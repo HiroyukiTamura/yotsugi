@@ -5,14 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:yotsugi/screen_main/screen_main.dart';
 import 'package:yotsugi/screen_map/screen_map.dart';
 import 'package:yotsugi/strings.dart';
+import 'package:yotsugi/styles.dart';
 
 class RootPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _RootPageState();
+
+  static const ROUTE_MAIN = '/';
+  static const ROUTE_GOOGLE_MAP = '/map';
 }
 
 class _RootPageState extends State<RootPage> {
-
   Future<void> _initializeFlutterFireFuture;
 
   @override
@@ -22,25 +25,37 @@ class _RootPageState extends State<RootPage> {
   }
 
   @override
-  Widget build(BuildContext context) => FutureBuilder<Object>(
-    future: _initializeFlutterFireFuture,
-    builder: (context, snapshot) {
-      return MaterialApp(
+  Widget build(BuildContext context) => FutureBuilder<void>(
+      future: _initializeFlutterFireFuture,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData)
+          return Container(
+            height: double.infinity,
+            width: double.infinity,
+            color: Styles.BACKGROUND,
+          );
+
+        return MaterialApp(
           title: Strings.APP_NAME,
           theme: ThemeData(
-            primarySwatch: Colors.blue,
+            primaryColor: Styles.PRIMARY_COLOR,
+            floatingActionButtonTheme: const FloatingActionButtonThemeData(
+              foregroundColor: Colors.white,
+              backgroundColor: Styles.ACCENT_COLOR,
+            ),
             visualDensity: VisualDensity.adaptivePlatformDensity,
+            backgroundColor: Styles.BACKGROUND,
           ),
-          initialRoute: '/',
+          initialRoute: RootPage.ROUTE_MAIN,
           routes: <String, WidgetBuilder>{
-            '/': (BuildContext context) => const ScreenMain(),
-            '/map': (BuildContext context) => const ScreenGoogleMapMain(),
+            RootPage.ROUTE_MAIN: (BuildContext context) => const ScreenMain(),
+            RootPage.ROUTE_GOOGLE_MAP: (BuildContext context) =>
+                const ScreenGoogleMapMain(),
           },
         );
-    }
-  );
+      });
 
-  Future<void> _initializeFlutterFire() async {
+  Future<int> _initializeFlutterFire() async {
     await Firebase.initializeApp();
     await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
 
@@ -49,5 +64,7 @@ class _RootPageState extends State<RootPage> {
       await FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
       originalOnError(errorDetails);
     };
+
+    return 0;
   }
 }

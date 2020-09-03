@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:video_player/video_player.dart';
+import 'package:yotsugi/root_page.dart';
 import 'package:yotsugi/screen_main/comment.dart';
 import 'package:yotsugi/screen_main/corner_label.dart';
 import 'package:yotsugi/screen_main/label_fadein.dart';
@@ -300,6 +301,7 @@ class _ScreenMainState extends State<ScreenMain> with TickerProviderStateMixin {
                                     duration:
                                     const Duration(milliseconds: 1500),
                                     string: Strings.MAP,
+                                    onTap: () => Navigator.of(context).pushNamed(RootPage.ROUTE_GOOGLE_MAP),
                                   ),
                                   CornerLabel(
                                     alignment: Alignment.bottomRight,

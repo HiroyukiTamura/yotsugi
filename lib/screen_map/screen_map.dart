@@ -20,34 +20,71 @@ class ScreenGoogleMapMain extends StatefulWidget {
 class ScreenGoogleMapState extends State<ScreenGoogleMapMain> {
   ScreenGoogleMapState()
       : _googlePlex = const CameraPosition(
-    target: LatLng(35.730461, 139.841722),
-    zoom: _ZOOM,
-  );
+          target: LatLng(35.730461, 139.841722), //四ツ木の座標
+          zoom: _ZOOM,
+        );
 
   static const double _ZOOM = 15;
 
-  final Completer<GoogleMapController> _controller = Completer<GoogleMapController>();
+  final Completer<GoogleMapController> _controller =
+      Completer<GoogleMapController>();
 
   final CameraPosition _googlePlex;
 
+  Future<String> _loadMapStyleFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadMapStyleFuture = _loadMapStyle();
+  }
+
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: const Text(Strings.MAP),
-    ),
-    body: GoogleMap(
-      initialCameraPosition: _googlePlex,
-      myLocationButtonEnabled: false,
-      zoomControlsEnabled: false,
-      compassEnabled: true,
-      onMapCreated: (controller) => _controller.complete(controller),
-    ),
-    floatingActionButton: FloatingActionButton(
-      onPressed: () => _onTapGps(context),
-      tooltip: Strings.GPS,
-      child: const Icon(Icons.gps_fixed),
-    ),
-  );
+        body: FutureBuilder<String>(
+          future: _loadMapStyleFuture,
+          builder: (context, snapshot) {
+            if (!snapshot.hasData)
+              return const SizedBox();
+
+            return Stack(
+              children: [
+                GoogleMap(
+                  initialCameraPosition: _googlePlex,
+                  myLocationButtonEnabled: false,
+                  zoomControlsEnabled: false,
+                  compassEnabled: true,
+                  onMapCreated: (controller) {
+                    controller.setMapStyle(snapshot.data);
+                    _controller.complete(controller);
+                  },
+                ),
+                SafeArea(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: RawMaterialButton(
+                      constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+                      onPressed: () => Navigator.of(context).pop(),
+                      fillColor: Colors.white,
+                      padding: const EdgeInsets.all(6),
+                      shape: const CircleBorder(),
+                      elevation: 0,
+                      child: const Icon(
+                        Icons.arrow_back,
+                        size: 24,
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            );
+          }
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => _onTapGps(context),
+          child: const Icon(Icons.gps_fixed),
+        ),
+      );
 
   Future<void> _moveMap(LocationData locationData) async {
     final GoogleMapController controller = await _controller.future;
@@ -58,11 +95,11 @@ class ScreenGoogleMapState extends State<ScreenGoogleMapMain> {
     controller.animateCamera(CameraUpdate.newCameraPosition(position));
   }
 
-
   Future<void> _onTapGps(BuildContext context) async {
     final location = Location();
     final pmsStatus = await location.hasPermission();
-    if (pmsStatus == PermissionStatus.denied || pmsStatus == PermissionStatus.deniedForever) {
+    if (pmsStatus == PermissionStatus.denied ||
+        pmsStatus == PermissionStatus.deniedForever) {
       final newPmsStatus = await location.requestPermission();
       if (newPmsStatus != PermissionStatus.granted) {
         await _showRelational(context);
@@ -90,46 +127,51 @@ class ScreenGoogleMapState extends State<ScreenGoogleMapMain> {
     _moveMap(locationData);
   }
 
-  static Future<void> _showRelational(BuildContext context) async => showDialog<AlertDialog>(
-      context: context,
-      builder: (context) => AlertDialog(
-        content: const Text(
-          Strings.GPS_PMS_RELATIONAL,
-        ),
-        actions: <Widget>[
-          FlatButton(
-            onPressed: () async => Navigator.pop(context),
-            child: Text(
-              Strings.OK,
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontFamily: Styles.FONT_SHINGO,
-                  color: Theme.of(context).accentColor),
-            ),
-          )
-        ],
-      ),
-    );
+
+  Future<String> _loadMapStyle() async => rootBundle.loadString('assets/map_style.json');
 
 
-  static Future<void> _notifyGpsServiceIsOff(BuildContext context) async => showDialog<AlertDialog>(
-    context: context,
-    builder: (context) => AlertDialog(
-      content: const Text(
-        Strings.GPS_SERVICE_RELATIONAL,
-      ),
-      actions: <Widget>[
-        FlatButton(
-          onPressed: () async => Navigator.pop(context),
-          child: Text(
-            Strings.OK,
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontFamily: Styles.FONT_SHINGO,
-                color: Theme.of(context).accentColor),
+  static Future<void> _showRelational(BuildContext context) async =>
+      showDialog<AlertDialog>(
+        context: context,
+        builder: (context) => AlertDialog(
+          content: const Text(
+            Strings.GPS_PMS_RELATIONAL,
           ),
-        )
-      ],
-    ),
-  );
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () async => Navigator.pop(context),
+              child: Text(
+                Strings.OK,
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontFamily: Styles.FONT_SHINGO,
+                    color: Theme.of(context).accentColor),
+              ),
+            )
+          ],
+        ),
+      );
+
+  static Future<void> _notifyGpsServiceIsOff(BuildContext context) async =>
+      showDialog<AlertDialog>(
+        context: context,
+        builder: (context) => AlertDialog(
+          content: const Text(
+            Strings.GPS_SERVICE_RELATIONAL,
+          ),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () async => Navigator.pop(context),
+              child: Text(
+                Strings.OK,
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontFamily: Styles.FONT_SHINGO,
+                    color: Theme.of(context).accentColor),
+              ),
+            )
+          ],
+        ),
+      );
 }
