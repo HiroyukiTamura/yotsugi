@@ -1,6 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 import 'package:yotsugi/root_page.dart';
 import 'package:yotsugi/screen_main/comment.dart';
@@ -10,7 +12,11 @@ import 'package:yotsugi/screen_main/non_glow_behavior.dart';
 import 'package:yotsugi/screen_main/theme_text.dart';
 import 'package:yotsugi/screen_main/thin_scrollbar.dart';
 import 'package:intl/intl.dart';
+import 'package:yotsugi/share_widget/share_widget.dart';
+import 'package:yotsugi/statics.dart';
 import 'package:yotsugi/strings.dart';
+import 'package:yotsugi/styles.dart';
+import 'package:share/share.dart';
 
 class ScreenMain extends StatefulWidget {
   const ScreenMain({Key key}) : super(key: key);
@@ -115,212 +121,217 @@ class _ScreenMainState extends State<ScreenMain> with TickerProviderStateMixin {
       child: Scaffold(
           backgroundColor: Colors.white,
           body: Stack(
-                children: [
-                  Column(
-                    children: <Widget>[
-                      SizedBox(
-                        height: headerH,
-                        width: double.infinity,
-                        child: Stack(
+            children: [
+              Column(
+                children: <Widget>[
+                  SizedBox(
+                    height: headerH,
+                    width: double.infinity,
+                    child: Stack(
+                      children: [
+                        if (_controller.value.initialized)
+                          VideoPlayer(_controller),
+                        Stack(
                           children: [
-                            if (_controller.value.initialized)
-                              VideoPlayer(_controller),
-                            Stack(
-                              children: [
-                                SlideTransition(
-                                  position: _animation,
-                                  child: Container(
-                                    height: headerH,
-                                    width: double.infinity,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(12),
-                                  child: Stack(
-                                    children: [
-                                      CornerLabel(
-                                        alignment: Alignment.topLeft,
-                                        curve: Curves.easeInOutSine,
-                                        tween: _topTween,
-                                        duration:
-                                        const Duration(seconds: 1),
-                                        string: 'Tokyo, Katsushika,',
-                                      ),
-                                      ValueListenableBuilder<String>(
-                                          valueListenable: _dateLabelVn,
-                                          builder: (_, value, child) =>
-                                              CornerLabel(
-                                                alignment:
-                                                Alignment.topRight,
-                                                curve: const Interval(
-                                                    1 / 3, 1,
-                                                    curve: Curves
-                                                        .easeInOutSine),
-                                                tween: _topTween,
-                                                duration: const Duration(
-                                                  milliseconds: 1500,
-                                                ),
-                                                string: value,
-                                              ))
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: contentH,
-                        child: Stack(
-                          children: [
-                            Center(
-                              child: ScrollConfiguration(
-                                behavior: NonGlowBehavior(),
-                                child: ListView.builder(
-                                  controller: _sc,
-                                  itemCount: 5,
-                                  padding: EdgeInsets.only(
-                                      right: 16,
-                                      left: 16,
-                                      top: contentH,
-                                      bottom: _BTM_PADDING),
-                                  itemBuilder: (context, index) {
-                                    switch (index) {
-                                      case 0:
-                                        return const Comment(
-                                            string:
-                                            '「元気ハウスチャンネルのネタに映像撮りにいかなきゃ。」');
-                                      case 1:
-                                        return const Comment(
-                                            string: '「笑それマジでたすかるんだけど～」');
-                                      case 2:
-                                        return const Comment(
-                                            string: '「そざいあるよ」');
-                                      case 3:
-                                        return Padding(
-                                          padding: const EdgeInsets.only(
-                                              top: 64, bottom: 48),
-                                          child: SizedBox(
-                                            height: 268,
-                                            width: 268,
-                                            child: Image.asset(
-                                              'img/sample_img.jpg',
-                                              errorBuilder:
-                                                  (_, __, stackTrace) {
-                                                debugPrintStack(
-                                                    stackTrace: stackTrace);
-                                                return const ColoredBox(
-                                                    color: Colors.black);
-                                              },
-                                            ),
-                                          ),
-                                        );
-                                      case 4:
-                                        return const DateText(
-                                            string: '2020:09:03:15:45');
-                                      default:
-                                        return Text('');
-                                    }
-                                  },
-                                ),
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.topCenter,
+                            SlideTransition(
+                              position: _animation,
                               child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  gradient: LinearGradient(
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter,
-                                      stops: const [
-                                        0,
-                                        .7,
-                                        1
-                                      ],
-                                      colors: [
-                                        Colors.white,
-                                        Colors.white,
-                                        Colors.white.withOpacity(0),
-                                      ]),
-                                ),
-                                height: 48,
+                                height: headerH,
+                                width: double.infinity,
+                                color: Colors.white,
                               ),
                             ),
-                            IgnorePointer(
-                              child: Align(
-                                alignment: Alignment.bottomCenter,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    gradient: LinearGradient(
-                                        begin: Alignment.topCenter,
-                                        end: Alignment.bottomCenter,
-                                        stops: const [
-                                          0,
-                                          .3,
-                                          1
-                                        ],
-                                        colors: [
-                                          Colors.white.withOpacity(0),
-                                          Colors.white,
-                                          Colors.white
-                                        ]),
-                                  ),
-                                  height: _BTM_PADDING,
-                                ),
-                              ),
-                            ),
-                            ValueListenableBuilder<double>(
-                                valueListenable: _themeOpacity,
-                                builder: (__, opacity, _) => Opacity(
-                                    opacity: opacity,
-                                    child: ThemeText(contentH: contentH))),
                             Padding(
                               padding: const EdgeInsets.all(12),
                               child: Stack(
                                 children: [
-                                  LabelFadeIn(
-                                    string: Strings.VIDEO,
+                                  CornerLabel(
                                     alignment: Alignment.topLeft,
-                                    animationController: _fadeInAc,
-                                  ),
-                                  LabelFadeIn(
-                                    string: Strings.SHARE,
-                                    alignment: Alignment.topRight,
-                                    animationController: _fadeInAc,
-                                  ),
-                                  ThinScrollbar(sc: _barSc),
-                                  CornerLabel(
-                                    alignment: Alignment.bottomLeft,
-                                    curve: const Interval(1 / 3, 1,
-                                        curve: Curves.easeInOutSine),
-                                    tween: _btmTween,
+                                    curve: Curves.easeInOutSine,
+                                    tween: _topTween,
                                     duration:
-                                    const Duration(milliseconds: 1500),
-                                    string: Strings.MAP,
-                                    onTap: () => Navigator.of(context).pushNamed(RootPage.ROUTE_GOOGLE_MAP),
+                                    const Duration(seconds: 1),
+                                    string: 'Tokyo, Katsushika,',
                                   ),
-                                  CornerLabel(
-                                    alignment: Alignment.bottomRight,
-                                    curve: const Interval(.5, 1,
-                                        curve: Curves.easeInOutSine),
-                                    tween: _btmTween,
-                                    duration: const Duration(seconds: 2),
-                                    string: Strings.BLUEPRINT,
-                                  ),
+                                  ValueListenableBuilder<String>(
+                                      valueListenable: _dateLabelVn,
+                                      builder: (_, value, child) =>
+                                          CornerLabel(
+                                            alignment:
+                                            Alignment.topRight,
+                                            curve: const Interval(
+                                                1 / 3, 1,
+                                                curve: Curves
+                                                    .easeInOutSine),
+                                            tween: _topTween,
+                                            duration: const Duration(
+                                              milliseconds: 1500,
+                                            ),
+                                            string: value,
+                                          ))
                                 ],
                               ),
                             ),
                           ],
                         ),
-                      )
-                    ],
+                      ],
+                    ),
                   ),
+                  SizedBox(
+                    height: contentH,
+                    child: Stack(
+                      children: [
+                        Center(
+                          child: ScrollConfiguration(
+                            behavior: NonGlowBehavior(),
+                            child: ListView.builder(
+                              controller: _sc,
+                              itemCount: 5,
+                              padding: EdgeInsets.only(
+                                  right: 16,
+                                  left: 16,
+                                  top: contentH,
+                                  bottom: _BTM_PADDING),
+                              itemBuilder: (context, index) {
+                                switch (index) {
+                                  case 0:
+                                    return const Comment(
+                                        string:
+                                        '「元気ハウスチャンネルのネタに映像撮りにいかなきゃ。」');
+                                  case 1:
+                                    return const Comment(
+                                        string: '「笑それマジでたすかるんだけど～」');
+                                  case 2:
+                                    return const Comment(
+                                        string: '「そざいあるよ」');
+                                  case 3:
+                                    return Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 64, bottom: 48),
+                                      child: SizedBox(
+                                        height: 268,
+                                        width: 268,
+                                        child: Image.asset(
+                                          'img/sample_img.jpg',
+                                          errorBuilder:
+                                              (_, __, stackTrace) {
+                                            debugPrintStack(
+                                                stackTrace: stackTrace);
+                                            return const ColoredBox(
+                                                color: Colors.black);
+                                          },
+                                        ),
+                                      ),
+                                    );
+                                  case 4:
+                                    return const DateText(
+                                        string: '2020:09:03:15:45');
+                                  default:
+                                    return Text('');
+                                }
+                              },
+                            ),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.topCenter,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  stops: const [
+                                    0,
+                                    .7,
+                                    1
+                                  ],
+                                  colors: [
+                                    Colors.white,
+                                    Colors.white,
+                                    Colors.white.withOpacity(0),
+                                  ]),
+                            ),
+                            height: 48,
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  stops: const [
+                                    0,
+                                    .3,
+                                    1
+                                  ],
+                                  colors: [
+                                    Colors.white.withOpacity(0),
+                                    Colors.white,
+                                    Colors.white
+                                  ]),
+                            ),
+                            height: _BTM_PADDING,
+                          ),
+                        ),
+                        ValueListenableBuilder<double>(
+                            valueListenable: _themeOpacity,
+                            builder: (__, opacity, _) =>
+                                Opacity(
+                                    opacity: opacity,
+                                    child: ThemeText(contentH: contentH))),
+                        Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Stack(
+                            children: [
+                              LabelFadeIn(
+                                string: Strings.VIDEO,
+                                alignment: Alignment.topLeft,
+                                animationController: _fadeInAc,
+                              ),
+                              if (!kIsWeb)
+                                LabelFadeIn(
+                                  string: Strings.SHARE,
+                                  alignment: Alignment.topRight,
+                                  animationController: _fadeInAc,
+                                  onTap: () => Share.share(Statics.HP_URL),
+                                ),
+                              // else //todo ここ
+
+                              ThinScrollbar(sc: _barSc),
+                              CornerLabel(
+                                alignment: Alignment.bottomLeft,
+                                curve: const Interval(1 / 3, 1,
+                                    curve: Curves.easeInOutSine),
+                                tween: _btmTween,
+                                duration:
+                                const Duration(milliseconds: 1500),
+                                string: Strings.MAP,
+                                onTap: () =>
+                                    Navigator.of(context).pushNamed(
+                                        RootPage.ROUTE_GOOGLE_MAP),
+                              ),
+                              CornerLabel(
+                                alignment: Alignment.bottomRight,
+                                curve: const Interval(.5, 1,
+                                    curve: Curves.easeInOutSine),
+                                tween: _btmTween,
+                                duration: const Duration(seconds: 2),
+                                string: Strings.BLUEPRINT,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
                 ],
-              )),
+              ),
+            ],
+          )),
     );
   }
 }

@@ -8,11 +8,13 @@ class LabelFadeIn extends StatelessWidget {
     @required this.string,
     @required this.animationController,
     @required this.alignment,
+    @required this.onTap,
   }) : super(key: key);
 
   final String string;
   final AnimationController animationController;
   final Alignment alignment;
+  final GestureTapCallback onTap;
 
   @override
   Widget build(BuildContext context) => Align(
@@ -25,12 +27,15 @@ class LabelFadeIn extends StatelessWidget {
             parent: animationController,
             curve: const Interval(.6, 1, curve: Curves.easeInOutSine),
           )),
-          child: Text(
-            string,
-            style: TextStyle(
-              fontFamily: Styles.FONT_SHINGO,
-              color: Colors.black87,
-              fontSize: 12,
+          child: InkWell(
+            onTap: onTap,
+            child: Text(
+              string,
+              style: const TextStyle(
+                fontFamily: Styles.FONT_SHINGO,
+                color: Colors.black87,
+                fontSize: 12,
+              ),
             ),
           ),
         ),

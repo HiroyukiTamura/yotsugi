@@ -13,4 +13,5 @@ class Strings {
   static const String PMS_ACCEPT = '許可する';
   static const String PMS_DENIED = '許可しない';
   static const String OK = 'OK';
+  static const String TOAST_ERR_CANT_SHARE = 'シェアできるアプリがみつかりませんでした';
 }
