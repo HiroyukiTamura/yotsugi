@@ -9,3 +9,5 @@ A new Flutter application.
 - SNS button 追加
 - about/contact/散文
 - 作業シート
+- google maps API keyの制限
+- Crashlytics導入

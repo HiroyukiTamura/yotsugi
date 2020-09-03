@@ -43,5 +43,13 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBQGI_sqT7rl4zht5Eb-lKuFmQeku0YFY4"/>
+
+        <meta-data
+            android:name="firebase_crashlytics_collection_enabled"
+            android:value="true" />
+
     </application>
 </manifest>
