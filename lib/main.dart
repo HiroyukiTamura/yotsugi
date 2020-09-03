@@ -9,7 +9,7 @@ import 'package:yotsugi/screen_main/non_glow_behavior.dart';
 import 'package:yotsugi/screen_main/theme_text.dart';
 import 'package:yotsugi/screen_main/thin_scrollbar.dart';
 import 'package:intl/intl.dart';
-import '../strings.dart';
+import 'strings.dart';
 
 void main() {
   runApp(MyApp());
