@@ -2,7 +2,7 @@ class Strings {
   static const String MAP = 'map';
   static const String BLUEPRINT = 'layout';
   static const String SHARE = 'share';
-  static const String VIDEO = 'video';
+  static const String ROADMAP = 'roadmap';
   static const String SCROLL = 'scroll';
   static const String APP_NAME = 'YOTSUGI';
   static const String GPS = 'GPS';

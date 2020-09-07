@@ -1,0 +1,194 @@
+import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:linked_scroll_controller/linked_scroll_controller.dart';
+import 'package:quiver/iterables.dart';
+import 'package:video_player/video_player.dart';
+import 'package:yotsugi/json_data/spreadsheet_data.dart';
+import 'package:yotsugi/statics.dart';
+import 'package:yotsugi/styles.dart';
+import 'package:yotsugi/util.dart';
+
+class ScreenRoadMap extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _ScreenRoadMapState();
+}
+
+class _ScreenRoadMapState extends State<ScreenRoadMap> {
+  LinkedScrollControllerGroup _controllers;
+  final List<ScrollController> _scList = [];
+  VideoPlayerController _vpc;
+
+  final ValueNotifier<_SpreadSheetDataWrapper> _vn = ValueNotifier(null);
+
+  @override
+  void initState() {
+    super.initState();
+    _controllers = LinkedScrollControllerGroup();
+    _vpc = VideoPlayerController.asset('video/roadmap_bg.mp4')
+      ..initialize()
+          // ..setLooping(true)
+          // ..play()
+          .then((_) async => _vn.value = await _requestSpreadSheet());
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _scList.forEach((sc) => sc.dispose());
+    _vpc.dispose();
+    _vn.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Styles.PRIMARY_COLOR,
+      body: Padding(
+        padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+        child: ValueListenableBuilder<_SpreadSheetDataWrapper>(
+            valueListenable: _vn,
+            builder: (context, data, child) {
+              if (data?.err != null) {
+                Util.reportCrash(data.err);
+                return Container(); //todo err
+              }
+              if (data?.ssd == null) return const SizedBox();
+
+              if (data.ssd.sheets.length > 1)
+                Util.reportCrash(Exception('snapshot.data.sheets.length > 1'));
+              final sheet = data.ssd.sheets[0];
+              final props = sheet.properties.gridProperties;
+              final datum = sheet.data.first;
+              final dataWithNull = sheet.getDataWithNullItem();
+              sheet.collapseEmptyRowAndColumn(dataWithNull);
+
+              final allWidgets = enumerate(dataWithNull).map((it) {
+                final sc = _controllers.addAndGet();
+                _scList.add(sc);
+                return _rowWidget(dataWithNull, datum, sc, it.index);
+              }).toList(growable: false);
+
+              return Stack(
+                children: [
+                  SizedBox.expand(
+                    child: VideoPlayer(_vpc),
+                  ),
+                  SizedBox.expand(
+                    child: ColoredBox(
+                      color: Colors.black.withOpacity(.3),
+                    ),
+                  ),
+                  SingleChildScrollView(
+                    child: Column(
+                      children: allWidgets,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: RawMaterialButton(
+                      constraints:
+                          const BoxConstraints(minWidth: 36, minHeight: 36),
+                      onPressed: () => Navigator.of(context).pop(),
+                      fillColor: Styles.PRIMARY_COLOR,
+                      padding: const EdgeInsets.all(6),
+                      shape: const CircleBorder(),
+                      elevation: 0,
+                      child: const Icon(
+                        Icons.arrow_back,
+                        size: 24,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            }),
+      ),
+    );
+  }
+
+  Future<_SpreadSheetDataWrapper> _requestSpreadSheet() async {
+    try {
+      final response = await Dio().get<String>(
+          'https://sheets.googleapis.com/v4/spreadsheets/1dtWBbEWWKIWCdpWiJKcbybeIb3rsojVsFF9RNSRQkJg',
+          queryParameters: <String, dynamic>{
+            'includeGridData': true,
+            'key': Statics.API_KEY,
+            'ranges': 'A1:CA200'
+          });
+      final ssd = SpreadSheetData.fromJson(response.data);
+      return _SpreadSheetDataWrapper(ssd: ssd);
+    } catch (e) {
+      Util.reportCrash(e);
+      return _SpreadSheetDataWrapper(err: e);
+    }
+  }
+
+  static BorderSide _genBorderSide(SingleBorder border) => BorderSide(
+      color:
+          border?.color?.toColor() == null ? Colors.transparent : Colors.white,
+      width: border?.width?.toDouble() ?? 0);
+
+  static Widget _rowWidget(List<List<Value>> dataWithNull, Datum datum,
+      ScrollController sc, int index) {
+    final dataListInRow = dataWithNull[index];
+    final widgets = enumerate(dataListInRow).map((it) {
+      final borders = dataListInRow[it.index]?.effectiveFormat?.borders;
+      final data = dataListInRow[it.index];
+      final text = data?.userEnteredValue?.stringValue;
+      final width = datum.columnMetadata[it.index].pixelSize.toDouble();
+      return Visibility(
+        visible: width != 0,
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border(
+              top: _genBorderSide(borders?.top),
+              right: _genBorderSide(borders?.right),
+              bottom: _genBorderSide(borders?.bottom),
+              left: _genBorderSide(borders?.left),
+            ),
+            color: data?.userEnteredFormat?.backgroundColor?.toColor() == null
+                ? null
+                : Colors.white.withOpacity(.1),
+          ),
+          width: width,
+          alignment: data?.alignment,
+          child: text == null
+              ? const SizedBox()
+              : Container(
+                  padding: const EdgeInsets.all(4),
+                  child: Text(
+                    text,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      height: 1.1,
+                      fontSize: 10,
+                    ),
+                  ),
+                ),
+        ),
+      );
+    }).toList(growable: false);
+
+    return SingleChildScrollView(
+      controller: sc,
+      scrollDirection: Axis.horizontal,
+      child: IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: widgets,
+        ),
+      ),
+    );
+  }
+}
+
+@immutable
+class _SpreadSheetDataWrapper {
+  const _SpreadSheetDataWrapper({this.ssd, this.err});
+
+  final SpreadSheetData ssd;
+  final dynamic err;
+}

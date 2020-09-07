@@ -288,9 +288,10 @@ class _ScreenMainState extends State<ScreenMain> with TickerProviderStateMixin {
                           child: Stack(
                             children: [
                               LabelFadeIn(
-                                string: Strings.VIDEO,
+                                string: Strings.ROADMAP,
                                 alignment: Alignment.topLeft,
                                 animationController: _fadeInAc,
+                                onTap: () => Navigator.of(context).pushNamed(RootPage.ROUTE_ROAD_MAP),
                               ),
                               if (!kIsWeb)
                                 LabelFadeIn(

@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:yotsugi/screen_main/screen_main.dart';
 import 'package:yotsugi/screen_map/screen_map.dart';
+import 'package:yotsugi/screen_roadmap/screen_roadmap.dart';
 import 'package:yotsugi/strings.dart';
 import 'package:yotsugi/styles.dart';
 
@@ -13,6 +14,7 @@ class RootPage extends StatefulWidget {
 
   static const ROUTE_MAIN = '/';
   static const ROUTE_GOOGLE_MAP = '/map';
+  static const ROUTE_ROAD_MAP = '/roadMap';
 }
 
 class _RootPageState extends State<RootPage> {
@@ -38,6 +40,7 @@ class _RootPageState extends State<RootPage> {
         return MaterialApp(
           title: Strings.APP_NAME,
           theme: ThemeData(
+            accentColor: Styles.ACCENT_COLOR,
             primaryColor: Styles.PRIMARY_COLOR,
             floatingActionButtonTheme: const FloatingActionButtonThemeData(
               foregroundColor: Colors.white,
@@ -48,9 +51,10 @@ class _RootPageState extends State<RootPage> {
           ),
           initialRoute: RootPage.ROUTE_MAIN,
           routes: <String, WidgetBuilder>{
-            RootPage.ROUTE_MAIN: (BuildContext context) => const ScreenMain(),
-            RootPage.ROUTE_GOOGLE_MAP: (BuildContext context) =>
+            RootPage.ROUTE_MAIN: (context) => const ScreenMain(),
+            RootPage.ROUTE_GOOGLE_MAP: (context) =>
                 const ScreenGoogleMapMain(),
+            RootPage.ROUTE_ROAD_MAP: (context) => ScreenRoadMap(),
           },
         );
       });
