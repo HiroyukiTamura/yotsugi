@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 import 'package:yotsugi/root_page.dart';
 import 'package:yotsugi/screen_main/comment.dart';
@@ -12,10 +11,8 @@ import 'package:yotsugi/screen_main/non_glow_behavior.dart';
 import 'package:yotsugi/screen_main/theme_text.dart';
 import 'package:yotsugi/screen_main/thin_scrollbar.dart';
 import 'package:intl/intl.dart';
-import 'package:yotsugi/share_widget/share_widget.dart';
 import 'package:yotsugi/statics.dart';
 import 'package:yotsugi/strings.dart';
-import 'package:yotsugi/styles.dart';
 import 'package:share/share.dart';
 
 class ScreenMain extends StatefulWidget {
@@ -90,6 +87,16 @@ class _ScreenMainState extends State<ScreenMain> with TickerProviderStateMixin {
     // _controller..setLooping(true)
     //   ..play();
     // });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+    _animationController.dispose();
+    _fadeInAc.dispose();
+    _sc.dispose();
+    _barSc.dispose();
   }
 
   void _updateDateStr(DateTime dateTime) {
@@ -322,6 +329,8 @@ class _ScreenMainState extends State<ScreenMain> with TickerProviderStateMixin {
                                 tween: _btmTween,
                                 duration: const Duration(seconds: 2),
                                 string: Strings.BLUEPRINT,
+                                onTap: () => Navigator.of(context).pushNamed(
+                                    RootPage.ROUTE_LAYOUT),
                               ),
                             ],
                           ),

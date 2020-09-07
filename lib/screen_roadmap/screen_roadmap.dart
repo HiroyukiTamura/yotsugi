@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:linked_scroll_controller/linked_scroll_controller.dart';
 import 'package:quiver/iterables.dart';
 import 'package:video_player/video_player.dart';
+import 'package:yotsugi/common/widget.dart';
 import 'package:yotsugi/json_data/spreadsheet_data.dart';
 import 'package:yotsugi/statics.dart';
 import 'package:yotsugi/styles.dart';
@@ -35,12 +36,15 @@ class _ScreenRoadMapState extends State<ScreenRoadMap> {
     _horizontalSc = ScrollController();
     _horizontalBarSc = ScrollController();
     _verticalBarSc = ScrollController();
-    _verticalSc = ScrollController()..addListener(() {
-      final ratio = _verticalSc.position.pixels / _verticalSc.position.maxScrollExtent;
-      debugPrint(_verticalBarSc.position.maxScrollExtent.toString());
-      final pos = _verticalBarSc.position.maxScrollExtent * (1 - ratio);
-      _verticalBarSc.animateTo(pos, duration: const Duration(), curve: Curves.linear);
-    });
+    _verticalSc = ScrollController()
+      ..addListener(() {
+        final ratio =
+            _verticalSc.position.pixels / _verticalSc.position.maxScrollExtent;
+        debugPrint(_verticalBarSc.position.maxScrollExtent.toString());
+        final pos = _verticalBarSc.position.maxScrollExtent * (1 - ratio);
+        _verticalBarSc.animateTo(pos,
+            duration: const Duration(), curve: Curves.linear);
+      });
     _vpc = VideoPlayerController.asset('video/roadmap_bg.mp4')
       ..initialize()
           // ..setLooping(true)
@@ -117,10 +121,10 @@ class _ScreenRoadMapState extends State<ScreenRoadMap> {
                           child: Container(
                             height: 96,
                             decoration: BoxDecoration(
-                                color: accentColor,
-                                borderRadius: const BorderRadius.all(
-                                  Radius.circular(6),
-                                ),
+                              color: accentColor,
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(6),
+                              ),
                             ),
                           ),
                         ),
@@ -150,23 +154,11 @@ class _ScreenRoadMapState extends State<ScreenRoadMap> {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: RawMaterialButton(
-                      constraints:
-                          const BoxConstraints(minWidth: 36, minHeight: 36),
-                      onPressed: () => Navigator.of(context).pop(),
-                      fillColor: accentColor,
-                      padding: const EdgeInsets.all(6),
-                      shape: const CircleBorder(),
-                      elevation: 0,
-                      child: const Icon(
-                        Icons.arrow_back,
-                        size: 24,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
+                  BackBtn(
+                    btnFillColor: accentColor,
+                    iconColor: Theme.of(context).accentColor,
+                    onTap: () => Navigator.of(context).pop(),
+                  )
                 ],
               );
             }),
