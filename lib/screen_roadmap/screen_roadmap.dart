@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:linked_scroll_controller/linked_scroll_controller.dart';
 import 'package:quiver/iterables.dart';
 import 'package:video_player/video_player.dart';
@@ -19,6 +20,11 @@ class _ScreenRoadMapState extends State<ScreenRoadMap> {
   LinkedScrollControllerGroup _controllers;
   final List<ScrollController> _scList = [];
   VideoPlayerController _vpc;
+  ScrollController _horizontalSc;
+  ScrollController _horizontalBarSc;
+  ScrollController _verticalBarSc;
+  ScrollController _verticalSc;
+  static final accentColor = Colors.black.withOpacity(.7);
 
   final ValueNotifier<_SpreadSheetDataWrapper> _vn = ValueNotifier(null);
 
@@ -26,6 +32,15 @@ class _ScreenRoadMapState extends State<ScreenRoadMap> {
   void initState() {
     super.initState();
     _controllers = LinkedScrollControllerGroup();
+    _horizontalSc = ScrollController();
+    _horizontalBarSc = ScrollController();
+    _verticalBarSc = ScrollController();
+    _verticalSc = ScrollController()..addListener(() {
+      final ratio = _verticalSc.position.pixels / _verticalSc.position.maxScrollExtent;
+      debugPrint(_verticalBarSc.position.maxScrollExtent.toString());
+      final pos = _verticalBarSc.position.maxScrollExtent * (1 - ratio);
+      _verticalBarSc.animateTo(pos, duration: const Duration(), curve: Curves.linear);
+    });
     _vpc = VideoPlayerController.asset('video/roadmap_bg.mp4')
       ..initialize()
           // ..setLooping(true)
@@ -39,6 +54,9 @@ class _ScreenRoadMapState extends State<ScreenRoadMap> {
     _scList.forEach((sc) => sc.dispose());
     _vpc.dispose();
     _vn.dispose();
+    _horizontalSc.dispose();
+    _horizontalBarSc.dispose();
+    _verticalBarSc.dispose();
   }
 
   @override
@@ -77,12 +95,59 @@ class _ScreenRoadMapState extends State<ScreenRoadMap> {
                   ),
                   SizedBox.expand(
                     child: ColoredBox(
-                      color: Colors.black.withOpacity(.3),
+                      color: Colors.black.withOpacity(.4),
                     ),
                   ),
                   SingleChildScrollView(
+                    controller: _verticalSc,
                     child: Column(
                       children: allWidgets,
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: FractionallySizedBox(
+                      heightFactor: .3,
+                      child: Container(
+                        width: 4,
+                        margin: const EdgeInsets.all(8),
+                        child: SingleChildScrollView(
+                          controller: _verticalBarSc,
+                          physics: const NeverScrollableScrollPhysics(),
+                          child: Container(
+                            height: 96,
+                            decoration: BoxDecoration(
+                                color: accentColor,
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(6),
+                                ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      height: 12,
+                      margin: const EdgeInsets.all(8),
+                      child: FractionallySizedBox(
+                        heightFactor: .3,
+                        child: SingleChildScrollView(
+                          controller: _horizontalBarSc,
+                          scrollDirection: Axis.horizontal,
+                          child: Container(
+                            width: 96,
+                            decoration: BoxDecoration(
+                              color: accentColor,
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(6),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                   Padding(
@@ -91,7 +156,7 @@ class _ScreenRoadMapState extends State<ScreenRoadMap> {
                       constraints:
                           const BoxConstraints(minWidth: 36, minHeight: 36),
                       onPressed: () => Navigator.of(context).pop(),
-                      fillColor: Styles.PRIMARY_COLOR,
+                      fillColor: accentColor,
                       padding: const EdgeInsets.all(6),
                       shape: const CircleBorder(),
                       elevation: 0,
