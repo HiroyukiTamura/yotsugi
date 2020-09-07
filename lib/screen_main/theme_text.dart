@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:yotsugi/strings.dart';
 import 'package:yotsugi/styles.dart';
 
 class ThemeText extends StatelessWidget {
@@ -15,9 +16,9 @@ class ThemeText extends StatelessWidget {
         child: Column(
           mainAxisAlignment:
           MainAxisAlignment.center,
-          children: [
+          children: const [
             Text(
-              'Yotsugi',
+              Strings.HOUSE_NAME,
               style: TextStyle(
                 fontFamily: Styles.FONT_SHINGO,
                 color: Colors.black54,
@@ -25,7 +26,7 @@ class ThemeText extends StatelessWidget {
                 fontSize: 32,
               ),
             ),
-            const SizedBox(
+            SizedBox(
               height: 16,
             ),
             Text(

@@ -20,7 +20,6 @@ class ScreenRoadMap extends StatefulWidget {
 class _ScreenRoadMapState extends State<ScreenRoadMap> {
   LinkedScrollControllerGroup _controllers;
   final List<ScrollController> _scList = [];
-  VideoPlayerController _vpc;
   ScrollController _horizontalSc;
   ScrollController _horizontalBarSc;
   ScrollController _verticalBarSc;
@@ -45,18 +44,12 @@ class _ScreenRoadMapState extends State<ScreenRoadMap> {
         _verticalBarSc.animateTo(pos,
             duration: const Duration(), curve: Curves.linear);
       });
-    _vpc = VideoPlayerController.asset('video/roadmap_bg.mp4')
-      ..initialize()
-          // ..setLooping(true)
-          // ..play()
-          .then((_) async => _vn.value = await _requestSpreadSheet());
   }
 
   @override
   void dispose() {
     super.dispose();
     _scList.forEach((sc) => sc.dispose());
-    _vpc.dispose();
     _vn.dispose();
     _horizontalSc.dispose();
     _horizontalBarSc.dispose();
@@ -95,7 +88,7 @@ class _ScreenRoadMapState extends State<ScreenRoadMap> {
               return Stack(
                 children: [
                   SizedBox.expand(
-                    child: VideoPlayer(_vpc),
+                    child: Image.asset('img/shadow.png'),
                   ),
                   SizedBox.expand(
                     child: ColoredBox(

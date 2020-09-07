@@ -23,7 +23,6 @@ class ScreenMain extends StatefulWidget {
 }
 
 class _ScreenMainState extends State<ScreenMain> with TickerProviderStateMixin {
-  VideoPlayerController _controller;
 
   static const int _WIDTH = 1920;
   static const int _HEIGHT = 1080;
@@ -42,10 +41,6 @@ class _ScreenMainState extends State<ScreenMain> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.asset('video/header.mp4')
-      ..initialize().then((_) {
-        setState(() {});
-      });
     _animationController = AnimationController(
         duration: const Duration(milliseconds: 2500), vsync: this)
       ..forward();
@@ -92,7 +87,6 @@ class _ScreenMainState extends State<ScreenMain> with TickerProviderStateMixin {
   @override
   void dispose() {
     super.dispose();
-    _controller.dispose();
     _animationController.dispose();
     _fadeInAc.dispose();
     _sc.dispose();
@@ -136,50 +130,45 @@ class _ScreenMainState extends State<ScreenMain> with TickerProviderStateMixin {
                     width: double.infinity,
                     child: Stack(
                       children: [
-                        if (_controller.value.initialized)
-                          VideoPlayer(_controller),
-                        Stack(
-                          children: [
-                            SlideTransition(
-                              position: _animation,
-                              child: Container(
-                                height: headerH,
-                                width: double.infinity,
-                                color: Colors.white,
+                        Image.asset('img/header.png'),
+                        SlideTransition(
+                          position: _animation,
+                          child: Container(
+                            height: headerH,
+                            width: double.infinity,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Stack(
+                            children: [
+                              CornerLabel(
+                                alignment: Alignment.topLeft,
+                                curve: Curves.easeInOutSine,
+                                tween: _topTween,
+                                duration:
+                                const Duration(seconds: 1),
+                                string: Strings.SHARE,
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(12),
-                              child: Stack(
-                                children: [
-                                  CornerLabel(
-                                    alignment: Alignment.topLeft,
-                                    curve: Curves.easeInOutSine,
-                                    tween: _topTween,
-                                    duration:
-                                    const Duration(seconds: 1),
-                                    string: 'Tokyo, Katsushika,',
-                                  ),
-                                  ValueListenableBuilder<String>(
-                                      valueListenable: _dateLabelVn,
-                                      builder: (_, value, child) =>
-                                          CornerLabel(
-                                            alignment:
-                                            Alignment.topRight,
-                                            curve: const Interval(
-                                                1 / 3, 1,
-                                                curve: Curves
-                                                    .easeInOutSine),
-                                            tween: _topTween,
-                                            duration: const Duration(
-                                              milliseconds: 1500,
-                                            ),
-                                            string: value,
-                                          ))
-                                ],
-                              ),
-                            ),
-                          ],
+                              ValueListenableBuilder<String>(
+                                  valueListenable: _dateLabelVn,
+                                  builder: (_, value, child) =>
+                                      CornerLabel(
+                                        alignment:
+                                        Alignment.topRight,
+                                        curve: const Interval(
+                                            1 / 3, 1,
+                                            curve: Curves
+                                                .easeInOutSine),
+                                        tween: _topTween,
+                                        duration: const Duration(
+                                          milliseconds: 1500,
+                                        ),
+                                        string: value,
+                                      ))
+                            ],
+                          ),
                         ),
                       ],
                     ),
@@ -302,7 +291,7 @@ class _ScreenMainState extends State<ScreenMain> with TickerProviderStateMixin {
                               ),
                               if (!kIsWeb)
                                 LabelFadeIn(
-                                  string: Strings.SHARE,
+                                  string: Strings.ABOUT,
                                   alignment: Alignment.topRight,
                                   animationController: _fadeInAc,
                                   onTap: () => Share.share(Statics.HP_URL),
