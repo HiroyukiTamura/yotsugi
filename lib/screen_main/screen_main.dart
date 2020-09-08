@@ -32,8 +32,7 @@ class _ScreenMainState extends State<ScreenMain> with TickerProviderStateMixin {
 
   AnimationController _fadeInAcLeft;
   AnimationController _fadeInAcRight;
-  final ValueNotifier<String> _dateLabelVn = ValueNotifier('2020:09:03:00:00');
-  final ValueNotifier<double> _themeOpacity = ValueNotifier(1);
+  ValueNotifier<double> _themeOpacity;
 
   ScrollController _sc;
   ScrollController _barSc;
@@ -66,6 +65,7 @@ class _ScreenMainState extends State<ScreenMain> with TickerProviderStateMixin {
       });
 
     _barSc = ScrollController();
+    _themeOpacity = ValueNotifier(1);
   }
 
   @override
@@ -107,7 +107,6 @@ class _ScreenMainState extends State<ScreenMain> with TickerProviderStateMixin {
             _Header(
               animation: _animation,
               headerH: headerH,
-              dateLabelVn: _dateLabelVn,
               topRightAnmDuration: const Duration(seconds: 1),
             ),
             _Content(
@@ -131,7 +130,6 @@ class _ScreenMainState extends State<ScreenMain> with TickerProviderStateMixin {
               child: _Header(
                 headerH: mediaQuery.size.height,
                 animation: _animation,
-                dateLabelVn: _dateLabelVn,
                 topRightAnmDuration: const Duration(milliseconds: 1500),
               ),
             ),
@@ -155,13 +153,11 @@ class _Header extends StatelessWidget {
     Key key,
     @required this.animation,
     @required this.headerH,
-    @required this.dateLabelVn,
     @required this.topRightAnmDuration,
   }) : super(key: key);
 
   final Animation<Offset> animation;
   final double headerH;
-  final ValueNotifier<String> dateLabelVn;
   final Duration topRightAnmDuration;
 
   static Tween<Offset> getTopTween() {
@@ -209,7 +205,7 @@ class _Header extends StatelessWidget {
                   duration: topRightAnmDuration,
                   string: Strings.POST,
                   fontSize: 12,
-                  onTap: () => Share.share(Statics.HP_URL), //todo ここ
+                  onTap: () => Navigator.of(context).pushNamed(RootPage.ROUTE_POST),
                 ),
               ],
             ),
@@ -281,14 +277,10 @@ class _Content extends StatelessWidget {
                       //pos == -2 => 最後のアイテム
                       //pos === -1 => 最初のアイテム
                       int offset = 0;
-                      int nextIndex = 0;
-                      if (pos == -2) {
+                      if (pos == -2)
                         offset = indexList.last;
-                        nextIndex = snapshot.data.size;
-                      } else if (pos >= 0) {
+                      else if (pos >= 0)
                         offset = indexList[pos];
-                        nextIndex = indexList[pos+1];
-                      }
 
                       QueryDocumentSnapshot snap = pos == -2 ? snapshot.data.docs.last : snapshot.data.docs[pos+1];
                       final indexInItem = i - offset;
@@ -299,7 +291,6 @@ class _Content extends StatelessWidget {
                         final date = (snap.get('createdAt') as Timestamp).toDate();
                         return DateText(string: DateFormat('yyyy:MM:dd:HH:mm').format(date));
                       } else if (diff == 0) {
-                        final dynamic imgName = snap.get('imgNames');
                         final imgNames = snap.get('imgNames') as List<dynamic>;
                         return Images(fileList: imgNames);
                       } else

@@ -53,8 +53,8 @@ class Images extends StatelessWidget {
       Padding(
           padding: const EdgeInsets.only(top: 64, bottom: 48),
           child: SizedBox(
-              height: 268,
-              width: 268,
+              height: 256,
+              width: 256,
               child: FutureBuilder<dynamic>(
                 future: FirebaseStorage()
                     .ref()

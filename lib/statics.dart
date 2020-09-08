@@ -6,6 +6,7 @@ class Statics {
   static const API_KEY = 'AIzaSyBQGI_sqT7rl4zht5Eb-lKuFmQeku0YFY4';
 
   static const int MAX_VIDEO_LEN_SEC = 9;
+  static const PASSWORD = 'yotsugi';
 }
 
 @immutable

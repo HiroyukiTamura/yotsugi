@@ -6,6 +6,7 @@ import 'package:yotsugi/screen_about/screen_about.dart';
 import 'package:yotsugi/screen_layout/screen_layout.dart';
 import 'package:yotsugi/screen_main/screen_main.dart';
 import 'package:yotsugi/screen_map/screen_map.dart';
+import 'package:yotsugi/screen_post/screen_post.dart';
 import 'package:yotsugi/screen_roadmap/screen_roadmap.dart';
 import 'package:yotsugi/strings.dart';
 import 'package:yotsugi/styles.dart';
@@ -19,6 +20,7 @@ class RootPage extends StatefulWidget {
   static const ROUTE_ROAD_MAP = '/roadMap';
   static const ROUTE_LAYOUT = '/layout';
   static const ROUTE_ABOUT = '/about';
+  static const ROUTE_POST = '/post';
 }
 
 class _RootPageState extends State<RootPage> {
@@ -61,6 +63,7 @@ class _RootPageState extends State<RootPage> {
             RootPage.ROUTE_ROAD_MAP: (_) => ScreenRoadMap(),
             RootPage.ROUTE_LAYOUT: (_) => ScreenLayout(),
             RootPage.ROUTE_ABOUT: (_) => ScreenAbout(),
+            RootPage.ROUTE_POST: (_) => ScreenPost(),
           },
         );
       });

@@ -22,20 +22,24 @@ class _ScreenRoadMapState extends State<ScreenRoadMap> {
   ScrollController _verticalSc;
   static final accentColor = Colors.black.withOpacity(.7);
 
-  final ValueNotifier<_SpreadSheetDataWrapper> _vn = ValueNotifier(null);
-  final ValueNotifier<double> _vScrollRatio = ValueNotifier(0);
-  final ValueNotifier<double> _hScrollRatio = ValueNotifier(0);
+  ValueNotifier<_SpreadSheetDataWrapper> _vn;
+  ValueNotifier<double> _vScrollRatio;
+  ValueNotifier<double> _hScrollRatio;
 
   @override
   void initState() {
     super.initState();
+
+    _vn = ValueNotifier(null);
+    _vScrollRatio = ValueNotifier(0);
+    _hScrollRatio = ValueNotifier(0);
+
     _controllers = LinkedScrollControllerGroup();
     _verticalSc = ScrollController()
       ..addListener(() => _vScrollRatio.value =
           _verticalSc.position.pixels / _verticalSc.position.maxScrollExtent);
 
-    if (_vn.value == null)
-      _requestSpreadSheet().then((value) => _vn.value = value);
+    _requestSpreadSheet().then((value) => _vn.value = value);
   }
 
   @override

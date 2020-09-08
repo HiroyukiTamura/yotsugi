@@ -13,6 +13,7 @@ class Strings {
   static const String PMS_ACCEPT = '許可する';
   static const String PMS_DENIED = '許可しない';
   static const String OK = 'OK';
+  static const String CANCEL = 'CANCEL';
   static const String ABOUT = 'about';
   static const String POST = 'post';
   static const String TOAST_ERR_CANT_SHARE = 'シェアできるアプリがみつかりませんでした';
@@ -35,4 +36,11 @@ class Strings {
   static const String ABOUT_H_FACILITY = '設備';
 
   static const String THEME_SUB = 'Tokyo, Katsushika';
+
+  static const String INVALID_PW = 'パスワードが間違っています';
+  static const String SNACK_UPLOADING = 'アップロードしています...';
+  static const String SNACK_ERR = '処理に失敗しました';
+  static const String SNACK_POST_DONE = '投稿しました';
+  static const String POST_DIALOG_TITLE = '投稿する';
+  static const String ENTER_PW = 'パスワードを入力';
 }
