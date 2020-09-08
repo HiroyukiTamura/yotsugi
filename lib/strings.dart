@@ -33,4 +33,6 @@ class Strings {
   static const String ABOUT_DISTANCE_GROCERY = 'セブンイレブン 徒歩2分';
   static const String ABOUT_H_LOCATION = '立地';
   static const String ABOUT_H_FACILITY = '設備';
+
+  static const String THEME_SUB = 'Tokyo, Katsushika';
 }
