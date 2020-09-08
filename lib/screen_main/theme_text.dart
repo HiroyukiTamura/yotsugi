@@ -22,7 +22,7 @@ class ThemeText extends StatelessWidget {
               style: TextStyle(
                 fontFamily: Styles.FONT_SHINGO,
                 color: Colors.black54,
-                letterSpacing: 6,
+                letterSpacing: 4,
                 fontSize: 32,
               ),
             ),

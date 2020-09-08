@@ -228,56 +228,50 @@ class _ScreenMainState extends State<ScreenMain> with TickerProviderStateMixin {
                             builder: (__, opacity, _) => Opacity(
                                 opacity: opacity,
                                 child: ThemeText(contentH: contentH))),
-                        Stack(
-                          children: [
-                            LabelFadeIn(
-                              string: Strings.WORKSHEET,
-                              alignment: Alignment.topLeft,
-                              animationController: _fadeInAcLeft,
-                              onTap: () => Navigator.of(context)
-                                  .pushNamed(RootPage.ROUTE_ROAD_MAP),
-                            ),
-                            if (!kIsWeb)
-                              LabelFadeIn(
-                                string: Strings.ABOUT,
-                                alignment: Alignment.topRight,
-                                animationController: _fadeInAcRight,
-                                onTap: () => Share.share(Statics.HP_URL),
-                              ),
-                            // else //todo ここ
-
-                            ThinScrollbar(sc: _barSc),
-                            CornerLabel(
-                              alignment: Alignment.bottomLeft,
-                              curve: const Interval(1 / 3, 1,
-                                  curve: Curves.easeInOutSine),
-                              tween: _btmTween,
-                              duration: const Duration(milliseconds: 1500),
-                              string: Strings.MAP,
-                              onTap: () => Navigator.of(context)
-                                  .pushNamed(RootPage.ROUTE_GOOGLE_MAP),
-                            ),
-                            CornerLabel(
-                              alignment: Alignment.bottomCenter,
-                              curve: const Interval(3 / 7, 1,
-                                  curve: Curves.easeInOutSine),
-                              tween: _btmTween,
-                              duration: const Duration(milliseconds: 1750),
-                              string: Strings.POST,
-                              onTap: () => Navigator.of(context)
-                                  .pushNamed(RootPage.ROUTE_GOOGLE_MAP),//todo ここ
-                            ),
-                            CornerLabel(
-                              alignment: Alignment.bottomRight,
-                              curve: const Interval(.5, 1,
-                                  curve: Curves.easeInOutSine),
-                              tween: _btmTween,
-                              duration: const Duration(seconds: 2),
-                              string: Strings.BLUEPRINT,
-                              onTap: () => Navigator.of(context)
-                                  .pushNamed(RootPage.ROUTE_LAYOUT),
-                            ),
-                          ],
+                        LabelFadeIn(
+                          string: Strings.WORKSHEET,
+                          alignment: Alignment.topLeft,
+                          animationController: _fadeInAcLeft,
+                          onTap: () => Navigator.of(context)
+                              .pushNamed(RootPage.ROUTE_ROAD_MAP),
+                        ),
+                        LabelFadeIn(
+                          string: Strings.ABOUT,
+                          alignment: Alignment.topRight,
+                          animationController: _fadeInAcRight,
+                          onTap: () => Navigator.of(context)
+                              .pushNamed(RootPage.ROUTE_ABOUT),
+                        ),
+                        ThinScrollbar(sc: _barSc),
+                        CornerLabel(
+                          alignment: Alignment.bottomLeft,
+                          curve: const Interval(1 / 3, 1,
+                              curve: Curves.easeInOutSine),
+                          tween: _btmTween,
+                          duration: const Duration(milliseconds: 1500),
+                          string: Strings.MAP,
+                          onTap: () => Navigator.of(context)
+                              .pushNamed(RootPage.ROUTE_GOOGLE_MAP),
+                        ),
+                        CornerLabel(
+                          alignment: Alignment.bottomCenter,
+                          curve: const Interval(3 / 7, 1,
+                              curve: Curves.easeInOutSine),
+                          tween: _btmTween,
+                          duration: const Duration(milliseconds: 1750),
+                          string: Strings.POST,
+                          onTap: () => Navigator.of(context)
+                              .pushNamed(RootPage.ROUTE_GOOGLE_MAP), //todo ここ
+                        ),
+                        CornerLabel(
+                          alignment: Alignment.bottomRight,
+                          curve: const Interval(.5, 1,
+                              curve: Curves.easeInOutSine),
+                          tween: _btmTween,
+                          duration: const Duration(seconds: 2),
+                          string: Strings.BLUEPRINT,
+                          onTap: () => Navigator.of(context)
+                              .pushNamed(RootPage.ROUTE_LAYOUT),
                         ),
                       ],
                     ),
@@ -290,8 +284,8 @@ class _ScreenMainState extends State<ScreenMain> with TickerProviderStateMixin {
   }
 
   AnimationController createAcForMiddleLabel() => AnimationController(
-        duration: const Duration(milliseconds: 2500), vsync: this)
-      ..forward();
+      duration: const Duration(milliseconds: 2500), vsync: this)
+    ..forward();
 }
 
 class _Header extends StatelessWidget {
@@ -313,46 +307,46 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SizedBox(
-      height: headerH,
-      width: double.infinity,
-      child: Stack(
-        children: [
-          Image.asset('img/header.png'),
-          SlideTransition(
-            position: animation,
-            child: Container(
-              height: headerH,
-              width: double.infinity,
-              color: Colors.white,
-            ),
-          ),
-          Stack(
-            children: [
-              CornerLabel(
-                alignment: Alignment.topLeft,
-                curve: Curves.easeInOutSine,
-                tween: _topTween,
-                duration: const Duration(seconds: 1),
-                string: Strings.SHARE,
-                fontSize: 14,
-                onTap: () => Share.share(Statics.HP_URL), //todo ここ
+        height: headerH,
+        width: double.infinity,
+        child: Stack(
+          children: [
+            Image.asset('img/header.png'),
+            SlideTransition(
+              position: animation,
+              child: Container(
+                height: headerH,
+                width: double.infinity,
+                color: Colors.white,
               ),
-              ValueListenableBuilder<String>(
-                  valueListenable: dateLabelVn,
-                  builder: (_, value, child) => CornerLabel(
-                        alignment: Alignment.topRight,
-                        curve: const Interval(1 / 3, 1,
-                            curve: Curves.easeInOutSine),
-                        tween: _topTween,
-                        fontSize: 14,
-                        duration: const Duration(
-                          milliseconds: 1500,
-                        ),
-                        string: value,
-                      ))
-            ],
-          ),
-        ],
-      ),
-    );
+            ),
+            Stack(
+              children: [
+                CornerLabel(
+                  alignment: Alignment.topLeft,
+                  curve: Curves.easeInOutSine,
+                  tween: _topTween,
+                  duration: const Duration(seconds: 1),
+                  string: Strings.SHARE,
+                  fontSize: 14,
+                  onTap: () => Share.share(Statics.HP_URL), //todo ここ
+                ),
+                ValueListenableBuilder<String>(
+                    valueListenable: dateLabelVn,
+                    builder: (_, value, child) => CornerLabel(
+                          alignment: Alignment.topRight,
+                          curve: const Interval(1 / 3, 1,
+                              curve: Curves.easeInOutSine),
+                          tween: _topTween,
+                          fontSize: 14,
+                          duration: const Duration(
+                            milliseconds: 1500,
+                          ),
+                          string: value,
+                        ))
+              ],
+            ),
+          ],
+        ),
+      );
 }

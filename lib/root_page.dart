@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:yotsugi/screen_about/screen_about.dart';
 import 'package:yotsugi/screen_layout/screen_layout.dart';
 import 'package:yotsugi/screen_main/screen_main.dart';
 import 'package:yotsugi/screen_map/screen_map.dart';
@@ -17,6 +18,7 @@ class RootPage extends StatefulWidget {
   static const ROUTE_GOOGLE_MAP = '/map';
   static const ROUTE_ROAD_MAP = '/roadMap';
   static const ROUTE_LAYOUT = '/layout';
+  static const ROUTE_ABOUT = '/about';
 }
 
 class _RootPageState extends State<RootPage> {
@@ -58,6 +60,7 @@ class _RootPageState extends State<RootPage> {
                 const ScreenGoogleMapMain(),
             RootPage.ROUTE_ROAD_MAP: (_) => ScreenRoadMap(),
             RootPage.ROUTE_LAYOUT: (_) => ScreenLayout(),
+            RootPage.ROUTE_ABOUT: (_) => ScreenAbout(),
           },
         );
       });

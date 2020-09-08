@@ -84,6 +84,12 @@ flutter:
         - asset: font/shingo_medium.ttf
         - asset: font/shingo_bold.ttf
           weight: 500
+    - family: notoSans
+      fonts:
+        - asset: font/NotoSansJP-Medium.otf
+          weight: 500
+        - asset: font/NotoSansJP-Regular.otf
+          weight: 400
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
