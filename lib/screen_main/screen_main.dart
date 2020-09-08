@@ -33,6 +33,8 @@ class _ScreenMainState extends State<ScreenMain> with TickerProviderStateMixin {
   final ValueNotifier<String> _dateLabelVn = ValueNotifier('2020:09:03:00:00');
   final ValueNotifier<double> _themeOpacity = ValueNotifier(1);
 
+  static const topRightAnmDuration = Duration(milliseconds: 1500);
+
   ScrollController _sc;
   ScrollController _barSc;
 
@@ -59,8 +61,7 @@ class _ScreenMainState extends State<ScreenMain> with TickerProviderStateMixin {
       ..addListener(() async {
         double ratio = _sc.position.pixels / _sc.position.maxScrollExtent;
         double ratio2 = 1 - ratio * 3;
-        if (ratio2.isNegative)
-          ratio2 = 0;
+        if (ratio2.isNegative) ratio2 = 0;
         _themeOpacity.value = ratio2;
       });
 
@@ -80,12 +81,12 @@ class _ScreenMainState extends State<ScreenMain> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
-    final is1Pain = mediaQuery.size.height > BreakPoints.W720;
+    final is1Pain = mediaQuery.size.height > BreakPoints.W480;
 
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: is1Pain ? _onePainBody(mediaQuery) : _twoPainBody(),
+        body: is1Pain ? _onePainBody(mediaQuery) : _twoPainBody(mediaQuery),
       ),
     );
   }
@@ -115,6 +116,7 @@ class _ScreenMainState extends State<ScreenMain> with TickerProviderStateMixin {
               fadeInAcLeft: _fadeInAcLeft,
               fadeInAcRight: _fadeInAcRight,
               themeOpacity: _themeOpacity,
+              is2pain: false,
             )
           ],
         ),
@@ -122,12 +124,12 @@ class _ScreenMainState extends State<ScreenMain> with TickerProviderStateMixin {
     );
   }
 
-  Widget _twoPainBody() => LayoutBuilder(
-        builder: (context, boxConstrains) => Row(
+  Widget _twoPainBody(MediaQueryData mediaQuery) {
+    return Row(
           children: [
             Expanded(
               child: _Header(
-                headerH: boxConstrains.maxHeight,
+                headerH: mediaQuery.size.height,
                 animation: _animation,
                 dateLabelVn: _dateLabelVn,
                 topRightAnmDuration: const Duration(milliseconds: 1500),
@@ -135,7 +137,8 @@ class _ScreenMainState extends State<ScreenMain> with TickerProviderStateMixin {
             ),
             Expanded(
               child: _Content(
-                height: boxConstrains.maxHeight,
+                is2pain: true,
+                height: mediaQuery.size.height,
                 sc: _sc,
                 fadeInAcLeft: _fadeInAcLeft,
                 fadeInAcRight: _fadeInAcRight,
@@ -143,8 +146,8 @@ class _ScreenMainState extends State<ScreenMain> with TickerProviderStateMixin {
               ),
             ),
           ],
-        ),
-      );
+        );
+  }
 }
 
 class _Header extends StatelessWidget {
@@ -161,10 +164,12 @@ class _Header extends StatelessWidget {
   final ValueNotifier<String> dateLabelVn;
   final Duration topRightAnmDuration;
 
-  Tween<Offset> get _topTween => Tween<Offset>(
-        begin: const Offset(0, -2),
-        end: const Offset(0, 0),
-      );
+  static Tween<Offset> getTopTween() {
+    return Tween<Offset>(
+      begin: const Offset(0, -2),
+      end: const Offset(0, 0),
+    );
+  }
 
   @override
   Widget build(BuildContext context) => SizedBox(
@@ -191,7 +196,7 @@ class _Header extends StatelessWidget {
                 CornerLabel(
                   alignment: Alignment.topLeft,
                   curve: Curves.easeInOutSine,
-                  tween: _topTween,
+                  tween: getTopTween(),
                   duration: const Duration(seconds: 1),
                   string: Strings.SHARE,
                   fontSize: 12,
@@ -200,7 +205,7 @@ class _Header extends StatelessWidget {
                 CornerLabel(
                   alignment: Alignment.topRight,
                   curve: Curves.easeInOutSine,
-                  tween: _topTween,
+                  tween: getTopTween(),
                   duration: topRightAnmDuration,
                   string: Strings.POST,
                   fontSize: 12,
@@ -216,6 +221,7 @@ class _Header extends StatelessWidget {
 class _Content extends StatelessWidget {
   const _Content({
     Key key,
+    @required this.is2pain,
     @required this.height,
     @required this.sc,
     @required this.fadeInAcLeft,
@@ -225,6 +231,7 @@ class _Content extends StatelessWidget {
 
   static const double _BTM_PADDING = 48;
 
+  final bool is2pain;
   final double height;
   final ScrollController sc;
   final AnimationController fadeInAcLeft;
@@ -253,7 +260,8 @@ class _Content extends StatelessWidget {
                 itemBuilder: (context, index) {
                   switch (index) {
                     case 0:
-                      return const Comment(string: '「元気ハウスチャンネルのネタに映像撮りにいかなきゃ。」');
+                      return const Comment(
+                          string: '「元気ハウスチャンネルのネタに映像撮りにいかなきゃ。」');
                     case 1:
                       return const Comment(string: '「笑それマジでたすかるんだけど～」');
                     case 2:
@@ -330,18 +338,8 @@ class _Content extends StatelessWidget {
               valueListenable: themeOpacity,
               builder: (__, opacity, _) => Opacity(
                   opacity: opacity, child: ThemeText(contentH: height))),
-          LabelFadeIn(
-            string: Strings.WORKSHEET,
-            alignment: Alignment.topLeft,
-            animationController: fadeInAcLeft,
-            onTap: () => Navigator.of(context).pushNamed(RootPage.ROUTE_ROAD_MAP),
-          ),
-          LabelFadeIn(
-            string: Strings.ABOUT,
-            alignment: Alignment.topRight,
-            animationController: fadeInAcRight,
-            onTap: () => Navigator.of(context).pushNamed(RootPage.ROUTE_ABOUT),
-          ),
+          _leftTopLabel(context),
+          _rightTopLabel(context),
           CornerLabel(
             alignment: Alignment.bottomLeft,
             curve: const Interval(1 / 3, 1, curve: Curves.easeInOutSine),
@@ -362,5 +360,48 @@ class _Content extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget _leftTopLabel(BuildContext context) {
+    Future<void> onTap() async => Navigator.of(context).pushNamed(RootPage.ROUTE_ROAD_MAP);
+
+    return is2pain
+        ? CornerLabel(
+            alignment: Alignment.topLeft,
+            curve: Curves.easeInOutSine,
+            tween: _Header.getTopTween(),
+            duration: const Duration(milliseconds: 1500),
+            string: Strings.WORKSHEET,
+            fontSize: 12,
+            onTap: () => onTap(),
+          )
+        : LabelFadeIn(
+            string: Strings.WORKSHEET,
+            alignment: Alignment.topLeft,
+            animationController: fadeInAcLeft,
+            onTap: () => onTap(),
+          );
+  }
+
+
+  Widget _rightTopLabel(BuildContext context) {
+    Future<void> onTap() async => Navigator.of(context).pushNamed(RootPage.ROUTE_ABOUT);
+
+    return is2pain
+        ? CornerLabel(
+            alignment: Alignment.topRight,
+            curve: Curves.easeInOutSine,
+            tween: _Header.getTopTween(),
+            duration: const Duration(seconds: 2),
+            string: Strings.ABOUT,
+            fontSize: 12,
+            onTap: () => onTap(),
+          )
+        : LabelFadeIn(
+            string: Strings.ABOUT,
+            alignment: Alignment.topRight,
+            animationController: fadeInAcRight,
+            onTap: () => onTap(),
+          );
   }
 }

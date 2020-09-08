@@ -11,4 +11,5 @@ class Statics {
 @immutable
 class BreakPoints {
   static const W720 = 720;
+  static const W480 = 480;
 }
