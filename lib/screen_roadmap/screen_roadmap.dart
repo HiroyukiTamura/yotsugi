@@ -19,30 +19,23 @@ class ScreenRoadMap extends StatefulWidget {
 class _ScreenRoadMapState extends State<ScreenRoadMap> {
   LinkedScrollControllerGroup _controllers;
   final List<ScrollController> _scList = [];
-  ScrollController _horizontalSc;
-  ScrollController _horizontalBarSc;
-  ScrollController _verticalBarSc;
   ScrollController _verticalSc;
   static final accentColor = Colors.black.withOpacity(.7);
 
   final ValueNotifier<_SpreadSheetDataWrapper> _vn = ValueNotifier(null);
+  final ValueNotifier<double> _vScrollRatio = ValueNotifier(0);
+  final ValueNotifier<double> _hScrollRatio = ValueNotifier(0);
 
   @override
   void initState() {
     super.initState();
     _controllers = LinkedScrollControllerGroup();
-    _horizontalSc = ScrollController();
-    _horizontalBarSc = ScrollController();
-    _verticalBarSc = ScrollController();
     _verticalSc = ScrollController()
-      ..addListener(() {
-        final ratio =
-            _verticalSc.position.pixels / _verticalSc.position.maxScrollExtent;
-        debugPrint(_verticalBarSc.position.maxScrollExtent.toString());
-        final pos = _verticalBarSc.position.maxScrollExtent * (1 - ratio);
-        _verticalBarSc.animateTo(pos,
-            duration: const Duration(), curve: Curves.linear);
-      });
+      ..addListener(() => _vScrollRatio.value =
+          _verticalSc.position.pixels / _verticalSc.position.maxScrollExtent);
+
+    if (_vn.value == null)
+      _requestSpreadSheet().then((value) => _vn.value = value);
   }
 
   @override
@@ -50,68 +43,91 @@ class _ScreenRoadMapState extends State<ScreenRoadMap> {
     super.dispose();
     _scList.forEach((sc) => sc.dispose());
     _vn.dispose();
-    _horizontalSc.dispose();
-    _horizontalBarSc.dispose();
-    _verticalBarSc.dispose();
+    _verticalSc.dispose();
+    _vScrollRatio.dispose();
+    _hScrollRatio.dispose();
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Styles.PRIMARY_COLOR,
-      body: Padding(
-        padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-        child: ValueListenableBuilder<_SpreadSheetDataWrapper>(
-            valueListenable: _vn,
-            builder: (context, data, child) {
-              if (data?.err != null) {
-                Util.reportCrash(data.err);
-                return Container(); //todo err
-              }
-              if (data?.ssd == null) return const SizedBox();
+  Widget build(BuildContext context) => Scaffold(
+        backgroundColor: Styles.PRIMARY_COLOR,
+        body: Padding(
+          padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+          child: ValueListenableBuilder<_SpreadSheetDataWrapper>(
+              valueListenable: _vn,
+              builder: (context, data, child) {
+                if (data?.err != null) {
+                  Util.reportCrash(data.err);
+                  return const SizedBox(); //todo err
+                }
 
-              if (data.ssd.sheets.length > 1)
-                Util.reportCrash(Exception('snapshot.data.sheets.length > 1'));
-              final sheet = data.ssd.sheets[0];
-              final props = sheet.properties.gridProperties;
-              final datum = sheet.data.first;
-              final dataWithNull = sheet.getDataWithNullItem();
-              sheet.collapseEmptyRowAndColumn(dataWithNull);
+                if (data?.ssd == null)
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
 
-              final allWidgets = enumerate(dataWithNull).map((it) {
-                final sc = _controllers.addAndGet();
-                _scList.add(sc);
-                return _rowWidget(dataWithNull, datum, sc, it.index);
-              }).toList(growable: false);
+                if (data.ssd.sheets.length > 1)
+                  Util.reportCrash(
+                      Exception('snapshot.data.sheets.length > 1'));
+                final sheet = data.ssd.sheets[0];
+                final props = sheet.properties.gridProperties;
+                final datum = sheet.data.first;
+                final dataWithNull = sheet.getDataWithNullItem();
+                sheet.collapseEmptyRowAndColumn(dataWithNull);
 
-              return Stack(
-                children: [
-                  SizedBox.expand(
-                    child: Image.asset('img/shadow.png'),
-                  ),
-                  SizedBox.expand(
-                    child: ColoredBox(
-                      color: Colors.black.withOpacity(.4),
+                final allWidgets = enumerate(dataWithNull).map((it) {
+                  final sc = _controllers.addAndGet();
+                  sc.addListener(() => _hScrollRatio.value = sc.position.pixels / sc.position.maxScrollExtent);
+                  _scList.add(sc);
+                  return _rowWidget(dataWithNull, datum, sc, it.index);
+                }).toList(growable: false);
+
+                final mqd = MediaQuery.of(context);
+                final totalH =
+                    mqd.size.height - mqd.padding.top - mqd.padding.bottom;
+                final totalW =
+                    mqd.size.width - mqd.padding.right - mqd.padding.left;
+
+                return Stack(
+                  children: [
+                    SizedBox.expand(
+                      child: Image.asset(
+                        'img/shadow.png',
+                        fit: BoxFit.fill,
+                      ),
                     ),
-                  ),
-                  SingleChildScrollView(
-                    controller: _verticalSc,
-                    child: Column(
-                      children: allWidgets,
+                    SizedBox.expand(
+                      child: ColoredBox(
+                        color: Colors.black.withOpacity(.4),
+                      ),
                     ),
-                  ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: FractionallySizedBox(
-                      heightFactor: .3,
+                    SingleChildScrollView(
+                      controller: _verticalSc,
+                      child: Column(
+                        children: allWidgets,
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.centerRight,
                       child: Container(
+                        height: totalH * .3,
                         width: 4,
                         margin: const EdgeInsets.all(8),
-                        child: SingleChildScrollView(
-                          controller: _verticalBarSc,
-                          physics: const NeverScrollableScrollPhysics(),
+                        child: ValueListenableBuilder<double>(
+                          valueListenable: _vScrollRatio,
+                          builder: (context, ratio, child) => Column(
+                            children: [
+                              SizedBox(
+                                height: totalH * .2 * ratio,
+                              ),
+                              child,
+                              SizedBox(
+                                height: totalH * .2 * (1 - ratio),
+                              ),
+                            ],
+                          ),
                           child: Container(
-                            height: 96,
+                            height: totalH * .1,
                             decoration: BoxDecoration(
                               color: accentColor,
                               borderRadius: const BorderRadius.all(
@@ -122,19 +138,27 @@ class _ScreenRoadMapState extends State<ScreenRoadMap> {
                         ),
                       ),
                     ),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      height: 12,
-                      margin: const EdgeInsets.all(8),
-                      child: FractionallySizedBox(
-                        heightFactor: .3,
-                        child: SingleChildScrollView(
-                          controller: _horizontalBarSc,
-                          scrollDirection: Axis.horizontal,
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        width: totalW * .3,
+                        height: 4,
+                        margin: const EdgeInsets.all(8),
+                        child: ValueListenableBuilder<double>(
+                          valueListenable: _hScrollRatio,
+                          builder: (context, ratio, child) => Row(
+                            children: [
+                              SizedBox(
+                                width: totalW * .2 * ratio,
+                              ),
+                              child,
+                              SizedBox(
+                                width: totalW * .2 * (1 - ratio),
+                              ),
+                            ],
+                          ),
                           child: Container(
-                            width: 96,
+                            width: totalW * .1,
                             decoration: BoxDecoration(
                               color: accentColor,
                               borderRadius: const BorderRadius.all(
@@ -145,18 +169,16 @@ class _ScreenRoadMapState extends State<ScreenRoadMap> {
                         ),
                       ),
                     ),
-                  ),
-                  BackBtn(
-                    btnFillColor: accentColor,
-                    iconColor: Theme.of(context).accentColor,
-                    onTap: () => Navigator.of(context).pop(),
-                  )
-                ],
-              );
-            }),
-      ),
-    );
-  }
+                    BackBtn(
+                      btnFillColor: accentColor,
+                      iconColor: Colors.white,
+                      onTap: () => Navigator.of(context).pop(),
+                    )
+                  ],
+                );
+              }),
+        ),
+      );
 
   Future<_SpreadSheetDataWrapper> _requestSpreadSheet() async {
     try {

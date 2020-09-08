@@ -51,7 +51,7 @@ class _ScreenLayoutState extends State<ScreenLayout> {
             Container(
               height: double.infinity,
               width: double.infinity,
-              color: Colors.black.withOpacity(.4),
+              color: Colors.black.withOpacity(.3),
             ),
             Container(
               padding: const EdgeInsets.all(16),
