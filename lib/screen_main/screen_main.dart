@@ -55,32 +55,16 @@ class _ScreenMainState extends State<ScreenMain> with TickerProviderStateMixin {
     _fadeInAcLeft = createAcForMiddleLabel();
     _fadeInAcRight = createAcForMiddleLabel();
 
-    final date = DateTime.now();
-    final todayEpochMicro =
-        DateTime(date.year, date.month, date.day).microsecondsSinceEpoch;
     _sc = ScrollController()
       ..addListener(() async {
         double ratio = _sc.position.pixels / _sc.position.maxScrollExtent;
         double ratio2 = 1 - ratio * 3;
-        if (ratio2.isNegative) ratio2 = 0;
+        if (ratio2.isNegative)
+          ratio2 = 0;
         _themeOpacity.value = ratio2;
-
-        _updateBarPosition(ratio, ratio2);
-
-        double microSec = 24 * 60 * 60 * 1000 * 1000 * ratio;
-        final dateTime = DateTime.fromMicrosecondsSinceEpoch(
-            todayEpochMicro + microSec.toInt());
-        _updateDateStr(dateTime);
-        // date.microsecond = microSec.toInt();
-        // await _controller.seekTo(Duration(microseconds: (ratio * 9 * 1000 * 1000).toInt()));
       });
 
     _barSc = ScrollController();
-
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    // _controller..setLooping(true)
-    //   ..play();
-    // });
   }
 
   @override
@@ -91,14 +75,6 @@ class _ScreenMainState extends State<ScreenMain> with TickerProviderStateMixin {
     _fadeInAcRight.dispose();
     _sc.dispose();
     _barSc.dispose();
-  }
-
-  void _updateDateStr(DateTime dateTime) {
-    _dateLabelVn.value = DateFormat('yyyy:MM:dd:HH:mm').format(dateTime);
-  }
-
-  void _updateBarPosition(double ratio, double themeOpacity) {
-    _barSc.jumpTo(_barSc.offset - ThinScrollbar.HEIGHT * ratio);
   }
 
   @override
@@ -131,9 +107,10 @@ class _ScreenMainState extends State<ScreenMain> with TickerProviderStateMixin {
               animation: _animation,
               headerH: headerH,
               dateLabelVn: _dateLabelVn,
+              topRightAnmDuration: const Duration(seconds: 1),
             ),
             _Content(
-              topPadding: contentH,
+              height: contentH,
               sc: _sc,
               fadeInAcLeft: _fadeInAcLeft,
               fadeInAcRight: _fadeInAcRight,
@@ -153,11 +130,12 @@ class _ScreenMainState extends State<ScreenMain> with TickerProviderStateMixin {
                 headerH: boxConstrains.maxHeight,
                 animation: _animation,
                 dateLabelVn: _dateLabelVn,
+                topRightAnmDuration: const Duration(milliseconds: 1500),
               ),
             ),
             Expanded(
               child: _Content(
-                topPadding: boxConstrains.maxHeight,
+                height: boxConstrains.maxHeight,
                 sc: _sc,
                 fadeInAcLeft: _fadeInAcLeft,
                 fadeInAcRight: _fadeInAcRight,
@@ -175,11 +153,13 @@ class _Header extends StatelessWidget {
     @required this.animation,
     @required this.headerH,
     @required this.dateLabelVn,
+    @required this.topRightAnmDuration,
   }) : super(key: key);
 
   final Animation<Offset> animation;
   final double headerH;
   final ValueNotifier<String> dateLabelVn;
+  final Duration topRightAnmDuration;
 
   Tween<Offset> get _topTween => Tween<Offset>(
         begin: const Offset(0, -2),
@@ -221,24 +201,11 @@ class _Header extends StatelessWidget {
                   alignment: Alignment.topRight,
                   curve: Curves.easeInOutSine,
                   tween: _topTween,
-                  duration: const Duration(seconds: 1),
+                  duration: topRightAnmDuration,
                   string: Strings.POST,
                   fontSize: 12,
                   onTap: () => Share.share(Statics.HP_URL), //todo ここ
                 ),
-                // ValueListenableBuilder<String>(
-                //     valueListenable: dateLabelVn,
-                //     builder: (_, value, child) => CornerLabel(
-                //           alignment: Alignment.topRight,
-                //           curve: const Interval(1 / 3, 1,
-                //               curve: Curves.easeInOutSine),
-                //           tween: _topTween,
-                //           fontSize: 14,
-                //           duration: const Duration(
-                //             milliseconds: 1500,
-                //           ),
-                //           string: value,
-                //         ))
               ],
             ),
           ],
@@ -249,7 +216,7 @@ class _Header extends StatelessWidget {
 class _Content extends StatelessWidget {
   const _Content({
     Key key,
-    @required this.topPadding,
+    @required this.height,
     @required this.sc,
     @required this.fadeInAcLeft,
     @required this.fadeInAcRight,
@@ -258,7 +225,7 @@ class _Content extends StatelessWidget {
 
   static const double _BTM_PADDING = 48;
 
-  final double topPadding;
+  final double height;
   final ScrollController sc;
   final AnimationController fadeInAcLeft;
   final AnimationController fadeInAcRight;
@@ -271,126 +238,129 @@ class _Content extends StatelessWidget {
       end: const Offset(0, 0),
     );
 
-    return Stack(
-      children: [
-        Center(
-          child: ScrollConfiguration(
-            behavior: NonGlowBehavior(),
-            child: ListView.builder(
-              controller: sc,
-              itemCount: 5,
-              padding: EdgeInsets.only(
-                  right: 16, left: 16, top: topPadding, bottom: _BTM_PADDING),
-              itemBuilder: (context, index) {
-                switch (index) {
-                  case 0:
-                    return const Comment(string: '「元気ハウスチャンネルのネタに映像撮りにいかなきゃ。」');
-                  case 1:
-                    return const Comment(string: '「笑それマジでたすかるんだけど～」');
-                  case 2:
-                    return const Comment(string: '「そざいあるよ」');
-                  case 3:
-                    return Padding(
-                      padding: const EdgeInsets.only(top: 64, bottom: 48),
-                      child: SizedBox(
-                        height: 268,
-                        width: 268,
-                        child: Image.asset(
-                          'img/sample_img.jpg',
-                          errorBuilder: (_, __, stackTrace) {
-                            debugPrintStack(stackTrace: stackTrace);
-                            return const ColoredBox(color: Colors.black);
-                          },
+    return SizedBox(
+      height: height,
+      child: Stack(
+        children: [
+          Center(
+            child: ScrollConfiguration(
+              behavior: NonGlowBehavior(),
+              child: ListView.builder(
+                controller: sc,
+                itemCount: 5,
+                padding: EdgeInsets.only(
+                    right: 16, left: 16, top: height, bottom: _BTM_PADDING),
+                itemBuilder: (context, index) {
+                  switch (index) {
+                    case 0:
+                      return const Comment(string: '「元気ハウスチャンネルのネタに映像撮りにいかなきゃ。」');
+                    case 1:
+                      return const Comment(string: '「笑それマジでたすかるんだけど～」');
+                    case 2:
+                      return const Comment(string: '「そざいあるよ」');
+                    case 3:
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 64, bottom: 48),
+                        child: SizedBox(
+                          height: 268,
+                          width: 268,
+                          child: Image.asset(
+                            'img/sample_img.jpg',
+                            errorBuilder: (_, __, stackTrace) {
+                              debugPrintStack(stackTrace: stackTrace);
+                              return const ColoredBox(color: Colors.black);
+                            },
+                          ),
                         ),
-                      ),
-                    );
-                  case 4:
-                    return const DateText(string: '2020:09:03:15:45');
-                  default:
-                    return Text('');
-                }
-              },
+                      );
+                    case 4:
+                      return const DateText(string: '2020:09:03:15:45');
+                    default:
+                      return Text('');
+                  }
+                },
+              ),
             ),
           ),
-        ),
-        Align(
-          alignment: Alignment.topCenter,
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  stops: const [
-                    0,
-                    .7,
-                    1
-                  ],
-                  colors: [
-                    Colors.white,
-                    Colors.white,
-                    Colors.white.withOpacity(0),
-                  ]),
+          Align(
+            alignment: Alignment.topCenter,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    stops: const [
+                      0,
+                      .7,
+                      1
+                    ],
+                    colors: [
+                      Colors.white,
+                      Colors.white,
+                      Colors.white.withOpacity(0),
+                    ]),
+              ),
+              height: 48,
             ),
-            height: 48,
           ),
-        ),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  stops: const [
-                    0,
-                    .3,
-                    1
-                  ],
-                  colors: [
-                    Colors.white.withOpacity(0),
-                    Colors.white,
-                    Colors.white
-                  ]),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    stops: const [
+                      0,
+                      .3,
+                      1
+                    ],
+                    colors: [
+                      Colors.white.withOpacity(0),
+                      Colors.white,
+                      Colors.white
+                    ]),
+              ),
+              height: _BTM_PADDING,
             ),
-            height: _BTM_PADDING,
           ),
-        ),
-        ValueListenableBuilder<double>(
-            valueListenable: themeOpacity,
-            builder: (__, opacity, _) => Opacity(
-                opacity: opacity, child: ThemeText(contentH: topPadding))),
-        LabelFadeIn(
-          string: Strings.WORKSHEET,
-          alignment: Alignment.topLeft,
-          animationController: fadeInAcLeft,
-          onTap: () => Navigator.of(context).pushNamed(RootPage.ROUTE_ROAD_MAP),
-        ),
-        LabelFadeIn(
-          string: Strings.ABOUT,
-          alignment: Alignment.topRight,
-          animationController: fadeInAcRight,
-          onTap: () => Navigator.of(context).pushNamed(RootPage.ROUTE_ABOUT),
-        ),
-        CornerLabel(
-          alignment: Alignment.bottomLeft,
-          curve: const Interval(1 / 3, 1, curve: Curves.easeInOutSine),
-          tween: _btmTween,
-          duration: const Duration(milliseconds: 1500),
-          string: Strings.MAP,
-          onTap: () =>
-              Navigator.of(context).pushNamed(RootPage.ROUTE_GOOGLE_MAP),
-        ),
-        CornerLabel(
-          alignment: Alignment.bottomRight,
-          curve: const Interval(.5, 1, curve: Curves.easeInOutSine),
-          tween: _btmTween,
-          duration: const Duration(seconds: 2),
-          string: Strings.BLUEPRINT,
-          onTap: () => Navigator.of(context).pushNamed(RootPage.ROUTE_LAYOUT),
-        ),
-      ],
+          ValueListenableBuilder<double>(
+              valueListenable: themeOpacity,
+              builder: (__, opacity, _) => Opacity(
+                  opacity: opacity, child: ThemeText(contentH: height))),
+          LabelFadeIn(
+            string: Strings.WORKSHEET,
+            alignment: Alignment.topLeft,
+            animationController: fadeInAcLeft,
+            onTap: () => Navigator.of(context).pushNamed(RootPage.ROUTE_ROAD_MAP),
+          ),
+          LabelFadeIn(
+            string: Strings.ABOUT,
+            alignment: Alignment.topRight,
+            animationController: fadeInAcRight,
+            onTap: () => Navigator.of(context).pushNamed(RootPage.ROUTE_ABOUT),
+          ),
+          CornerLabel(
+            alignment: Alignment.bottomLeft,
+            curve: const Interval(1 / 3, 1, curve: Curves.easeInOutSine),
+            tween: _btmTween,
+            duration: const Duration(milliseconds: 1500),
+            string: Strings.MAP,
+            onTap: () =>
+                Navigator.of(context).pushNamed(RootPage.ROUTE_GOOGLE_MAP),
+          ),
+          CornerLabel(
+            alignment: Alignment.bottomRight,
+            curve: const Interval(.5, 1, curve: Curves.easeInOutSine),
+            tween: _btmTween,
+            duration: const Duration(seconds: 2),
+            string: Strings.BLUEPRINT,
+            onTap: () => Navigator.of(context).pushNamed(RootPage.ROUTE_LAYOUT),
+          ),
+        ],
+      ),
     );
   }
 }
