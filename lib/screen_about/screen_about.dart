@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:yotsugi/statics.dart';
 import 'package:yotsugi/strings.dart';
 import 'package:yotsugi/styles.dart';
 
@@ -12,7 +13,7 @@ class _ScreenAboutState extends State<ScreenAbout> {
   @override
   Widget build(BuildContext context) => LayoutBuilder(
       builder: (context, boxConstrains) {
-        final bool scrollable = boxConstrains.maxHeight < 720;
+        final bool scrollable = boxConstrains.maxHeight < BreakPoints.W720;
         return SafeArea(
           child: Scaffold(
             body: Stack(
