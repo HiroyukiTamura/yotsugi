@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:linked_scroll_controller/linked_scroll_controller.dart';
 import 'package:quiver/iterables.dart';
-import 'package:video_player/video_player.dart';
 import 'package:yotsugi/common/widget.dart';
 import 'package:yotsugi/json_data/spreadsheet_data.dart';
 import 'package:yotsugi/statics.dart';

@@ -10,7 +10,8 @@ class CornerLabel extends StatelessWidget {
     @required this.duration,
     @required this.tween,
     @required this.string,
-    @required this.onTap,
+    this.onTap,
+    this.fontSize = 12,
   }) : super(key: key);
 
   final Curve curve;
@@ -19,6 +20,7 @@ class CornerLabel extends StatelessWidget {
   final Duration duration;
   final Alignment alignment;
   final GestureTapCallback onTap;
+  final double fontSize;
 
   @override
   Widget build(BuildContext context) => Align(
@@ -29,17 +31,22 @@ class CornerLabel extends StatelessWidget {
               FractionalTranslation(translation: offset, child: child),
           duration: duration,
           curve: curve,
-          child: InkWell(
+          child: onTap == null ? _text() : InkWell(
             onTap: onTap,
-            child: Text(
-              string,
-              style: const TextStyle(
-                fontFamily: Styles.FONT_SHINGO,
-                color: Colors.black87,
-                fontSize: 12,
-              ),
-            ),
+            child: _text(),
           ),
         ),
       );
+
+  Widget _text() => Padding(
+    padding: const EdgeInsets.all(16),
+    child: Text(
+        string,
+        style: TextStyle(
+          fontFamily: Styles.FONT_SHINGO,
+          color: Colors.black87,
+          fontSize: fontSize,
+        ),
+      ),
+  );
 }

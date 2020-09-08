@@ -29,12 +29,15 @@ class LabelFadeIn extends StatelessWidget {
           )),
           child: InkWell(
             onTap: onTap,
-            child: Text(
-              string,
-              style: const TextStyle(
-                fontFamily: Styles.FONT_SHINGO,
-                color: Colors.black87,
-                fontSize: 12,
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Text(
+                string,
+                style: const TextStyle(
+                  fontFamily: Styles.FONT_SHINGO,
+                  color: Colors.black87,
+                  fontSize: 12,
+                ),
               ),
             ),
           ),

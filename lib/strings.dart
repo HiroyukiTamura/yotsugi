@@ -2,7 +2,7 @@ class Strings {
   static const String MAP = 'map';
   static const String BLUEPRINT = 'layout';
   static const String SHARE = 'share';
-  static const String ROADMAP = 'roadmap';
+  static const String WORKSHEET = 'worksheet';
   static const String SCROLL = 'scroll';
   static const String APP_NAME = 'YOTSUGI';
   static const String GPS = 'GPS';
@@ -14,6 +14,7 @@ class Strings {
   static const String PMS_DENIED = '許可しない';
   static const String OK = 'OK';
   static const String ABOUT = 'about';
+  static const String POST = 'post';
   static const String TOAST_ERR_CANT_SHARE = 'シェアできるアプリがみつかりませんでした';
   static const String HOUSE_NAME = 'Itsumuso';
 }
