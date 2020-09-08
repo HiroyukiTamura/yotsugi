@@ -10,9 +10,11 @@ import 'package:yotsugi/screen_main/non_glow_behavior.dart';
 import 'package:yotsugi/screen_main/theme_text.dart';
 import 'package:yotsugi/screen_main/thin_scrollbar.dart';
 import 'package:intl/intl.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:yotsugi/statics.dart';
 import 'package:yotsugi/strings.dart';
 import 'package:share/share.dart';
+import 'package:yotsugi/util.dart';
 
 class ScreenMain extends StatefulWidget {
   const ScreenMain({Key key}) : super(key: key);
@@ -32,8 +34,6 @@ class _ScreenMainState extends State<ScreenMain> with TickerProviderStateMixin {
   AnimationController _fadeInAcRight;
   final ValueNotifier<String> _dateLabelVn = ValueNotifier('2020:09:03:00:00');
   final ValueNotifier<double> _themeOpacity = ValueNotifier(1);
-
-  static const topRightAnmDuration = Duration(milliseconds: 1500);
 
   ScrollController _sc;
   ScrollController _barSc;
@@ -249,47 +249,65 @@ class _Content extends StatelessWidget {
       height: height,
       child: Stack(
         children: [
-          Center(
-            child: ScrollConfiguration(
-              behavior: NonGlowBehavior(),
-              child: ListView.builder(
-                controller: sc,
-                itemCount: 5,
-                padding: EdgeInsets.only(
-                    right: 16, left: 16, top: height, bottom: _BTM_PADDING),
-                itemBuilder: (context, index) {
-                  switch (index) {
-                    case 0:
-                      return const Comment(
-                          string: '「元気ハウスチャンネルのネタに映像撮りにいかなきゃ。」');
-                    case 1:
-                      return const Comment(string: '「笑それマジでたすかるんだけど～」');
-                    case 2:
-                      return const Comment(string: '「そざいあるよ」');
-                    case 3:
-                      return Padding(
-                        padding: const EdgeInsets.only(top: 64, bottom: 48),
-                        child: SizedBox(
-                          height: 268,
-                          width: 268,
-                          child: Image.asset(
-                            'img/sample_img.jpg',
-                            errorBuilder: (_, __, stackTrace) {
-                              debugPrintStack(stackTrace: stackTrace);
-                              return const ColoredBox(color: Colors.black);
-                            },
-                          ),
-                        ),
-                      );
-                    case 4:
-                      return const DateText(string: '2020:09:03:15:45');
-                    default:
-                      return Text('');
-                  }
-                },
-              ),
-            ),
-          ),
+          FutureBuilder<QuerySnapshot>(
+              future: FirebaseFirestore.instance
+                  .collection('log')
+                  .get(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  Util.reportCrash(snapshot.error);
+                  return const SizedBox();
+                }
+
+                if (!snapshot.hasData)
+                  return const SizedBox();
+
+                int count = 0;
+                List<int> indexList = [];
+                snapshot.data.docs.forEach((doc) {
+                  indexList.add(count);
+                  final comment = doc.get('comments') as String;
+                  count += comment.split('\\n').length;
+                  count += 2;//日付と写真分
+                });
+                return ScrollConfiguration(
+                  behavior: NonGlowBehavior(),
+                  child: ListView.builder(
+                    controller: sc,
+                    itemCount: count,
+                    padding: EdgeInsets.only(top: height, bottom: _BTM_PADDING),
+                    itemBuilder: (context, i) {
+                      int pos = indexList.indexWhere((element) => element > i) -1;
+                      //pos == -2 => 最後のアイテム
+                      //pos === -1 => 最初のアイテム
+                      int offset = 0;
+                      int nextIndex = 0;
+                      if (pos == -2) {
+                        offset = indexList.last;
+                        nextIndex = snapshot.data.size;
+                      } else if (pos >= 0) {
+                        offset = indexList[pos];
+                        nextIndex = indexList[pos+1];
+                      }
+
+                      QueryDocumentSnapshot snap = pos == -2 ? snapshot.data.docs.last : snapshot.data.docs[pos+1];
+                      final indexInItem = i - offset;
+                      final comment = snap.get('comments') as String;
+                      final comments = comment.split('\\n');
+                      final diff = comments.length - indexInItem;
+                      if (diff == -1) {
+                        final date = (snap.get('createdAt') as Timestamp).toDate();
+                        return DateText(string: DateFormat('yyyy:MM:dd:HH:mm').format(date));
+                      } else if (diff == 0) {
+                        final dynamic imgName = snap.get('imgNames');
+                        final imgNames = snap.get('imgNames') as List<dynamic>;
+                        return Images(fileList: imgNames);
+                      } else
+                        return Comment(string: comments[indexInItem]);
+                    },
+                  ),
+                );
+              },),
           Align(
             alignment: Alignment.topCenter,
             child: Container(
