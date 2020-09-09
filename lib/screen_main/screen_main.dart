@@ -109,13 +109,15 @@ class _ScreenMainState extends State<ScreenMain> with TickerProviderStateMixin {
               headerH: headerH,
               topRightAnmDuration: const Duration(seconds: 1),
             ),
-            _Content(
-              height: contentH,
-              sc: _sc,
-              fadeInAcLeft: _fadeInAcLeft,
-              fadeInAcRight: _fadeInAcRight,
-              themeOpacity: _themeOpacity,
-              is2pain: false,
+            Expanded(
+              child: _Content(
+                height: contentH,
+                sc: _sc,
+                fadeInAcLeft: _fadeInAcLeft,
+                fadeInAcRight: _fadeInAcRight,
+                themeOpacity: _themeOpacity,
+                is2pain: false,
+              ),
             )
           ],
         ),
@@ -241,132 +243,130 @@ class _Content extends StatelessWidget {
       end: const Offset(0, 0),
     );
 
-    return SizedBox(
-      height: height,
-      child: Stack(
-        children: [
-          FutureBuilder<QuerySnapshot>(
-              future: FirebaseFirestore.instance
-                  .collection('log')
-                  .get(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  Util.reportCrash(snapshot.error);
-                  return const SizedBox();
-                }
+    return Stack(
+      children: [
+        FutureBuilder<QuerySnapshot>(
+            future: FirebaseFirestore.instance
+                .collection('log')
+                .orderBy('createdAt')
+                .get(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                Util.reportCrash(snapshot.error);
+                return const SizedBox();
+              }
 
-                if (!snapshot.hasData)
-                  return const SizedBox();
+              if (!snapshot.hasData)
+                return const SizedBox();
 
-                int count = 0;
-                List<int> indexList = [];
-                snapshot.data.docs.forEach((doc) {
-                  indexList.add(count);
-                  final comment = doc.get('comments') as String;
-                  count += comment.split('\\n').length;
-                  count += 2;//日付と写真分
-                });
-                return ScrollConfiguration(
-                  behavior: NonGlowBehavior(),
-                  child: ListView.builder(
-                    controller: sc,
-                    itemCount: count,
-                    padding: EdgeInsets.only(top: height, bottom: _BTM_PADDING),
-                    itemBuilder: (context, i) {
-                      int pos = indexList.indexWhere((element) => element > i)-1;
-                      //pos == -2 => 最後のアイテム
-                      int offset = 0;
-                      if (pos == -2)
-                        offset = indexList.last;
-                      else if (pos >= 0)
-                        offset = indexList[pos];
+              int count = 0;
+              List<int> indexList = [];
+              snapshot.data.docs.forEach((doc) {
+                indexList.add(count);
+                final comment = doc.get('comments') as String;
+                count += comment.split('\\n').length;
+                count += 2;//日付と写真分
+              });
+              return ScrollConfiguration(
+                behavior: NonGlowBehavior(),
+                child: ListView.builder(
+                  controller: sc,
+                  itemCount: count,
+                  padding: EdgeInsets.only(top: height, bottom: _BTM_PADDING),
+                  itemBuilder: (context, i) {
+                    int pos = indexList.indexWhere((element) => element > i)-1;
+                    //pos == -2 => 最後のアイテム
+                    int offset = 0;
+                    if (pos == -2)
+                      offset = indexList.last;
+                    else if (pos >= 0)
+                      offset = indexList[pos];
 
-                      QueryDocumentSnapshot snap = pos == -2 ? snapshot.data.docs.last : snapshot.data.docs[pos];
-                      final indexInItem = i - offset;
-                      final comment = snap.get('comments') as String;
-                      final comments = comment.split('\\n');
-                      final diff = comments.length - indexInItem;
-                      if (diff == -1) {
-                        final date = (snap.get('createdAt') as Timestamp).toDate();
-                        return DateText(string: DateFormat('yyyy:MM:dd:HH:mm').format(date));
-                      } else if (diff == 0) {
-                        final imgNames = snap.get('imgNames') as List<dynamic>;
-                        return Images(fileList: imgNames);
-                      } else
-                        return Comment(string: comments[indexInItem]);
-                    },
-                  ),
-                );
-              },),
-          Align(
-            alignment: Alignment.topCenter,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    stops: const [
-                      0,
-                      .7,
-                      1
-                    ],
-                    colors: [
-                      Colors.white,
-                      Colors.white,
-                      Colors.white.withOpacity(0),
-                    ]),
-              ),
-              height: 48,
+                    QueryDocumentSnapshot snap = pos == -2 ? snapshot.data.docs.last : snapshot.data.docs[pos];
+                    final indexInItem = i - offset;
+                    final comment = snap.get('comments') as String;
+                    final comments = comment.split('\\n');
+                    final diff = comments.length - indexInItem;
+                    if (diff == -1) {
+                      final date = (snap.get('createdAt') as Timestamp).toDate();
+                      return DateText(string: DateFormat('yyyy:MM:dd:HH:mm').format(date));
+                    } else if (diff == 0) {
+                      final imgNames = snap.get('imgNames') as List<dynamic>;
+                      return Images(fileList: imgNames);
+                    } else
+                      return Comment(string: comments[indexInItem]);
+                  },
+                ),
+              );
+            },),
+        Align(
+          alignment: Alignment.topCenter,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  stops: const [
+                    0,
+                    .7,
+                    1
+                  ],
+                  colors: [
+                    Colors.white,
+                    Colors.white,
+                    Colors.white.withOpacity(0),
+                  ]),
             ),
+            height: 48,
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    stops: const [
-                      0,
-                      .3,
-                      1
-                    ],
-                    colors: [
-                      Colors.white.withOpacity(0),
-                      Colors.white,
-                      Colors.white
-                    ]),
-              ),
-              height: _BTM_PADDING,
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  stops: const [
+                    0,
+                    .3,
+                    1
+                  ],
+                  colors: [
+                    Colors.white.withOpacity(0),
+                    Colors.white,
+                    Colors.white
+                  ]),
             ),
+            height: _BTM_PADDING,
           ),
-          ValueListenableBuilder<double>(
-              valueListenable: themeOpacity,
-              builder: (__, opacity, _) => Opacity(
-                  opacity: opacity, child: ThemeText(contentH: height))),
-          _leftTopLabel(context),
-          _rightTopLabel(context),
-          CornerLabel(
-            alignment: Alignment.bottomLeft,
-            curve: const Interval(1 / 3, 1, curve: Curves.easeInOutSine),
-            tween: _btmTween,
-            duration: const Duration(milliseconds: 1500),
-            string: Strings.MAP,
-            onTap: () =>
-                Navigator.of(context).pushNamed(RootPage.ROUTE_GOOGLE_MAP),
-          ),
-          CornerLabel(
-            alignment: Alignment.bottomRight,
-            curve: const Interval(.5, 1, curve: Curves.easeInOutSine),
-            tween: _btmTween,
-            duration: const Duration(seconds: 2),
-            string: Strings.BLUEPRINT,
-            onTap: () => Navigator.of(context).pushNamed(RootPage.ROUTE_LAYOUT),
-          ),
-        ],
-      ),
+        ),
+        ValueListenableBuilder<double>(
+            valueListenable: themeOpacity,
+            builder: (__, opacity, _) => Opacity(
+                opacity: opacity, child: ThemeText(contentH: height))),
+        _leftTopLabel(context),
+        _rightTopLabel(context),
+        CornerLabel(
+          alignment: Alignment.bottomLeft,
+          curve: const Interval(1 / 3, 1, curve: Curves.easeInOutSine),
+          tween: _btmTween,
+          duration: const Duration(milliseconds: 1500),
+          string: Strings.MAP,
+          onTap: () =>
+              Navigator.of(context).pushNamed(RootPage.ROUTE_GOOGLE_MAP),
+        ),
+        CornerLabel(
+          alignment: Alignment.bottomRight,
+          curve: const Interval(.5, 1, curve: Curves.easeInOutSine),
+          tween: _btmTween,
+          duration: const Duration(seconds: 2),
+          string: Strings.BLUEPRINT,
+          onTap: () => Navigator.of(context).pushNamed(RootPage.ROUTE_LAYOUT),
+        ),
+      ],
     );
   }
 

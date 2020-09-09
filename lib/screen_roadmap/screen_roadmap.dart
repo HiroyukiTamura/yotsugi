@@ -79,12 +79,18 @@ class _ScreenRoadMapState extends State<ScreenRoadMap> {
                 final dataWithNull = sheet.getDataWithNullItem();
                 sheet.collapseEmptyRowAndColumn(dataWithNull);
 
-                final allWidgets = enumerate(dataWithNull).map((it) {
-                  final sc = _controllers.addAndGet();
-                  sc.addListener(() => _hScrollRatio.value = sc.position.pixels / sc.position.maxScrollExtent);
-                  _scList.add(sc);
-                  return _rowWidget(dataWithNull, datum, sc, it.index);
-                }).toList(growable: false);
+                List<Widget> allWidgets = _scList.isEmpty
+                    ? enumerate(dataWithNull).map((it) {
+                        final sc = _controllers.addAndGet();
+                        sc.addListener(() => _hScrollRatio.value =
+                            sc.position.pixels / sc.position.maxScrollExtent);
+                        _scList.add(sc);
+                        return _rowWidget(dataWithNull, datum, sc, it.index);
+                      }).toList(growable: false)
+                    : enumerate(dataWithNull)
+                        .map((it) => _rowWidget(
+                            dataWithNull, datum, _scList[it.index], it.index))
+                        .toList(growable: false);
 
                 final mqd = MediaQuery.of(context);
                 final totalH =
