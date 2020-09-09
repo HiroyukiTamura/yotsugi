@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -33,7 +35,7 @@ class ScreenGoogleMapState extends State<ScreenGoogleMapMain> {
 
   final CameraPosition _googlePlex;
 
-  Future<String> _loadMapStyleFuture;
+  Future<_Data> _loadMapStyleFuture;
 
   @override
   void initState() {
@@ -44,10 +46,11 @@ class ScreenGoogleMapState extends State<ScreenGoogleMapMain> {
   /// todo pinを立てる必要がある
   @override
   Widget build(BuildContext context) => Scaffold(
-        body: FutureBuilder<String>(
+        body: FutureBuilder<_Data>(
             future: _loadMapStyleFuture,
             builder: (context, snapshot) {
-              if (!snapshot.hasData) return const SizedBox();
+              if (!snapshot.hasData)
+                return const SizedBox();
 
               return Stack(
                 children: [
@@ -57,14 +60,14 @@ class ScreenGoogleMapState extends State<ScreenGoogleMapMain> {
                     zoomControlsEnabled: false,
                     compassEnabled: true,
                     onMapCreated: (controller) {
-                      controller.setMapStyle(snapshot.data);
+                      controller.setMapStyle(snapshot.data.mapStyleStr);
                       _controller.complete(controller);
                     },
                     markers: <Marker>{
                       Marker(
                         position: _latLng,
                         markerId: MarkerId('spot'),
-                        //todo icon作成
+                        icon: snapshot.data.bd,
                       )
                     },
                   ),
@@ -136,8 +139,21 @@ class ScreenGoogleMapState extends State<ScreenGoogleMapMain> {
     _moveMap(locationData);
   }
 
-  Future<String> _loadMapStyle() async =>
-      rootBundle.loadString('assets/map_style.json');
+  Future<_Data> _loadMapStyle() async {
+    final mapStyle = await rootBundle.loadString('assets/map_style.json');
+    final Uint8List markerIcon = await _getBytesFromAsset('img/maps_flags.png', 64);
+    final bd = BitmapDescriptor.fromBytes(markerIcon);
+    return _Data(mapStyle, bd);
+  }
+
+  ///@see https://stackoverflow.com/a/56534916
+  static Future<Uint8List> _getBytesFromAsset(String path, int width) async {
+    final data = await rootBundle.load(path);
+    final codec = await ui.instantiateImageCodec(data.buffer.asUint8List(), targetWidth: width);
+    final fi = await codec.getNextFrame();
+    final byteData = await fi.image.toByteData(format: ui.ImageByteFormat.png);
+    return byteData.buffer.asUint8List();
+  }
 
   static Future<void> _showRelational(BuildContext context) async =>
       showDialog<AlertDialog>(
@@ -182,4 +198,12 @@ class ScreenGoogleMapState extends State<ScreenGoogleMapMain> {
           ],
         ),
       );
+}
+
+class _Data {
+
+  _Data(this.mapStyleStr, this.bd);
+
+  final String mapStyleStr;
+  final BitmapDescriptor bd;
 }

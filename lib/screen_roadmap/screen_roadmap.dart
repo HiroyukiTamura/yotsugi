@@ -61,9 +61,19 @@ class _ScreenRoadMapState extends State<ScreenRoadMap> {
           child: ValueListenableBuilder<_SpreadSheetDataWrapper>(
               valueListenable: _vn,
               builder: (context, data, child) {
-                if (data?.err == null) {
+                if (data?.err != null) {
                   Util.reportCrash(data.err);
-                  return const ErrRobotWidget();
+                  return SafeArea(
+                    child: Stack(
+                      children: const [
+                        ErrRobotWidget(),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8),
+                          child: BackButton(),
+                        ),
+                      ],
+                    ),
+                  );
                 }
 
                 if (data?.ssd == null)

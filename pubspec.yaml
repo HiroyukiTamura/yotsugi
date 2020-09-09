@@ -71,6 +71,7 @@ flutter:
     - img/shadow.png
     - img/header.png
     - img/err_robot.svg
+    - img/maps_flags.png
     - assets/map_style.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
