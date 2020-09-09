@@ -60,7 +60,10 @@ class _ScreenMainState extends State<ScreenMain> with TickerProviderStateMixin {
       ..addListener(() async {
         double ratio = _sc.position.pixels / _sc.position.maxScrollExtent;
         double ratio2 = 1 - ratio * 3;
-        if (ratio2.isNegative) ratio2 = 0;
+        if (ratio2.isNegative)
+          ratio2 = 0;
+        if (ratio2 > 1)
+          ratio2 = 1;
         _themeOpacity.value = ratio2;
       });
 
