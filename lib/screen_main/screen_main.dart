@@ -273,16 +273,15 @@ class _Content extends StatelessWidget {
                     itemCount: count,
                     padding: EdgeInsets.only(top: height, bottom: _BTM_PADDING),
                     itemBuilder: (context, i) {
-                      int pos = indexList.indexWhere((element) => element > i) -1;
+                      int pos = indexList.indexWhere((element) => element > i)-1;
                       //pos == -2 => 最後のアイテム
-                      //pos === -1 => 最初のアイテム
                       int offset = 0;
                       if (pos == -2)
                         offset = indexList.last;
                       else if (pos >= 0)
                         offset = indexList[pos];
 
-                      QueryDocumentSnapshot snap = pos == -2 ? snapshot.data.docs.last : snapshot.data.docs[pos+1];
+                      QueryDocumentSnapshot snap = pos == -2 ? snapshot.data.docs.last : snapshot.data.docs[pos];
                       final indexInItem = i - offset;
                       final comment = snap.get('comments') as String;
                       final comments = comment.split('\\n');

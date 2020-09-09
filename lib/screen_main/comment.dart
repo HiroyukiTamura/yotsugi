@@ -10,8 +10,7 @@ class Comment extends StatelessWidget {
   final String string;
 
   @override
-  Widget build(BuildContext context) =>
-      Padding(
+  Widget build(BuildContext context) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         child: Text(
           string,
@@ -29,9 +28,8 @@ class DateText extends StatelessWidget {
   final String string;
 
   @override
-  Widget build(BuildContext context) =>
-      Container(
-        padding: const EdgeInsets.symmetric(horizontal: 32),
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 48),
         alignment: Alignment.centerRight,
         child: Text(
           string,
@@ -44,14 +42,19 @@ class DateText extends StatelessWidget {
 }
 
 class Images extends StatelessWidget {
-  const Images({Key key, this.fileList}) : super(key: key);
+  Images({Key key, List<dynamic> fileList})
+      : fileName = fileList.first as String,
+        super(key: key);
 
-  final List<dynamic> fileList;
+  final String fileName;
 
   @override
-  Widget build(BuildContext context) =>
-      Padding(
-          padding: const EdgeInsets.only(top: 64, bottom: 48),
+  Widget build(BuildContext context) {
+    if (fileName == null)
+      return const SizedBox();
+    else
+      return Padding(
+          padding: const EdgeInsets.only(top: 64),
           child: SizedBox(
               height: 256,
               width: 256,
@@ -59,17 +62,15 @@ class Images extends StatelessWidget {
                 future: FirebaseStorage()
                     .ref()
                     .child('log')
-                    .child(fileList.first as String)
+                    .child(fileName)
                     .getDownloadURL(),
                 builder: (context, AsyncSnapshot<dynamic> snapshot) {
-
                   if (snapshot.hasError) {
                     Util.reportCrash(snapshot.error);
                     return const SizedBox();
                   }
 
-                  if (!snapshot.hasData)
-                    return const SizedBox();
+                  if (!snapshot.hasData) return const SizedBox();
 
                   return CachedNetworkImage(
                     imageUrl: snapshot.data as String,
@@ -79,6 +80,6 @@ class Images extends StatelessWidget {
                     },
                   );
                 },
-              )
-          ));
+              )));
+  }
 }
