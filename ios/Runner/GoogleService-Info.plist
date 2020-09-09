@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>120831632058-shu68u67fn35fbfpos2a2voudop9khcn.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.120831632058-shu68u67fn35fbfpos2a2voudop9khcn</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAOxW57pbMuj0OskZOEBMmZr4oCAyrm4Ms</string>
+	<key>GCM_SENDER_ID</key>
+	<string>120831632058</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.cks.yotsugi</string>
+	<key>PROJECT_ID</key>
+	<string>yotsugi-78140</string>
+	<key>STORAGE_BUCKET</key>
+	<string>yotsugi-78140.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:120831632058:ios:30fc720a6ffb32624d1883</string>
+	<key>DATABASE_URL</key>
+	<string>https://yotsugi-78140.firebaseio.com</string>
+</dict>
+</plist>

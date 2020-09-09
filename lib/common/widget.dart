@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:yotsugi/strings.dart';
+import 'package:yotsugi/styles.dart';
 
 ///画面左上で戻るボタンを提供する
 class BackBtn extends StatelessWidget {
@@ -31,4 +34,54 @@ class BackBtn extends StatelessWidget {
           ),
         ),
       );
+}
+
+class ErrRobotWidget extends StatelessWidget {
+
+  const ErrRobotWidget({this.errMsg = Strings.SNACK_ERR, this.errMsg2nd}): super();
+
+  final String errMsg;
+  final String errMsg2nd;
+
+  @override
+  Widget build(BuildContext context) {
+    List<Widget> children = <Widget>[
+      SvgPicture.asset(
+        'img/err_robot.svg',
+        height: 72,
+        width: 72,
+        semanticsLabel: Strings.SNACK_ERR,
+        color: Styles.ACCENT_COLOR,
+      ),
+      const SizedBox(
+        height: 24,
+      ),
+      _errorText(text: errMsg),
+    ];
+
+    if (errMsg2nd != null) {
+      children.add(Padding(
+        padding: const EdgeInsets.only(top: 12),
+        child: _errorText(text: errMsg2nd),
+      ));
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      alignment: Alignment.center,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: children,
+      ),
+    );
+  }
+
+  static Text _errorText({@required String text}) => Text(
+    text,
+    style: const TextStyle(
+        fontFamily: Styles.FONT_SHINGO,
+        fontSize: 18,
+        color: Styles.ACCENT_COLOR),
+  );
 }

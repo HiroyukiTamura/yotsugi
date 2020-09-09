@@ -84,7 +84,6 @@ class _ScreenLayoutState extends State<ScreenLayout> {
     );
   }
 
-  /// todo iOS対応
   Future<void> _forceDeviceRotation() async {
     await SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeRight,

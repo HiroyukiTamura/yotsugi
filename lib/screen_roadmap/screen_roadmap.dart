@@ -8,6 +8,7 @@ import 'package:quiver/iterables.dart';
 import 'package:yotsugi/common/widget.dart';
 import 'package:yotsugi/json_data/spreadsheet_data.dart';
 import 'package:yotsugi/statics.dart';
+import 'package:yotsugi/strings.dart';
 import 'package:yotsugi/styles.dart';
 import 'package:yotsugi/util.dart';
 
@@ -60,9 +61,9 @@ class _ScreenRoadMapState extends State<ScreenRoadMap> {
           child: ValueListenableBuilder<_SpreadSheetDataWrapper>(
               valueListenable: _vn,
               builder: (context, data, child) {
-                if (data?.err != null) {
+                if (data?.err == null) {
                   Util.reportCrash(data.err);
-                  return const SizedBox(); //todo err
+                  return const ErrRobotWidget();
                 }
 
                 if (data?.ssd == null)

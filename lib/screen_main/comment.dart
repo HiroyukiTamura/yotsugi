@@ -29,7 +29,7 @@ class DateText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 48),
+        padding: const EdgeInsets.only(right: 32, left: 32, top: 48, bottom: 68),
         alignment: Alignment.centerRight,
         child: Text(
           string,
