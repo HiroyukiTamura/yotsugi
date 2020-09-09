@@ -18,16 +18,42 @@
   <link rel="manifest" href="manifest.json">
 </head>
 <body>
-  <!-- This script installs service_worker.js to provide PWA functionality to
-       application. For more information, see:
-       https://developers.google.com/web/fundamentals/primers/service-workers -->
-  <script>
+<!-- This script installs service_worker.js to provide PWA functionality to
+     application. For more information, see:
+     https://developers.google.com/web/fundamentals/primers/service-workers -->
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAcp2fJhXJoiBw6YqZGTIg3VOuq6GK0yo0"></script>
+<script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-app.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-storage.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-firestore.js"></script>
+
+<script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+        apiKey: "AIzaSyBQGI_sqT7rl4zht5Eb-lKuFmQeku0YFY4",
+        authDomain: "yotsugi-78140.firebaseapp.com",
+        databaseURL: "https://yotsugi-78140.firebaseio.com",
+        projectId: "yotsugi-78140",
+        storageBucket: "yotsugi-78140.appspot.com",
+        messagingSenderId: "120831632058",
+        appId: "1:120831632058:web:e1b44b94ae86501e4d1883",
+        measurementId: "G-4483NPPL1G"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+</script>
+<script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function () {
         navigator.serviceWorker.register('flutter_service_worker.js');
       });
     }
   </script>
-  <script src="main.dart.js" type="application/javascript"></script>
+<script src="main.dart.js" type="application/javascript"></script>
 </body>
 </html>

@@ -1,3 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -43,16 +45,27 @@ class ErrRobotWidget extends StatelessWidget {
   final String errMsg;
   final String errMsg2nd;
 
+  static const _IMG_URL = 'img/err_robot.svg';
+  static const double _SIZE = 72;
+
   @override
   Widget build(BuildContext context) {
     List<Widget> children = <Widget>[
-      SvgPicture.asset(
-        'img/err_robot.svg',
-        height: 72,
-        width: 72,
-        semanticsLabel: Strings.SNACK_ERR,
-        color: Styles.ACCENT_COLOR,
-      ),
+      if (kIsWeb)
+        CachedNetworkImage(
+          imageUrl: _IMG_URL,
+          height: _SIZE,
+          width: _SIZE,
+          color: Styles.ACCENT_COLOR,
+        )
+      else
+        SvgPicture.asset(
+          _IMG_URL,
+          height: _SIZE,
+          width: _SIZE,
+          semanticsLabel: Strings.SNACK_ERR,
+          color: Styles.ACCENT_COLOR,
+        ),
       const SizedBox(
         height: 24,
       ),

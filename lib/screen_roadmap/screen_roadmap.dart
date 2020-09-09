@@ -37,8 +37,10 @@ class _ScreenRoadMapState extends State<ScreenRoadMap> {
 
     _controllers = LinkedScrollControllerGroup();
     _verticalSc = ScrollController()
-      ..addListener(() => _vScrollRatio.value =
-          _verticalSc.position.pixels / _verticalSc.position.maxScrollExtent);
+      ..addListener(() {
+        double ratio = _verticalSc.position.pixels / _verticalSc.position.maxScrollExtent;
+        _vScrollRatio.value = Util.roundRatio(ratio);
+      });
 
     _requestSpreadSheet().then((value) => _vn.value = value);
   }
@@ -93,10 +95,10 @@ class _ScreenRoadMapState extends State<ScreenRoadMap> {
                 List<Widget> allWidgets = _scList.isEmpty
                     ? enumerate(dataWithNull).map((it) {
                         final sc = _controllers.addAndGet();
-                        sc.addListener(() => _hScrollRatio.value =
-                            sc.position.pixels / sc.position.maxScrollExtent);
-                        _scList.add(sc);
-                        return _rowWidget(dataWithNull, datum, sc, it.index);
+                        sc.addListener(() {
+                          final ratio = sc.position.pixels / sc.position.maxScrollExtent;
+                          _hScrollRatio.value = Util.roundRatio(ratio);
+                        });
                       }).toList(growable: false)
                     : enumerate(dataWithNull)
                         .map((it) => _rowWidget(

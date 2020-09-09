@@ -1,8 +1,7 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
@@ -11,6 +10,8 @@ import 'package:yotsugi/statics.dart';
 import 'package:yotsugi/strings.dart';
 import 'package:path/path.dart' as p;
 import 'package:yotsugi/util.dart';
+import 'package:yotsugi/common/remote_storage_client_impl.dart' if (kIsWeb) 'package:yotsugi/common/remote_storage_client_impl_web.dart';
+
 
 class ScreenPost extends StatefulWidget {
   @override
@@ -193,18 +194,13 @@ class _ScreenPostState extends State<ScreenPost> {
         msg: Strings.SNACK_UPLOADING
     );
 
+    final client = createRemoteStorageClient();
     String fileName;
     if (_imgPathVn.value != null) {
-      final localFile = File(_imgPathVn.value);
-      fileName = Uuid().v4() + p.extension(_imgPathVn.value);
+      fileName = client.genFileName(_imgPathVn.value);
 
       try {
-        await FirebaseStorage.instance
-                  .ref()
-                  .child('log')
-                  .child(fileName)
-                  .putFile(localFile)
-                  .onComplete;
+        await client.uploadImg(_imgPathVn.value, fileName);
       } catch (e) {
         Util.reportCrash(e);
         await Fluttertoast.showToast(

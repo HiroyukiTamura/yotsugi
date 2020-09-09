@@ -84,7 +84,7 @@ class _ScreenMainState extends State<ScreenMain> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
-    final is1Pain = mediaQuery.size.height > BreakPoints.W480;
+    final is1Pain = mediaQuery.size.height > mediaQuery.size.width;//WEB CUSTOM;
 
     return SafeArea(
       child: Scaffold(

@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -56,10 +58,15 @@ class _ScreenLayoutState extends State<ScreenLayout> {
             Container(
               padding: const EdgeInsets.all(16),
               alignment: Alignment.center,
-              child: SvgPicture.asset(
-                'img/layout.svg',
-                color: Colors.white,
-              ),
+              child: kIsWeb
+                  ? CachedNetworkImage(
+                      imageUrl: 'img/layout.svg',
+                      color: Colors.white,
+                    )
+                  : SvgPicture.asset(
+                      'img/layout.svg',
+                      color: Colors.white,
+                    ),
             ),
             BackBtn(
               btnFillColor: Theme.of(context).primaryColor,
