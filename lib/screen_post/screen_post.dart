@@ -1,14 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:uuid/uuid.dart';
 import 'package:yotsugi/statics.dart';
 import 'package:yotsugi/strings.dart';
-import 'package:path/path.dart' as p;
 import 'package:yotsugi/util.dart';
 import 'package:yotsugi/common/remote_storage_client_impl.dart' if (kIsWeb) 'package:yotsugi/common/remote_storage_client_impl_web.dart';
 
