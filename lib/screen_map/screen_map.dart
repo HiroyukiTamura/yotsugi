@@ -20,11 +20,13 @@ class ScreenGoogleMapMain extends StatefulWidget {
 class ScreenGoogleMapState extends State<ScreenGoogleMapMain> {
   ScreenGoogleMapState()
       : _googlePlex = const CameraPosition(
-          target: LatLng(35.730461, 139.841722), //四ツ木の座標
+          target: _latLng, //四ツ木の座標
           zoom: _ZOOM,
         );
 
   static const double _ZOOM = 15;
+
+  static const _latLng = LatLng(35.730461, 139.841722);
 
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
@@ -39,47 +41,54 @@ class ScreenGoogleMapState extends State<ScreenGoogleMapMain> {
     _loadMapStyleFuture = _loadMapStyle();
   }
 
+  /// todo pinを立てる必要がある
   @override
   Widget build(BuildContext context) => Scaffold(
         body: FutureBuilder<String>(
-          future: _loadMapStyleFuture,
-          builder: (context, snapshot) {
-            if (!snapshot.hasData)
-              return const SizedBox();
+            future: _loadMapStyleFuture,
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) return const SizedBox();
 
-            return Stack(
-              children: [
-                GoogleMap(
-                  initialCameraPosition: _googlePlex,
-                  myLocationButtonEnabled: false,
-                  zoomControlsEnabled: false,
-                  compassEnabled: true,
-                  onMapCreated: (controller) {
-                    controller.setMapStyle(snapshot.data);
-                    _controller.complete(controller);
-                  },
-                ),
-                SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: RawMaterialButton(
-                      constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
-                      onPressed: () => Navigator.of(context).pop(),
-                      fillColor: Colors.white,
-                      padding: const EdgeInsets.all(6),
-                      shape: const CircleBorder(),
-                      elevation: 0,
-                      child: const Icon(
-                        Icons.arrow_back,
-                        size: 24,
+              return Stack(
+                children: [
+                  GoogleMap(
+                    initialCameraPosition: _googlePlex,
+                    myLocationButtonEnabled: false,
+                    zoomControlsEnabled: false,
+                    compassEnabled: true,
+                    onMapCreated: (controller) {
+                      controller.setMapStyle(snapshot.data);
+                      _controller.complete(controller);
+                    },
+                    markers: <Marker>{
+                      Marker(
+                        position: _latLng,
+                        markerId: MarkerId('spot'),
+                        //todo icon作成
+                      )
+                    },
+                  ),
+                  SafeArea(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: RawMaterialButton(
+                        constraints:
+                            const BoxConstraints(minWidth: 36, minHeight: 36),
+                        onPressed: () => Navigator.of(context).pop(),
+                        fillColor: Colors.white,
+                        padding: const EdgeInsets.all(6),
+                        shape: const CircleBorder(),
+                        elevation: 0,
+                        child: const Icon(
+                          Icons.arrow_back,
+                          size: 24,
+                        ),
                       ),
                     ),
-                  ),
-                )
-              ],
-            );
-          }
-        ),
+                  )
+                ],
+              );
+            }),
         floatingActionButton: FloatingActionButton(
           onPressed: () => _onTapGps(context),
           child: const Icon(Icons.gps_fixed),
@@ -127,9 +136,8 @@ class ScreenGoogleMapState extends State<ScreenGoogleMapMain> {
     _moveMap(locationData);
   }
 
-
-  Future<String> _loadMapStyle() async => rootBundle.loadString('assets/map_style.json');
-
+  Future<String> _loadMapStyle() async =>
+      rootBundle.loadString('assets/map_style.json');
 
   static Future<void> _showRelational(BuildContext context) async =>
       showDialog<AlertDialog>(
