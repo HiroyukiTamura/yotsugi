@@ -38,6 +38,7 @@ class Strings {
   static const String THEME_SUB = 'Tokyo, Katsushika';
 
   static const String INVALID_PW = 'パスワードが間違っています';
+  static const String SNACK_NO_COMMENT = 'コメントを入力してください';
   static const String SNACK_UPLOADING = 'アップロードしています...';
   static const String SNACK_ERR = '処理に失敗しました';
   static const String SNACK_POST_DONE = '投稿しました';
