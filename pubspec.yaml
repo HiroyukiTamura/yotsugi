@@ -26,14 +26,14 @@ dependencies:
   transparent_image: ^1.0.0
   intl: ^0.16.1
   firebase_core: ^0.5.0
-  firebase_analytics: ^1.0.4
+  firebase_analytics: ^1.2.0+1
   firebase_crashlytics: ^0.2.0-dev.5
   firebase_storage: ^4.0.0
   cloud_firestore: ^0.14.0+2
-  google_maps_flutter: ^0.5.31
+  google_maps_flutter: ^0.5.32
   google_maps_flutter_web: ^0.1.0+1
   location: ^3.0.2
-  url_launcher: ^5.5.2
+  url_launcher: ^5.5.3
   font_awesome_flutter: ^8.8.1
   share: ^0.6.5
   json_serializable: ^3.4.1
@@ -41,7 +41,7 @@ dependencies:
   quiver: ^2.1.3
   linked_scroll_controller: ^0.1.2
   flutter_svg: ^0.18.1
-  cached_network_image: ^2.3.1
+  cached_network_image: 2.3.2+1
   image_picker: ^0.6.7+7
   image_picker_for_web: ^0.1.0
   uuid: ^2.2.2
