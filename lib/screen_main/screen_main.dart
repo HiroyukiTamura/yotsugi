@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:yotsugi/root_page.dart';
 import 'package:yotsugi/screen_main/comment.dart';
 import 'package:yotsugi/screen_main/corner_label.dart';
@@ -60,10 +61,8 @@ class _ScreenMainState extends State<ScreenMain> with TickerProviderStateMixin {
       ..addListener(() async {
         double ratio = _sc.position.pixels / _sc.position.maxScrollExtent;
         double ratio2 = 1 - ratio * 3;
-        if (ratio2.isNegative)
-          ratio2 = 0;
-        if (ratio2 > 1)
-          ratio2 = 1;
+        if (ratio2.isNegative) ratio2 = 0;
+        if (ratio2 > 1) ratio2 = 1;
         _themeOpacity.value = ratio2;
       });
 
@@ -84,7 +83,8 @@ class _ScreenMainState extends State<ScreenMain> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
-    final is1Pain = mediaQuery.size.height > mediaQuery.size.width;//WEB CUSTOM;
+    final is1Pain =
+        mediaQuery.size.height > mediaQuery.size.width; //WEB CUSTOM;
 
     return SafeArea(
       child: Scaffold(
@@ -130,26 +130,26 @@ class _ScreenMainState extends State<ScreenMain> with TickerProviderStateMixin {
 
   Widget _twoPainBody(MediaQueryData mediaQuery) {
     return Row(
-          children: [
-            Expanded(
-              child: _Header(
-                headerH: mediaQuery.size.height,
-                animation: _animation,
-                topRightAnmDuration: const Duration(milliseconds: 1500),
-              ),
-            ),
-            Expanded(
-              child: _Content(
-                is2pain: true,
-                height: mediaQuery.size.height,
-                sc: _sc,
-                fadeInAcLeft: _fadeInAcLeft,
-                fadeInAcRight: _fadeInAcRight,
-                themeOpacity: _themeOpacity,
-              ),
-            ),
-          ],
-        );
+      children: [
+        Expanded(
+          child: _Header(
+            headerH: mediaQuery.size.height,
+            animation: _animation,
+            topRightAnmDuration: const Duration(milliseconds: 1500),
+          ),
+        ),
+        Expanded(
+          child: _Content(
+            is2pain: true,
+            height: mediaQuery.size.height,
+            sc: _sc,
+            fadeInAcLeft: _fadeInAcLeft,
+            fadeInAcRight: _fadeInAcRight,
+            themeOpacity: _themeOpacity,
+          ),
+        ),
+      ],
+    );
   }
 }
 
@@ -194,15 +194,7 @@ class _Header extends StatelessWidget {
             ),
             Stack(
               children: [
-                CornerLabel(
-                  alignment: Alignment.topLeft,
-                  curve: Curves.easeInOutSine,
-                  tween: getTopTween(),
-                  duration: const Duration(seconds: 1),
-                  string: Strings.SHARE,
-                  fontSize: 12,
-                  onTap: () => Share.share(Statics.HP_URL), //todo ここ
-                ),
+                _topLeftLabel(),
                 CornerLabel(
                   alignment: Alignment.topRight,
                   curve: Curves.easeInOutSine,
@@ -210,13 +202,49 @@ class _Header extends StatelessWidget {
                   duration: topRightAnmDuration,
                   string: Strings.POST,
                   fontSize: 12,
-                  onTap: () => Navigator.of(context).pushNamed(RootPage.ROUTE_POST),
+                  onTap: () =>
+                      Navigator.of(context).pushNamed(RootPage.ROUTE_POST),
                 ),
               ],
             ),
           ],
         ),
       );
+
+
+  Widget _topLeftLabel() => kIsWeb
+        ? Align(
+            alignment: Alignment.topLeft,
+            child: Row(
+              children: [
+                _ShareIcon(
+                  icon: FontAwesomeIcons.github,
+                  onTap: () async => Util.launchURL(Statics.GITHUB_URL),
+                ),
+                _ShareIcon(
+                  icon: FontAwesomeIcons.twitter,
+                  onTap: () async => Util.launchURL(Statics.TWITTER_URL),
+                ),
+                _ShareIcon(
+                  icon: FontAwesomeIcons.facebook,
+                  onTap: () async => Util.launchURL(Statics.FACEBOOK_URL),
+                ),
+                _ShareIcon(
+                  icon: FontAwesomeIcons.line,
+                  onTap: () async => Util.launchURL(Statics.LINE_URL),
+                ),
+              ],
+            ),
+          )
+        : CornerLabel(
+            alignment: Alignment.topLeft,
+            curve: Curves.easeInOutSine,
+            tween: getTopTween(),
+            duration: const Duration(seconds: 1),
+            string: Strings.SHARE,
+            fontSize: 12,
+            onTap: () => Share.share(Statics.HP_URL), //todo ここ
+          );
 }
 
 class _Content extends StatelessWidget {
@@ -249,59 +277,61 @@ class _Content extends StatelessWidget {
     return Stack(
       children: [
         FutureBuilder<QuerySnapshot>(
-            future: FirebaseFirestore.instance
-                .collection('log')
-                .orderBy('createdAt')
-                .get(),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                Util.reportCrash(snapshot.error);
-                return const SizedBox();
-              }
+          future: FirebaseFirestore.instance
+              .collection('log')
+              .orderBy('createdAt')
+              .get(),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              Util.reportCrash(snapshot.error);
+              return const SizedBox();
+            }
 
-              if (!snapshot.hasData)
-                return const SizedBox();
+            if (!snapshot.hasData) return const SizedBox();
 
-              int count = 0;
-              List<int> indexList = [];
-              snapshot.data.docs.forEach((doc) {
-                indexList.add(count);
-                final comment = doc.get('comments') as String;
-                count += comment.split('\\n').length;
-                count += 2;//日付と写真分
-              });
-              return ScrollConfiguration(
-                behavior: NonGlowBehavior(),
-                child: ListView.builder(
-                  controller: sc,
-                  itemCount: count,
-                  padding: EdgeInsets.only(top: height, bottom: _BTM_PADDING),
-                  itemBuilder: (context, i) {
-                    int pos = indexList.indexWhere((element) => element > i)-1;
-                    //pos == -2 => 最後のアイテム
-                    int offset = 0;
-                    if (pos == -2)
-                      offset = indexList.last;
-                    else if (pos >= 0)
-                      offset = indexList[pos];
+            int count = 0;
+            List<int> indexList = [];
+            snapshot.data.docs.forEach((doc) {
+              indexList.add(count);
+              final comment = doc.get('comments') as String;
+              count += comment.split('\\n').length;
+              count += 2; //日付と写真分
+            });
+            return ScrollConfiguration(
+              behavior: NonGlowBehavior(),
+              child: ListView.builder(
+                controller: sc,
+                itemCount: count,
+                padding: EdgeInsets.only(top: height, bottom: _BTM_PADDING),
+                itemBuilder: (context, i) {
+                  int pos = indexList.indexWhere((element) => element > i) - 1;
+                  //pos == -2 => 最後のアイテム
+                  int offset = 0;
+                  if (pos == -2)
+                    offset = indexList.last;
+                  else if (pos >= 0) offset = indexList[pos];
 
-                    QueryDocumentSnapshot snap = pos == -2 ? snapshot.data.docs.last : snapshot.data.docs[pos];
-                    final indexInItem = i - offset;
-                    final comment = snap.get('comments') as String;
-                    final comments = comment.split('\\n');
-                    final diff = comments.length - indexInItem;
-                    if (diff == -1) {
-                      final date = (snap.get('createdAt') as Timestamp).toDate();
-                      return DateText(string: DateFormat('yyyy:MM:dd:HH:mm').format(date));
-                    } else if (diff == 0) {
-                      final imgNames = snap.get('imgNames') as List<dynamic>;
-                      return Images(fileList: imgNames);
-                    } else
-                      return Comment(string: comments[indexInItem]);
-                  },
-                ),
-              );
-            },),
+                  QueryDocumentSnapshot snap = pos == -2
+                      ? snapshot.data.docs.last
+                      : snapshot.data.docs[pos];
+                  final indexInItem = i - offset;
+                  final comment = snap.get('comments') as String;
+                  final comments = comment.split('\\n');
+                  final diff = comments.length - indexInItem;
+                  if (diff == -1) {
+                    final date = (snap.get('createdAt') as Timestamp).toDate();
+                    return DateText(
+                        string: DateFormat('yyyy:MM:dd:HH:mm').format(date));
+                  } else if (diff == 0) {
+                    final imgNames = snap.get('imgNames') as List<dynamic>;
+                    return Images(fileList: imgNames);
+                  } else
+                    return Comment(string: comments[indexInItem]);
+                },
+              ),
+            );
+          },
+        ),
         Align(
           alignment: Alignment.topCenter,
           child: Container(
@@ -348,8 +378,8 @@ class _Content extends StatelessWidget {
         ),
         ValueListenableBuilder<double>(
             valueListenable: themeOpacity,
-            builder: (__, opacity, _) => Opacity(
-                opacity: opacity, child: ThemeText(contentH: height))),
+            builder: (__, opacity, _) =>
+                Opacity(opacity: opacity, child: ThemeText(contentH: height))),
         _leftTopLabel(context),
         _rightTopLabel(context),
         CornerLabel(
@@ -374,7 +404,8 @@ class _Content extends StatelessWidget {
   }
 
   Widget _leftTopLabel(BuildContext context) {
-    Future<void> onTap() async => Navigator.of(context).pushNamed(RootPage.ROUTE_ROAD_MAP);
+    Future<void> onTap() async =>
+        Navigator.of(context).pushNamed(RootPage.ROUTE_ROAD_MAP);
 
     return is2pain
         ? CornerLabel(
@@ -394,9 +425,9 @@ class _Content extends StatelessWidget {
           );
   }
 
-
   Widget _rightTopLabel(BuildContext context) {
-    Future<void> onTap() async => Navigator.of(context).pushNamed(RootPage.ROUTE_ABOUT);
+    Future<void> onTap() async =>
+        Navigator.of(context).pushNamed(RootPage.ROUTE_ABOUT);
 
     return is2pain
         ? CornerLabel(
@@ -415,4 +446,28 @@ class _Content extends StatelessWidget {
             onTap: () => onTap(),
           );
   }
+}
+
+class _ShareIcon extends StatelessWidget {
+  const _ShareIcon({
+    Key key,
+    @required this.icon,
+    @required this.onTap,
+  }) : super(key: key);
+
+  final IconData icon;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) => RawMaterialButton(
+        constraints: const BoxConstraints(minWidth: 28, minHeight: 28),
+        onPressed: onTap,
+        shape: const CircleBorder(),
+        elevation: 0,
+        child: FaIcon(
+          icon,
+          size: 16,
+          color: Colors.black.withOpacity(.8),
+        ),
+      );
 }

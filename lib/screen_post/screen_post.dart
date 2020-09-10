@@ -7,8 +7,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:yotsugi/statics.dart';
 import 'package:yotsugi/strings.dart';
 import 'package:yotsugi/util.dart';
-import 'package:yotsugi/common/remote_storage_client_impl_web.dart' if (dart.library.io) 'package:yotsugi/common/remote_storage_client_impl.dart';
-
+import 'package:yotsugi/common/remote_storage_client_impl_web.dart'
+    if (dart.library.io) 'package:yotsugi/common/remote_storage_client_impl.dart';
 
 class ScreenPost extends StatefulWidget {
   @override
@@ -59,7 +59,11 @@ class _ScreenPostState extends State<ScreenPost> {
               SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.only(
-                      top: 72, bottom: 24, right: 24, left: 24),
+                    top: kIsWeb ? 96 : 72,
+                    bottom: 24,
+                    right: 24,
+                    left: 24,
+                  ),
                   child: Column(
                     children: [
                       TextField(
@@ -122,7 +126,7 @@ class _ScreenPostState extends State<ScreenPost> {
                 ),
               ),
               const Padding(
-                padding: EdgeInsets.all(8),
+                padding: EdgeInsets.all(kIsWeb ? 24 : 8),
                 child: BackButton(
                   color: Colors.white,
                 ),
@@ -142,14 +146,14 @@ class _ScreenPostState extends State<ScreenPost> {
               content: ValueListenableBuilder<bool>(
                 valueListenable: vnTextErr,
                 builder: (context, showErr, _) => TextField(
-                    controller: controller,
-                    obscureText: true,
-                    cursorColor: Colors.black54,
-                    decoration: InputDecoration(
-                      hintText: Strings.ENTER_PW,
-                      errorText: showErr ? 'パスワードが間違っています' : null,
-                    ),
+                  controller: controller,
+                  obscureText: true,
+                  cursorColor: Colors.black54,
+                  decoration: InputDecoration(
+                    hintText: Strings.ENTER_PW,
+                    errorText: showErr ? 'パスワードが間違っています' : null,
                   ),
+                ),
               ),
               actions: <Widget>[
                 // ボタン領域
@@ -177,19 +181,14 @@ class _ScreenPostState extends State<ScreenPost> {
               ],
             ));
 
-    if (pw == null)
-      return;
+    if (pw == null) return;
 
     if (_editingController.text?.isNotEmpty != true) {
-      await Fluttertoast.showToast(
-          msg: Strings.SNACK_NO_COMMENT
-      );
+      await Fluttertoast.showToast(msg: Strings.SNACK_NO_COMMENT);
       return;
     }
 
-    await Fluttertoast.showToast(
-        msg: Strings.SNACK_UPLOADING
-    );
+    await Fluttertoast.showToast(msg: Strings.SNACK_UPLOADING);
 
     final client = createRemoteStorageClient();
     String fileName;
@@ -200,30 +199,24 @@ class _ScreenPostState extends State<ScreenPost> {
         await client.uploadImg(_imgPathVn.value, fileName);
       } catch (e) {
         Util.reportCrash(e);
-        await Fluttertoast.showToast(
-            msg: Strings.SNACK_ERR
-        );
+        await Fluttertoast.showToast(msg: Strings.SNACK_ERR);
         return;
       }
     }
 
     try {
       await FirebaseFirestore.instance.collection('log').add(<String, dynamic>{
-            'comments': _editingController.text,
-            'imgNames': [fileName],
-            'createdAt': Timestamp.fromDate(DateTime.now()),
-          });
+        'comments': _editingController.text,
+        'imgNames': [fileName],
+        'createdAt': Timestamp.fromDate(DateTime.now()),
+      });
     } catch (e) {
       Util.reportCrash(e);
-      await Fluttertoast.showToast(
-          msg: Strings.SNACK_ERR
-      );
+      await Fluttertoast.showToast(msg: Strings.SNACK_ERR);
       return;
     }
 
-    await Fluttertoast.showToast(
-        msg: Strings.SNACK_POST_DONE
-    );
+    await Fluttertoast.showToast(msg: Strings.SNACK_POST_DONE);
 
     Navigator.pop(context);
   }

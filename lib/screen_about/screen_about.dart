@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:yotsugi/statics.dart';
 import 'package:yotsugi/strings.dart';
@@ -32,8 +33,11 @@ class _ScreenAboutState extends State<ScreenAbout> {
                   color: Colors.black.withOpacity(.2),
                 ),
                 _contentWidget(scrollable),
-                const BackButton(
-                  color: Colors.white,
+                const Padding(
+                  padding: EdgeInsets.all(kIsWeb ? 24 : 0),
+                  child: BackButton(
+                    color: Colors.white,
+                  ),
                 )
               ],
             ),
@@ -71,6 +75,7 @@ class _ScreenAboutState extends State<ScreenAbout> {
         string: Strings.HOUSE_NAME_JA,
         fontSize: 16,
       ),
+      const SizedBox(height: 8),
       const _Content(
         string: Strings.ADDRESS,
         fontSize: 14,

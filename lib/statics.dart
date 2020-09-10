@@ -4,6 +4,10 @@ import 'package:flutter/cupertino.dart';
 class Statics {
   static const HP_URL = 'https://flutter.dev'; //todo これ
   static const API_KEY = 'AIzaSyBQGI_sqT7rl4zht5Eb-lKuFmQeku0YFY4';
+  static const GITHUB_URL = 'https://github.com/HiroyukTamura/yotsugi';
+  static const TWITTER_URL = 'http://twitter.com/share?$HP_URL';
+  static const FACEBOOK_URL = 'https://www.facebook.com/dialog/share?href=$HP_URL&app_id=354380272272765';
+  static const LINE_URL = 'https://social-plugins.line.me/lineit/share?url=$HP_URL';
 
   static const int MAX_VIDEO_LEN_SEC = 9;
   static const PASSWORD = 'yotsugi';

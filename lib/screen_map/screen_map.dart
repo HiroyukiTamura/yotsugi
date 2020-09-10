@@ -116,7 +116,7 @@ class _ScreenGoogleMapState extends State<ScreenGoogleMapMain> {
     if (pmsStatus == PermissionStatus.denied ||
         pmsStatus == PermissionStatus.deniedForever) {
       final newPmsStatus = await location.requestPermission();
-      if (newPmsStatus != PermissionStatus.granted) {
+      if (newPmsStatus != PermissionStatus.granted && !kIsWeb) {
         await _showRelational(context);
         return;
       }

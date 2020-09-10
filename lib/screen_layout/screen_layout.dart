@@ -48,7 +48,10 @@ class _ScreenLayoutState extends State<ScreenLayout> {
         child: Stack(
           children: [
             SizedBox.expand(
-              child: Image.asset('assets/shadow.png'),
+              child: Image.asset(
+                'assets/shadow.png',
+                fit: BoxFit.fill,
+              ),
             ),
             Container(
               height: double.infinity,
@@ -69,8 +72,8 @@ class _ScreenLayoutState extends State<ScreenLayout> {
                     ),
             ),
             BackBtn(
-              btnFillColor: Theme.of(context).primaryColor,
-              iconColor: Colors.black,
+              btnFillColor: Theme.of(context).accentColor,
+              iconColor: Colors.white,
               onTap: () => Navigator.of(context).pop(),
             ),
             const Padding(
