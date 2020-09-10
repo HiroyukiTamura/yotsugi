@@ -121,7 +121,7 @@ class _ScreenRoadMapState extends BackMovieState<ScreenRoadMap> {
                     ...backGround(videoShadowOpacity: .4),
                     SingleChildScrollView(
                       controller: _verticalSc,
-                      padding: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.symmetric(vertical: 16),
                       child: Center(
                         child: Column(
                           children: allWidgets,

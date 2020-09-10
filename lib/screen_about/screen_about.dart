@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:video_player/video_player.dart';
 import 'package:yotsugi/common/back_movie_state.dart';
 import 'package:yotsugi/statics.dart';
 import 'package:yotsugi/strings.dart';
@@ -122,7 +121,8 @@ class _Intro extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double fontSize = MediaQuery.of(context).size.height > BreakPoints.W720 ? 20: 18;
+    final size = MediaQuery.of(context).size;
+    double fontSize = size.height > BreakPoints.W720 && size.width > BreakPoints.W720 ? 20: 18;
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8),
         child: Text(

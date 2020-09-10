@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:yotsugi/strings.dart';
@@ -10,7 +11,7 @@ import 'package:yotsugi/styles.dart';
 class BackBtn extends StatelessWidget {
   const BackBtn({
     Key key,
-    @required this.btnFillColor,
+    this.btnFillColor = Colors.transparent,
     @required this.iconColor,
     @required this.onTap,
   }) : super(key: key);

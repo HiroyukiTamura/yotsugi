@@ -1,14 +1,5 @@
 # yotsugi
 
-A new Flutter application.
-
-## todo
-
-- map追加
-- 図面追加
-- SNS button 追加
-- about/contact/散文
-- [ ] 作業シート
-- google maps API keyの制限
-- [x] Crashlytics導入
-- [ ] シェアボタン(Web)
+### tools
+- firebase project: yotsugi
+- [figma](https://www.figma.com/file/pwU8lTS0PJwlsahMLH5GWc/%E5%9B%9B%E3%83%84%E6%9C%A8?node-id=0%3A1)
