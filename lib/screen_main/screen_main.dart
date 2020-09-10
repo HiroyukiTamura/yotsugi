@@ -9,7 +9,6 @@ import 'package:yotsugi/screen_main/corner_label.dart';
 import 'package:yotsugi/screen_main/label_fadein.dart';
 import 'package:yotsugi/screen_main/non_glow_behavior.dart';
 import 'package:yotsugi/screen_main/theme_text.dart';
-import 'package:yotsugi/screen_main/thin_scrollbar.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:yotsugi/statics.dart';
@@ -128,8 +127,7 @@ class _ScreenMainState extends State<ScreenMain> with TickerProviderStateMixin {
     );
   }
 
-  Widget _twoPainBody(MediaQueryData mediaQuery) {
-    return Row(
+  Widget _twoPainBody(MediaQueryData mediaQuery) => Row(
       children: [
         Expanded(
           child: _Header(
@@ -150,7 +148,6 @@ class _ScreenMainState extends State<ScreenMain> with TickerProviderStateMixin {
         ),
       ],
     );
-  }
 }
 
 class _Header extends StatelessWidget {
@@ -219,18 +216,22 @@ class _Header extends StatelessWidget {
               children: [
                 _ShareIcon(
                   icon: FontAwesomeIcons.github,
+                  duration: const Duration(seconds: 1),
                   onTap: () async => Util.launchURL(Statics.GITHUB_URL),
                 ),
                 _ShareIcon(
                   icon: FontAwesomeIcons.twitter,
+                  duration: const Duration(milliseconds: 1100),
                   onTap: () async => Util.launchURL(Statics.TWITTER_URL),
                 ),
                 _ShareIcon(
                   icon: FontAwesomeIcons.facebook,
+                  duration: const Duration(milliseconds: 1200),
                   onTap: () async => Util.launchURL(Statics.FACEBOOK_URL),
                 ),
                 _ShareIcon(
                   icon: FontAwesomeIcons.line,
+                  duration: const Duration(milliseconds: 1300),
                   onTap: () async => Util.launchURL(Statics.LINE_URL),
                 ),
               ],
@@ -279,7 +280,7 @@ class _Content extends StatelessWidget {
         FutureBuilder<QuerySnapshot>(
           future: FirebaseFirestore.instance
               .collection('log')
-              .orderBy('createdAt')
+              .orderBy('createdAt', descending: true)
               .get(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
@@ -452,22 +453,31 @@ class _ShareIcon extends StatelessWidget {
   const _ShareIcon({
     Key key,
     @required this.icon,
+    @required this.duration,
     @required this.onTap,
   }) : super(key: key);
 
   final IconData icon;
   final VoidCallback onTap;
+  final Duration duration;
 
   @override
-  Widget build(BuildContext context) => RawMaterialButton(
-        constraints: const BoxConstraints(minWidth: 28, minHeight: 28),
-        onPressed: onTap,
-        shape: const CircleBorder(),
-        elevation: 0,
-        child: FaIcon(
-          icon,
-          size: 16,
-          color: Colors.black.withOpacity(.8),
+  Widget build(BuildContext context) => TweenAnimationBuilder<Offset>(
+    tween: _Header.getTopTween(),
+    builder: (_, offset, child) =>
+        FractionalTranslation(translation: offset, child: child),
+    duration: duration,
+    curve: Curves.easeInOutSine,
+    child: RawMaterialButton(
+          constraints: const BoxConstraints(minWidth: 28, minHeight: 28),
+          onPressed: onTap,
+          shape: const CircleBorder(),
+          elevation: 0,
+          child: FaIcon(
+            icon,
+            size: 16,
+            color: Colors.black.withOpacity(.8),
+          ),
         ),
-      );
+  );
 }

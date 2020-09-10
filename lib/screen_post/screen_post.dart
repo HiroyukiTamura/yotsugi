@@ -1,3 +1,6 @@
+import 'dart:typed_data';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -16,14 +19,15 @@ class ScreenPost extends StatefulWidget {
 }
 
 class _ScreenPostState extends State<ScreenPost> {
-  ValueNotifier<String> _imgPathVn;
+  ValueNotifier<_ImgData> _imgDataVn;
   TextEditingController _editingController;
+  static const double _IMG_SIZE = 160;
 
   @override
   void initState() {
     super.initState();
     _editingController = TextEditingController();
-    _imgPathVn = ValueNotifier<String>(null);
+    _imgDataVn = ValueNotifier<_ImgData>(null);
   }
 
   @override
@@ -83,15 +87,15 @@ class _ScreenPostState extends State<ScreenPost> {
                           hintText: 'コメントを入力',
                         ),
                       ),
-                      ValueListenableBuilder<String>(
-                          valueListenable: _imgPathVn,
-                          builder: (context, imgPath, child) => imgPath == null
+                      ValueListenableBuilder<_ImgData>(
+                          valueListenable: _imgDataVn,
+                          builder: (context, imgData, child) => imgData == null
                               ? InkWell(
                                   onTap: () async {
                                     final pickedFile = await ImagePicker()
                                         .getImage(source: ImageSource.gallery);
-                                    _imgPathVn.value = pickedFile.path;
-                                    //todo iOS対応
+                                    final bytes = await pickedFile.readAsBytes();
+                                    _imgDataVn.value = _ImgData(bytes, pickedFile.path);
                                   },
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(
@@ -114,11 +118,17 @@ class _ScreenPostState extends State<ScreenPost> {
                                   child: Center(
                                       child: Material(
                                     elevation: 4,
-                                    child: Image.asset(
-                                      imgPath,
-                                      height: 160,
-                                      width: 160,
-                                    ),
+                                    child: kIsWeb
+                                        ? CachedNetworkImage(
+                                            imageUrl: imgData.filePath,
+                                            height: _IMG_SIZE,
+                                            width: _IMG_SIZE,
+                                          )
+                                        : Image.asset(
+                                            imgData.filePath,
+                                            height: _IMG_SIZE,
+                                            width: _IMG_SIZE,
+                                          ),
                                   )),
                                 )),
                     ],
@@ -192,11 +202,14 @@ class _ScreenPostState extends State<ScreenPost> {
 
     final client = createRemoteStorageClient();
     String fileName;
-    if (_imgPathVn.value != null) {
-      fileName = client.genFileName(_imgPathVn.value);
+    if (_imgDataVn.value != null) {
+      fileName = client.genFileName(_imgDataVn.value.filePath);
 
       try {
-        await client.uploadImg(_imgPathVn.value, fileName);
+        if (kIsWeb)
+          await client.uploadBlob(_imgDataVn.value.blob, fileName);
+        else
+          await client.uploadImg(_imgDataVn.value.filePath, fileName);
       } catch (e) {
         Util.reportCrash(e);
         await Fluttertoast.showToast(msg: Strings.SNACK_ERR);
@@ -220,4 +233,11 @@ class _ScreenPostState extends State<ScreenPost> {
 
     Navigator.pop(context);
   }
+}
+
+class _ImgData {
+  _ImgData(this.blob, this.filePath);
+
+  final Uint8List blob;
+  final String filePath;
 }
