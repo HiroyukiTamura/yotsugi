@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 
 @immutable
 class Statics {
-  static const HP_URL = 'https://flutter.dev'; //todo これ
+  static const HP_URL = 'https://yotsugi-78140.web.app'; //todo これ
   static const API_KEY = 'AIzaSyBQGI_sqT7rl4zht5Eb-lKuFmQeku0YFY4';
   static const GITHUB_URL = 'https://github.com/HiroyukTamura/yotsugi';
   static const TWITTER_URL = 'http://twitter.com/share?$HP_URL';
