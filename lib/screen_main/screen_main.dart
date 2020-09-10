@@ -180,7 +180,7 @@ class _Header extends StatelessWidget {
           children: [
             SizedBox.expand(
               child: Image.asset(
-                'img/header.png',
+                'assets/header.png',
                 fit: BoxFit.cover,
               ),
             ),

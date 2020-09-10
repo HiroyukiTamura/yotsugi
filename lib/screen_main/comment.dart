@@ -1,10 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:yotsugi/util.dart';
-import 'package:yotsugi/common/remote_storage_client_impl.dart' if (kIsWeb) 'package:yotsugi/common/remote_storage_client_impl_web.dart';
+import 'package:yotsugi/common/remote_storage_client_impl_web.dart' if (dart.library.io) 'package:yotsugi/common/remote_storage_client_impl.dart';
 
 class Comment extends StatelessWidget {
   const Comment({Key key, @required this.string}) : super(key: key);
@@ -61,11 +60,7 @@ class Images extends StatelessWidget {
               height: 256,
               width: 256,
               child: FutureBuilder<dynamic>(
-                future: FirebaseStorage()
-                    .ref()
-                    .child('log')
-                    .child(fileName)
-                    .getDownloadURL(),
+                future: createRemoteStorageClient().getImgUrl(fileName),
                 builder: (context, AsyncSnapshot<dynamic> snapshot) {
                   if (snapshot.hasError) {
                     Util.reportCrash(snapshot.error);

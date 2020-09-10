@@ -22,7 +22,7 @@ class _ScreenAboutState extends State<ScreenAbout> {
                   child: FittedBox(
                     fit: BoxFit.fill,
                     child: Image.asset(
-                      'img/shadow.png',
+                      'assets/shadow.png',
                     ),
                   ),
                 ),

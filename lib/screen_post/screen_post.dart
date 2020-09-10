@@ -7,7 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:yotsugi/statics.dart';
 import 'package:yotsugi/strings.dart';
 import 'package:yotsugi/util.dart';
-import 'package:yotsugi/common/remote_storage_client_impl.dart' if (kIsWeb) 'package:yotsugi/common/remote_storage_client_impl_web.dart';
+import 'package:yotsugi/common/remote_storage_client_impl_web.dart' if (dart.library.io) 'package:yotsugi/common/remote_storage_client_impl.dart';
 
 
 class ScreenPost extends StatefulWidget {
@@ -47,7 +47,7 @@ class _ScreenPostState extends State<ScreenPost> {
             children: [
               SizedBox.expand(
                 child: Image.asset(
-                  'img/shadow.png',
+                  'assets/shadow.png',
                   fit: BoxFit.fill,
                 ),
               ),

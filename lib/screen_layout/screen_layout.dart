@@ -48,7 +48,7 @@ class _ScreenLayoutState extends State<ScreenLayout> {
         child: Stack(
           children: [
             SizedBox.expand(
-              child: Image.asset('img/shadow.png'),
+              child: Image.asset('assets/shadow.png'),
             ),
             Container(
               height: double.infinity,
@@ -60,11 +60,11 @@ class _ScreenLayoutState extends State<ScreenLayout> {
               alignment: Alignment.center,
               child: kIsWeb
                   ? CachedNetworkImage(
-                      imageUrl: 'img/layout.svg',
+                      imageUrl: 'assets/layout.svg',
                       color: Colors.white,
                     )
                   : SvgPicture.asset(
-                      'img/layout.svg',
+                      'assets/layout.svg',
                       color: Colors.white,
                     ),
             ),

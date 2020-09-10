@@ -115,7 +115,7 @@ class _ScreenRoadMapState extends State<ScreenRoadMap> {
                   children: [
                     SizedBox.expand(
                       child: Image.asset(
-                        'img/shadow.png',
+                        'assets/shadow.png',
                         fit: BoxFit.fill,
                       ),
                     ),

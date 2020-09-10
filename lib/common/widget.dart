@@ -45,7 +45,7 @@ class ErrRobotWidget extends StatelessWidget {
   final String errMsg;
   final String errMsg2nd;
 
-  static const _IMG_URL = 'img/err_robot.svg';
+  static const _IMG_URL = 'assets/err_robot.svg';
   static const double _SIZE = 72;
 
   @override

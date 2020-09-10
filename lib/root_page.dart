@@ -1,14 +1,16 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:yotsugi/screen_about/screen_about.dart';
 import 'package:yotsugi/screen_layout/screen_layout.dart';
 import 'package:yotsugi/screen_main/screen_main.dart';
+import 'package:yotsugi/screen_map/screen_map.dart';
 import 'package:yotsugi/screen_post/screen_post.dart';
 import 'package:yotsugi/screen_roadmap/screen_roadmap.dart';
 import 'package:yotsugi/strings.dart';
 import 'package:yotsugi/styles.dart';
-import 'package:yotsugi/common/reporting_err_client_impl.dart' if (kIsWeb) 'package:yotsugi/common/reporting_err_client_impl_web';
+import 'package:yotsugi/common/reporting_err_client_impl_web.dart' if (dart.library.io) 'package:yotsugi/common/reporting_err_client_impl.dart';
 
 class RootPage extends StatefulWidget {
   @override
@@ -57,8 +59,7 @@ class _RootPageState extends State<RootPage> {
           initialRoute: RootPage.ROUTE_MAIN,
           routes: <String, WidgetBuilder>{
             RootPage.ROUTE_MAIN: (_) => const ScreenMain(),
-            RootPage.ROUTE_GOOGLE_MAP: (_) =>
-                const SizedBox(),
+            RootPage.ROUTE_GOOGLE_MAP: (_) => const ScreenGoogleMapMain(),
             RootPage.ROUTE_ROAD_MAP: (_) => ScreenRoadMap(),
             RootPage.ROUTE_LAYOUT: (_) => ScreenLayout(),
             RootPage.ROUTE_ABOUT: (_) => ScreenAbout(),

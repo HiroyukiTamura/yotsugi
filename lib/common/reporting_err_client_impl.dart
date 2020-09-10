@@ -15,4 +15,12 @@ class ReportingErrClientImpl extends ReportingErrClient {
       originalOnError(errorDetails);
     };
   }
+
+  @override
+  Future<void> reportErr(Object err, StackTrace stackTrace) =>
+      FirebaseCrashlytics.instance.recordError(err, stackTrace);
+
+  @override
+  Future<void> reportCaughtStackTrace(dynamic exception, {StackTrace stackTrace}) =>
+      FirebaseCrashlytics.instance.recordError(exception, stackTrace);
 }
