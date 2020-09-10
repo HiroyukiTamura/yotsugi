@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:video_player/video_player.dart';
+import 'package:yotsugi/common/back_movie_state.dart';
 import 'package:yotsugi/statics.dart';
 import 'package:yotsugi/strings.dart';
 import 'package:yotsugi/styles.dart';
@@ -10,42 +12,35 @@ class ScreenAbout extends StatefulWidget {
   State<StatefulWidget> createState() => _ScreenAboutState();
 }
 
-class _ScreenAboutState extends State<ScreenAbout> {
+class _ScreenAboutState extends BackMovieState<ScreenAbout> {
+
   @override
   Widget build(BuildContext context) => LayoutBuilder(
-      builder: (context, boxConstrains) {
-        final bool scrollable = boxConstrains.maxHeight < BreakPoints.W720;
-        return SafeArea(
-          child: Scaffold(
-            body: Stack(
-              children: [
-                SizedBox.expand(
-                  child: FittedBox(
-                    fit: BoxFit.fill,
-                    child: Image.asset(
-                      'assets/shadow.png',
+        builder: (context, boxConstrains) {
+          final bool scrollable = boxConstrains.maxHeight < BreakPoints.W720;
+          return SafeArea(
+            child: Scaffold(
+              body: Stack(
+                children: [
+                  ...backGround(),
+                  Container(
+                    height: double.infinity,
+                    width: double.infinity,
+                    color: Colors.black.withOpacity(.2),
+                  ),
+                  _contentWidget(scrollable),
+                  const Padding(
+                    padding: EdgeInsets.all(kIsWeb ? 24 : 0),
+                    child: BackButton(
+                      color: Colors.white,
                     ),
-                  ),
-                ),
-                Container(
-                  height: double.infinity,
-                  width: double.infinity,
-                  color: Colors.black.withOpacity(.2),
-                ),
-                _contentWidget(scrollable),
-                const Padding(
-                  padding: EdgeInsets.all(kIsWeb ? 24 : 0),
-                  child: BackButton(
-                    color: Colors.white,
-                  ),
-                )
-              ],
+                  )
+                ],
+              ),
             ),
-          ),
-        );
-      },
-    );
-
+          );
+        },
+      );
 
   Widget _contentWidget(bool scrollable) {
     final children = [
@@ -126,18 +121,21 @@ class _Intro extends StatelessWidget {
   final String string;
 
   @override
-  Widget build(BuildContext context) => Padding(
+  Widget build(BuildContext context) {
+    double fontSize = MediaQuery.of(context).size.height > BreakPoints.W720 ? 20: 18;
+    return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8),
         child: Text(
           string,
-          style: const TextStyle(
+          style: TextStyle(
               height: 1.2,
-              fontSize: 18,
+              fontSize: fontSize,
               fontFamily: Styles.FONT_SANS,
               fontWeight: FontWeight.w500,
               color: Colors.white),
         ),
       );
+  }
 }
 
 class _IntroReference extends StatelessWidget {

@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:linked_scroll_controller/linked_scroll_controller.dart';
 import 'package:quiver/iterables.dart';
+import 'package:yotsugi/common/back_movie_state.dart';
 import 'package:yotsugi/common/widget.dart';
 import 'package:yotsugi/json_data/spreadsheet_data.dart';
 import 'package:yotsugi/statics.dart';
-import 'package:yotsugi/strings.dart';
 import 'package:yotsugi/styles.dart';
 import 'package:yotsugi/util.dart';
 
@@ -17,7 +17,7 @@ class ScreenRoadMap extends StatefulWidget {
   State<StatefulWidget> createState() => _ScreenRoadMapState();
 }
 
-class _ScreenRoadMapState extends State<ScreenRoadMap> {
+class _ScreenRoadMapState extends BackMovieState<ScreenRoadMap> {
   LinkedScrollControllerGroup _controllers;
   final List<ScrollController> _scList = [];
   ScrollController _verticalSc;
@@ -38,7 +38,8 @@ class _ScreenRoadMapState extends State<ScreenRoadMap> {
     _controllers = LinkedScrollControllerGroup();
     _verticalSc = ScrollController()
       ..addListener(() {
-        double ratio = _verticalSc.position.pixels / _verticalSc.position.maxScrollExtent;
+        double ratio =
+            _verticalSc.position.pixels / _verticalSc.position.maxScrollExtent;
         _vScrollRatio.value = Util.roundRatio(ratio);
       });
 
@@ -96,9 +97,13 @@ class _ScreenRoadMapState extends State<ScreenRoadMap> {
                     ? enumerate(dataWithNull).map((it) {
                         final sc = _controllers.addAndGet();
                         sc.addListener(() {
-                          final ratio = sc.position.pixels / sc.position.maxScrollExtent;
+                          final ratio =
+                              sc.position.pixels / sc.position.maxScrollExtent;
                           _hScrollRatio.value = Util.roundRatio(ratio);
                         });
+                        _scList.add(sc);
+                        return _rowWidget(
+                            dataWithNull, datum, _scList[it.index], it.index);
                       }).toList(growable: false)
                     : enumerate(dataWithNull)
                         .map((it) => _rowWidget(
@@ -113,21 +118,14 @@ class _ScreenRoadMapState extends State<ScreenRoadMap> {
 
                 return Stack(
                   children: [
-                    SizedBox.expand(
-                      child: Image.asset(
-                        'assets/shadow.png',
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                    SizedBox.expand(
-                      child: ColoredBox(
-                        color: Colors.black.withOpacity(.4),
-                      ),
-                    ),
+                    ...backGround(videoShadowOpacity: .4),
                     SingleChildScrollView(
                       controller: _verticalSc,
-                      child: Column(
-                        children: allWidgets,
+                      padding: const EdgeInsets.all(16),
+                      child: Center(
+                        child: Column(
+                          children: allWidgets,
+                        ),
                       ),
                     ),
                     Align(
@@ -225,14 +223,20 @@ class _ScreenRoadMapState extends State<ScreenRoadMap> {
           border?.color?.toColor() == null ? Colors.transparent : Colors.white,
       width: border?.width?.toDouble() ?? 0);
 
-  static Widget _rowWidget(List<List<Value>> dataWithNull, Datum datum,
-      ScrollController sc, int index) {
+  static Widget _rowWidget(
+    List<List<Value>> dataWithNull,
+    Datum datum,
+    ScrollController sc,
+    int index,
+  ) {
     final dataListInRow = dataWithNull[index];
     final widgets = enumerate(dataListInRow).map((it) {
+
       final borders = dataListInRow[it.index]?.effectiveFormat?.borders;
       final data = dataListInRow[it.index];
       final text = data?.userEnteredValue?.stringValue;
       final width = datum.columnMetadata[it.index].pixelSize.toDouble();
+
       return Visibility(
         visible: width != 0,
         child: Container(
