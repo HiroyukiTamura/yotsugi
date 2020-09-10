@@ -4,7 +4,7 @@ class Strings {
   static const String SHARE = 'share';
   static const String WORKSHEET = 'worksheet';
   static const String SCROLL = 'scroll';
-  static const String APP_NAME = 'YOTSUGI';
+  static const String APP_NAME = 'Itsumuso';
   static const String GPS = 'GPS';
   static const String GPS_PMS_RELATIONAL =
       '地図を現在地に移動させるために、GPS権限が必要です。\nなお、権限は端末の設定からいつでも変更することができます。';
