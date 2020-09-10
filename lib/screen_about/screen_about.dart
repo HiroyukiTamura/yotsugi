@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:yotsugi/common/back_movie_state.dart';
-import 'package:yotsugi/statics.dart';
-import 'package:yotsugi/strings.dart';
-import 'package:yotsugi/styles.dart';
+import 'package:istsumuso/common/back_movie_state.dart';
+import 'package:istsumuso/statics.dart';
+import 'package:istsumuso/strings.dart';
+import 'package:istsumuso/styles.dart';
 
 class ScreenAbout extends StatefulWidget {
   @override

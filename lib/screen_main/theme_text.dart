@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:yotsugi/strings.dart';
-import 'package:yotsugi/styles.dart';
+import 'package:istsumuso/strings.dart';
+import 'package:istsumuso/styles.dart';
 
 class ThemeText extends StatelessWidget {
   const ThemeText({Key key, this.contentH}) : super(key: key);

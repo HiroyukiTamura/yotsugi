@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:yotsugi/strings.dart';
-import 'package:yotsugi/styles.dart';
+import 'package:istsumuso/strings.dart';
+import 'package:istsumuso/styles.dart';
 
 ///画面左上で戻るボタンを提供する
 class BackBtn extends StatelessWidget {

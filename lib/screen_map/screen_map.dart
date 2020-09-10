@@ -8,9 +8,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
-import 'package:yotsugi/strings.dart';
-import 'package:yotsugi/styles.dart';
-import 'package:yotsugi/util.dart';
+import 'package:istsumuso/strings.dart';
+import 'package:istsumuso/styles.dart';
+import 'package:istsumuso/util.dart';
 
 class ScreenGoogleMapMain extends StatefulWidget {
   const ScreenGoogleMapMain();

@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:yotsugi/common/reporting_err_client_impl_web.dart' if (dart.library.io) 'package:yotsugi/common/reporting_err_client_impl.dart';
-import 'package:yotsugi/strings.dart';
+import 'package:istsumuso/common/reporting_err_client_impl_web.dart' if (dart.library.io) 'package:istsumuso/common/reporting_err_client_impl.dart';
+import 'package:istsumuso/strings.dart';
 
 class Util {
   static Future<void> reportCrash(dynamic exception, { StackTrace stackTrace }) async {

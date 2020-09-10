@@ -1,16 +1,15 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:yotsugi/screen_about/screen_about.dart';
-import 'package:yotsugi/screen_layout/screen_layout.dart';
-import 'package:yotsugi/screen_main/screen_main.dart';
-import 'package:yotsugi/screen_map/screen_map.dart';
-import 'package:yotsugi/screen_post/screen_post.dart';
-import 'package:yotsugi/screen_roadmap/screen_roadmap.dart';
-import 'package:yotsugi/strings.dart';
-import 'package:yotsugi/styles.dart';
-import 'package:yotsugi/common/reporting_err_client_impl_web.dart' if (dart.library.io) 'package:yotsugi/common/reporting_err_client_impl.dart';
+import 'package:istsumuso/screen_about/screen_about.dart';
+import 'package:istsumuso/screen_layout/screen_layout.dart';
+import 'package:istsumuso/screen_main/screen_main.dart';
+import 'package:istsumuso/screen_map/screen_map.dart';
+import 'package:istsumuso/screen_post/screen_post.dart';
+import 'package:istsumuso/screen_roadmap/screen_roadmap.dart';
+import 'package:istsumuso/strings.dart';
+import 'package:istsumuso/styles.dart';
+import 'package:istsumuso/common/reporting_err_client_impl_web.dart' if (dart.library.io) 'package:istsumuso/common/reporting_err_client_impl.dart';
 
 class RootPage extends StatefulWidget {
   @override

@@ -3,18 +3,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:yotsugi/root_page.dart';
-import 'package:yotsugi/screen_main/comment.dart';
-import 'package:yotsugi/screen_main/corner_label.dart';
-import 'package:yotsugi/screen_main/label_fadein.dart';
-import 'package:yotsugi/screen_main/non_glow_behavior.dart';
-import 'package:yotsugi/screen_main/theme_text.dart';
+import 'package:istsumuso/root_page.dart';
+import 'package:istsumuso/screen_main/comment.dart';
+import 'package:istsumuso/screen_main/corner_label.dart';
+import 'package:istsumuso/screen_main/label_fadein.dart';
+import 'package:istsumuso/screen_main/non_glow_behavior.dart';
+import 'package:istsumuso/screen_main/theme_text.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:yotsugi/statics.dart';
-import 'package:yotsugi/strings.dart';
+import 'package:istsumuso/statics.dart';
+import 'package:istsumuso/strings.dart';
 import 'package:share/share.dart';
-import 'package:yotsugi/util.dart';
+import 'package:istsumuso/util.dart';
 
 class ScreenMain extends StatefulWidget {
   const ScreenMain({Key key}) : super(key: key);

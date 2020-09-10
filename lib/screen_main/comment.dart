@@ -2,8 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:yotsugi/util.dart';
-import 'package:yotsugi/common/remote_storage_client_impl_web.dart' if (dart.library.io) 'package:yotsugi/common/remote_storage_client_impl.dart';
+import 'package:istsumuso/util.dart';
+import 'package:istsumuso/common/remote_storage_client_impl_web.dart' if (dart.library.io) 'package:istsumuso/common/remote_storage_client_impl.dart';
 
 class Comment extends StatelessWidget {
   const Comment({Key key, @required this.string}) : super(key: key);
