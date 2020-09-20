@@ -85,10 +85,10 @@ class _ScreenMainState extends State<ScreenMain> with TickerProviderStateMixin {
     final is1Pain =
         mediaQuery.size.height > mediaQuery.size.width; //WEB CUSTOM;
 
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: is1Pain ? _onePainBody(mediaQuery) : _twoPainBody(mediaQuery),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: is1Pain ? _onePainBody(mediaQuery) : _twoPainBody(mediaQuery),
       ),
     );
   }
