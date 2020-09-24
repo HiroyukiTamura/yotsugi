@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:istsumuso/styles.dart';
+import 'package:itsumuso/styles.dart';
 
 class CornerLabel extends StatelessWidget {
   const CornerLabel({

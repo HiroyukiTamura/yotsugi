@@ -1,7 +1,7 @@
 
 import 'dart:html';
 
-import 'package:istsumuso/common/redirect_router.dart';
+import 'package:itsumuso/common/redirect_router.dart';
 
 RedirectRouter createRedirectRouter() => RedirectRouterImplWeb();
 

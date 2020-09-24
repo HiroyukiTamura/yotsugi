@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:istsumuso/styles.dart';
+import 'package:itsumuso/styles.dart';
 
 class LabelFadeIn extends StatelessWidget {
   const LabelFadeIn({

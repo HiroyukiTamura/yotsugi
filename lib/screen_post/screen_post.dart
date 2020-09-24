@@ -7,11 +7,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:istsumuso/statics.dart';
-import 'package:istsumuso/strings.dart';
-import 'package:istsumuso/util.dart';
-import 'package:istsumuso/common/remote_storage_client_impl_web.dart'
-    if (dart.library.io) 'package:istsumuso/common/remote_storage_client_impl.dart';
+import 'package:itsumuso/statics.dart';
+import 'package:itsumuso/strings.dart';
+import 'package:itsumuso/util.dart';
+import 'package:itsumuso/common/remote_storage_client_impl_web.dart'
+    if (dart.library.io) 'package:itsumuso/common/remote_storage_client_impl.dart';
 
 class ScreenPost extends StatefulWidget {
   @override

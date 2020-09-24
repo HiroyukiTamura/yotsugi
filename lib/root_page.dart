@@ -1,19 +1,19 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:istsumuso/common/redirect_router.dart' show RedirectCommand;
-import 'package:istsumuso/screen_about/screen_about.dart';
-import 'package:istsumuso/screen_layout/screen_layout.dart';
-import 'package:istsumuso/screen_main/screen_main.dart';
-import 'package:istsumuso/screen_map/screen_map.dart';
-import 'package:istsumuso/screen_post/screen_post.dart';
-import 'package:istsumuso/screen_roadmap/screen_roadmap.dart';
-import 'package:istsumuso/statics.dart';
-import 'package:istsumuso/strings.dart';
-import 'package:istsumuso/styles.dart';
-import 'package:istsumuso/common/reporting_err_client_impl_web.dart' if (dart.library.io) 'package:istsumuso/common/reporting_err_client_impl.dart';
-import 'package:istsumuso/common/redirect_router_impl_web.dart' if (dart.library.io) 'package:istsumuso/common/redirect_router_impl.dart';
-import 'package:istsumuso/util.dart';
+import 'package:itsumuso/common/redirect_router.dart' show RedirectCommand;
+import 'package:itsumuso/screen_about/screen_about.dart';
+import 'package:itsumuso/screen_layout/screen_layout.dart';
+import 'package:itsumuso/screen_main/screen_main.dart';
+import 'package:itsumuso/screen_map/screen_map.dart';
+import 'package:itsumuso/screen_post/screen_post.dart';
+import 'package:itsumuso/screen_roadmap/screen_roadmap.dart';
+import 'package:itsumuso/statics.dart';
+import 'package:itsumuso/strings.dart';
+import 'package:itsumuso/styles.dart';
+import 'package:itsumuso/common/reporting_err_client_impl_web.dart' if (dart.library.io) 'package:itsumuso/common/reporting_err_client_impl.dart';
+import 'package:itsumuso/common/redirect_router_impl_web.dart' if (dart.library.io) 'package:itsumuso/common/redirect_router_impl.dart';
+import 'package:itsumuso/util.dart';
 
 class RootPage extends StatefulWidget {
   @override

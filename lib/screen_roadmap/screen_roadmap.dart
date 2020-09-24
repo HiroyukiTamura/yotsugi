@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:linked_scroll_controller/linked_scroll_controller.dart';
 import 'package:quiver/iterables.dart';
-import 'package:istsumuso/common/back_movie_state.dart';
-import 'package:istsumuso/common/widget.dart';
-import 'package:istsumuso/json_data/spreadsheet_data.dart';
-import 'package:istsumuso/statics.dart';
-import 'package:istsumuso/styles.dart';
-import 'package:istsumuso/util.dart';
+import 'package:itsumuso/common/back_movie_state.dart';
+import 'package:itsumuso/common/widget.dart';
+import 'package:itsumuso/json_data/spreadsheet_data.dart';
+import 'package:itsumuso/statics.dart';
+import 'package:itsumuso/styles.dart';
+import 'package:itsumuso/util.dart';
 
 class ScreenRoadMap extends StatefulWidget {
   @override

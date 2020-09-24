@@ -2,7 +2,7 @@ import 'dart:html';
 import 'dart:typed_data';
 
 import 'package:firebase/firebase.dart' as fb;
-import 'package:istsumuso/common/remote_storage_client.dart';
+import 'package:itsumuso/common/remote_storage_client.dart';
 
 RemoteStorageClient createRemoteStorageClient() => RemoteStorageClientImplWeb();
 

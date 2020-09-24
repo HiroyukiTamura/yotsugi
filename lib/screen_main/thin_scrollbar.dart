@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:istsumuso/strings.dart';
-import 'package:istsumuso/styles.dart';
+import 'package:itsumuso/strings.dart';
+import 'package:itsumuso/styles.dart';
 
 class ThinScrollbar extends StatelessWidget {
 
