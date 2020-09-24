@@ -13,7 +13,7 @@ import 'package:itsumuso/strings.dart';
 import 'package:itsumuso/styles.dart';
 import 'package:itsumuso/common/reporting_err_client_impl_web.dart' if (dart.library.io) 'package:itsumuso/common/reporting_err_client_impl.dart';
 import 'package:itsumuso/common/redirect_router_impl_web.dart' if (dart.library.io) 'package:itsumuso/common/redirect_router_impl.dart';
-import 'package:itsumuso/util.dart';
+import 'package:itsumuso/common/url_launcher_impl_web.dart' if (dart.library.io) 'package:itsumuso/common/url_launcher_impl.dart';
 
 class RootPage extends StatefulWidget {
   @override
@@ -29,6 +29,7 @@ class RootPage extends StatefulWidget {
 
 class _RootPageState extends State<RootPage> {
 
+  final _urlLauncher = createUrlLauncher();
   final _redirectCommand = createRedirectRouter().getRedirectCommand();
   Future<void> _initializeFlutterFireFuture;
 
@@ -70,7 +71,7 @@ class _RootPageState extends State<RootPage> {
           );
 
         final storeUrl = _redirectCommand == RedirectCommand.APP_STORE ? Statics.APP_STORE_URL : Statics.PLAY_STORE_URL;
-        Util.launchURL(storeUrl);
+        _urlLauncher.launchUrl(storeUrl);
 
         return _bgContainer();
       });

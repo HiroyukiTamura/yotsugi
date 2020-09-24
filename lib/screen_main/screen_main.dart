@@ -15,6 +15,7 @@ import 'package:itsumuso/statics.dart';
 import 'package:itsumuso/strings.dart';
 import 'package:share/share.dart';
 import 'package:itsumuso/util.dart';
+import 'package:itsumuso/common/url_launcher_impl_web.dart' if (dart.library.io) 'package:itsumuso/common/url_launcher_impl.dart';
 
 class ScreenMain extends StatefulWidget {
   const ScreenMain({Key key}) : super(key: key);
@@ -161,6 +162,7 @@ class _Header extends StatelessWidget {
   final Animation<Offset> animation;
   final double headerH;
   final Duration topRightAnmDuration;
+  static final _urlLauncher = createUrlLauncher();
 
   static Tween<Offset> getTopTween() {
     return Tween<Offset>(
@@ -217,22 +219,22 @@ class _Header extends StatelessWidget {
                 _ShareIcon(
                   icon: FontAwesomeIcons.github,
                   duration: const Duration(seconds: 1),
-                  onTap: () async => Util.launchURL(Statics.GITHUB_URL),
+                  onTap: () async => _urlLauncher.launchUrl(Statics.GITHUB_URL),
                 ),
                 _ShareIcon(
                   icon: FontAwesomeIcons.twitter,
                   duration: const Duration(milliseconds: 1100),
-                  onTap: () async => Util.launchURL(Statics.TWITTER_URL),
+                  onTap: () async => _urlLauncher.launchUrl(Statics.TWITTER_URL),
                 ),
                 _ShareIcon(
                   icon: FontAwesomeIcons.facebook,
                   duration: const Duration(milliseconds: 1200),
-                  onTap: () async => Util.launchURL(Statics.FACEBOOK_URL),
+                  onTap: () async => _urlLauncher.launchUrl(Statics.FACEBOOK_URL),
                 ),
                 _ShareIcon(
                   icon: FontAwesomeIcons.line,
                   duration: const Duration(milliseconds: 1300),
-                  onTap: () async => Util.launchURL(Statics.LINE_URL),
+                  onTap: () async => _urlLauncher.launchUrl(Statics.LINE_URL),
                 ),
               ],
             ),
