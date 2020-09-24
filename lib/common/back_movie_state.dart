@@ -13,7 +13,7 @@ abstract class BackMovieState<T extends StatefulWidget> extends State<T> {
   @override
   void initState() {
     super.initState();
-    vpc = VideoPlayerController.asset('video/roadmap_bg.mp4');
+    vpc = VideoPlayerController.asset('assets/roadmap_bg.mp4');
     playVideoFuture = _playVideo();
   }
 
