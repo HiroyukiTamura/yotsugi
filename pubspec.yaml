@@ -48,6 +48,7 @@ dependencies:
   fluttertoast: ^7.0.4
   firebase: ^7.3.0
   video_player: ^0.10.12+2
+  path_provider_windows: ^0.0.4+1
 
 dev_dependencies:
   flutter_test:
