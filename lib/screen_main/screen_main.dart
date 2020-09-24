@@ -219,22 +219,22 @@ class _Header extends StatelessWidget {
                 _ShareIcon(
                   icon: FontAwesomeIcons.github,
                   duration: const Duration(seconds: 1),
-                  onTap: () async => _urlLauncher.launchUrl(Statics.GITHUB_URL),
+                  onTap: () async => _urlLauncher.launchUrl(Statics.GITHUB_URL, newTab: true),
                 ),
                 _ShareIcon(
                   icon: FontAwesomeIcons.twitter,
                   duration: const Duration(milliseconds: 1100),
-                  onTap: () async => _urlLauncher.launchUrl(Statics.TWITTER_URL),
+                  onTap: () async => _urlLauncher.launchUrl(Statics.TWITTER_URL, newTab: true),
                 ),
                 _ShareIcon(
                   icon: FontAwesomeIcons.facebook,
                   duration: const Duration(milliseconds: 1200),
-                  onTap: () async => _urlLauncher.launchUrl(Statics.FACEBOOK_URL),
+                  onTap: () async => _urlLauncher.launchUrl(Statics.FACEBOOK_URL, newTab: true),
                 ),
                 _ShareIcon(
                   icon: FontAwesomeIcons.line,
                   duration: const Duration(milliseconds: 1300),
-                  onTap: () async => _urlLauncher.launchUrl(Statics.LINE_URL),
+                  onTap: () async => _urlLauncher.launchUrl(Statics.LINE_URL, newTab: true),
                 ),
               ],
             ),
