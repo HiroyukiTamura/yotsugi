@@ -124,8 +124,8 @@ class _ScreenPostState extends State<ScreenPost> {
                                             height: _IMG_SIZE,
                                             width: _IMG_SIZE,
                                           )
-                                        : Image.asset(
-                                            imgData.filePath,
+                                        : Image.memory(
+                                            imgData.blob,
                                             height: _IMG_SIZE,
                                             width: _IMG_SIZE,
                                           ),
