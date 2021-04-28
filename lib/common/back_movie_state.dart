@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:itsumuso/gen/assets.gen.dart';
 import 'package:video_player/video_player.dart';
 
 @protected
@@ -13,7 +14,7 @@ abstract class BackMovieState<T extends StatefulWidget> extends State<T> {
   @override
   void initState() {
     super.initState();
-    vpc = VideoPlayerController.asset('assets/roadmap_bg.mp4');
+    vpc = VideoPlayerController.asset(Assets.roadmapBg);
     playVideoFuture = _playVideo();
   }
 
@@ -62,9 +63,7 @@ abstract class BackMovieState<T extends StatefulWidget> extends State<T> {
           SizedBox.expand(
             child: FittedBox(
               fit: BoxFit.fill,
-              child: Image.asset(
-                'assets/shadow.png',
-              ),
+              child: Assets.shadow.image(),
             ),
           ),
           Container(

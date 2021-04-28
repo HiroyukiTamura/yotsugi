@@ -4,13 +4,15 @@
 /// *****************************************************
 
 import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter/services.dart';
 
 class Assets {
   Assets._();
 
-  static const String errRobot = 'assets/err_robot.svg';
+  static const SvgGenImage errRobot = SvgGenImage('assets/err_robot.svg');
   static const AssetGenImage header = AssetGenImage('assets/header.png');
-  static const String layout = 'assets/layout.svg';
+  static const SvgGenImage layout = SvgGenImage('assets/layout.svg');
   static const String mapStyle = 'assets/map_style.json';
   static const AssetGenImage mapsFlags = AssetGenImage('assets/maps_flags.png');
   static const String roadmapBg = 'assets/roadmap_bg.mp4';
@@ -65,4 +67,49 @@ class AssetGenImage extends AssetImage {
   }
 
   String get path => assetName;
+}
+
+class SvgGenImage {
+  const SvgGenImage(this._assetName);
+
+  final String _assetName;
+
+  SvgPicture svg({
+    Key? key,
+    bool matchTextDirection = false,
+    AssetBundle? bundle,
+    String? package,
+    double? width,
+    double? height,
+    BoxFit fit = BoxFit.contain,
+    AlignmentGeometry alignment = Alignment.center,
+    bool allowDrawingOutsideViewBox = false,
+    WidgetBuilder? placeholderBuilder,
+    Color? color,
+    BlendMode colorBlendMode = BlendMode.srcIn,
+    String? semanticsLabel,
+    bool excludeFromSemantics = false,
+    Clip clipBehavior = Clip.hardEdge,
+  }) {
+    return SvgPicture.asset(
+      _assetName,
+      key: key,
+      matchTextDirection: matchTextDirection,
+      bundle: bundle,
+      package: package,
+      width: width,
+      height: height,
+      fit: fit,
+      alignment: alignment,
+      allowDrawingOutsideViewBox: allowDrawingOutsideViewBox,
+      placeholderBuilder: placeholderBuilder,
+      color: color,
+      colorBlendMode: colorBlendMode,
+      semanticsLabel: semanticsLabel,
+      excludeFromSemantics: excludeFromSemantics,
+      clipBehavior: clipBehavior,
+    );
+  }
+
+  String get path => _assetName;
 }

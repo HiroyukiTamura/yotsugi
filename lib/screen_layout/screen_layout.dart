@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:itsumuso/common/back_movie_state.dart';
 import 'package:itsumuso/common/widget.dart';
+import 'package:itsumuso/gen/assets.gen.dart';
 
 class ScreenLayout extends StatefulWidget {
   @override
@@ -28,7 +29,8 @@ class _ScreenLayoutState extends BackMovieState<ScreenLayout> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((_) => _forceDeviceRotation());
+    WidgetsBinding.instance!
+        .addPostFrameCallback((_) => _forceDeviceRotation());
   }
 
   @override
@@ -52,15 +54,9 @@ class _ScreenLayoutState extends BackMovieState<ScreenLayout> {
             Container(
               padding: const EdgeInsets.all(16),
               alignment: Alignment.center,
-              child: kIsWeb
-                  ? CachedNetworkImage(
-                      imageUrl: 'assets/layout.svg',
-                      color: Colors.white,
-                    )
-                  : SvgPicture.asset(
-                      'assets/layout.svg',
-                      color: Colors.white,
-                    ),
+              child: Assets.layout.svg(
+                  color: Colors.white
+              ),
             ),
             BackBtn(
               btnFillColor: Theme.of(context).accentColor,
@@ -72,7 +68,7 @@ class _ScreenLayoutState extends BackMovieState<ScreenLayout> {
               child: Align(
                 alignment: Alignment.topRight,
                 child: Text(
-                  '2020:09:07:13:10',//todo fix
+                  '2020:09:07:13:10', //todo fix
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.white,
@@ -86,8 +82,9 @@ class _ScreenLayoutState extends BackMovieState<ScreenLayout> {
     );
   }
 
-  Future<void> _forceDeviceRotation() async => SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeRight,
-      DeviceOrientation.landscapeLeft,
-    ]);
+  Future<void> _forceDeviceRotation() async =>
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.landscapeRight,
+        DeviceOrientation.landscapeLeft,
+      ]);
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:itsumuso/gen/assets.gen.dart';
 import 'package:itsumuso/strings.dart';
 import 'package:itsumuso/styles.dart';
 
@@ -46,27 +47,16 @@ class ErrRobotWidget extends StatelessWidget {
   final String errMsg;
   final String? errMsg2nd;
 
-  static const _IMG_URL = 'assets/err_robot.svg';
   static const double _SIZE = 72;
 
   @override
   Widget build(BuildContext context) {
     List<Widget> children = <Widget>[
-      if (kIsWeb)
-        CachedNetworkImage(
-          imageUrl: _IMG_URL,
-          height: _SIZE,
-          width: _SIZE,
-          color: Styles.ACCENT_COLOR,
-        )
-      else
-        SvgPicture.asset(
-          _IMG_URL,
-          height: _SIZE,
-          width: _SIZE,
-          semanticsLabel: Strings.SNACK_ERR,
-          color: Styles.ACCENT_COLOR,
-        ),
+      Assets.errRobot.svg(
+        height: _SIZE,
+        width: _SIZE,
+        color: Styles.ACCENT_COLOR,
+      ),
       const SizedBox(
         height: 24,
       ),

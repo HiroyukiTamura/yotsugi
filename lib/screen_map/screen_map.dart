@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:itsumuso/gen/assets.gen.dart';
 import 'package:location/location.dart';
 import 'package:itsumuso/strings.dart';
 import 'package:itsumuso/styles.dart';
@@ -148,12 +149,12 @@ class _ScreenGoogleMapState extends State<ScreenGoogleMapMain> {
   }
 
   Future<_Data> _loadMapStyle(BuildContext context) async {
-    final mapStyle = await rootBundle.loadString('assets/map_style.json');
+    final mapStyle = await rootBundle.loadString(Assets.mapStyle);
     BitmapDescriptor bd;
     if (kIsWeb) {
       final conf =
           createLocalImageConfiguration(context, size: const Size.square(48));
-      bd = await BitmapDescriptor.fromAssetImage(conf, 'assets/maps_flags.png');
+      bd = await BitmapDescriptor.fromAssetImage(conf, Assets.mapsFlags.path);
     } else {
       final Uint8List markerIcon =
           await _getBytesFromAsset('maps_flags.png', 64);

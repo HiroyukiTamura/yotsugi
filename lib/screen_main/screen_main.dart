@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:itsumuso/gen/assets.gen.dart';
 import 'package:itsumuso/root_page.dart';
 import 'package:itsumuso/screen_main/comment.dart';
 import 'package:itsumuso/screen_main/corner_label.dart';
@@ -15,7 +16,8 @@ import 'package:itsumuso/statics.dart';
 import 'package:itsumuso/strings.dart';
 import 'package:share/share.dart';
 import 'package:itsumuso/util.dart';
-import 'package:itsumuso/common/url_launcher_impl_web.dart' if (dart.library.io) 'package:itsumuso/common/url_launcher_impl.dart';
+import 'package:itsumuso/common/url_launcher_impl_web.dart'
+    if (dart.library.io) 'package:itsumuso/common/url_launcher_impl.dart';
 
 class ScreenMain extends StatefulWidget {
   const ScreenMain({Key? key}) : super(key: key);
@@ -129,26 +131,26 @@ class _ScreenMainState extends State<ScreenMain> with TickerProviderStateMixin {
   }
 
   Widget _twoPainBody(MediaQueryData mediaQuery) => Row(
-      children: [
-        Expanded(
-          child: _Header(
-            headerH: mediaQuery.size.height,
-            animation: _animation,
-            topRightAnmDuration: const Duration(milliseconds: 1500),
+        children: [
+          Expanded(
+            child: _Header(
+              headerH: mediaQuery.size.height,
+              animation: _animation,
+              topRightAnmDuration: const Duration(milliseconds: 1500),
+            ),
           ),
-        ),
-        Expanded(
-          child: _Content(
-            is2pain: true,
-            height: mediaQuery.size.height,
-            sc: _sc,
-            fadeInAcLeft: _fadeInAcLeft,
-            fadeInAcRight: _fadeInAcRight,
-            themeOpacity: _themeOpacity,
+          Expanded(
+            child: _Content(
+              is2pain: true,
+              height: mediaQuery.size.height,
+              sc: _sc,
+              fadeInAcLeft: _fadeInAcLeft,
+              fadeInAcRight: _fadeInAcRight,
+              themeOpacity: _themeOpacity,
+            ),
           ),
-        ),
-      ],
-    );
+        ],
+      );
 }
 
 class _Header extends StatelessWidget {
@@ -178,8 +180,7 @@ class _Header extends StatelessWidget {
         child: Stack(
           children: [
             SizedBox.expand(
-              child: Image.asset(
-                'assets/header.png',
+              child: Assets.header.image(
                 fit: BoxFit.cover,
               ),
             ),
@@ -210,44 +211,47 @@ class _Header extends StatelessWidget {
         ),
       );
 
-
   Widget _topLeftLabel() => kIsWeb
-        ? Align(
-            alignment: Alignment.topLeft,
-            child: Row(
-              children: [
-                _ShareIcon(
-                  icon: FontAwesomeIcons.github,
-                  duration: const Duration(seconds: 1),
-                  onTap: () async => _urlLauncher.launchUrl(Statics.GITHUB_URL, newTab: true),
-                ),
-                _ShareIcon(
-                  icon: FontAwesomeIcons.twitter,
-                  duration: const Duration(milliseconds: 1100),
-                  onTap: () async => _urlLauncher.launchUrl(Statics.TWITTER_URL, newTab: true),
-                ),
-                _ShareIcon(
-                  icon: FontAwesomeIcons.facebook,
-                  duration: const Duration(milliseconds: 1200),
-                  onTap: () async => _urlLauncher.launchUrl(Statics.FACEBOOK_URL, newTab: true),
-                ),
-                _ShareIcon(
-                  icon: FontAwesomeIcons.line,
-                  duration: const Duration(milliseconds: 1300),
-                  onTap: () async => _urlLauncher.launchUrl(Statics.LINE_URL, newTab: true),
-                ),
-              ],
-            ),
-          )
-        : CornerLabel(
-            alignment: Alignment.topLeft,
-            curve: Curves.easeInOutSine,
-            tween: getTopTween(),
-            duration: const Duration(seconds: 1),
-            string: Strings.SHARE,
-            fontSize: 12,
-            onTap: () => Share.share(Statics.HP_URL), //todo ここ
-          );
+      ? Align(
+          alignment: Alignment.topLeft,
+          child: Row(
+            children: [
+              _ShareIcon(
+                icon: FontAwesomeIcons.github,
+                duration: const Duration(seconds: 1),
+                onTap: () async =>
+                    _urlLauncher.launchUrl(Statics.GITHUB_URL, newTab: true),
+              ),
+              _ShareIcon(
+                icon: FontAwesomeIcons.twitter,
+                duration: const Duration(milliseconds: 1100),
+                onTap: () async =>
+                    _urlLauncher.launchUrl(Statics.TWITTER_URL, newTab: true),
+              ),
+              _ShareIcon(
+                icon: FontAwesomeIcons.facebook,
+                duration: const Duration(milliseconds: 1200),
+                onTap: () async =>
+                    _urlLauncher.launchUrl(Statics.FACEBOOK_URL, newTab: true),
+              ),
+              _ShareIcon(
+                icon: FontAwesomeIcons.line,
+                duration: const Duration(milliseconds: 1300),
+                onTap: () async =>
+                    _urlLauncher.launchUrl(Statics.LINE_URL, newTab: true),
+              ),
+            ],
+          ),
+        )
+      : CornerLabel(
+          alignment: Alignment.topLeft,
+          curve: Curves.easeInOutSine,
+          tween: getTopTween(),
+          duration: const Duration(seconds: 1),
+          string: Strings.SHARE,
+          fontSize: 12,
+          onTap: () => Share.share(Statics.HP_URL), //todo ここ
+        );
 }
 
 class _Content extends StatelessWidget {
@@ -465,12 +469,12 @@ class _ShareIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => TweenAnimationBuilder<Offset>(
-    tween: _Header.getTopTween(),
-    builder: (_, offset, child) =>
-        FractionalTranslation(translation: offset, child: child),
-    duration: duration,
-    curve: Curves.easeInOutSine,
-    child: RawMaterialButton(
+        tween: _Header.getTopTween(),
+        builder: (_, offset, child) =>
+            FractionalTranslation(translation: offset, child: child),
+        duration: duration,
+        curve: Curves.easeInOutSine,
+        child: RawMaterialButton(
           constraints: const BoxConstraints(minWidth: 28, minHeight: 28),
           onPressed: onTap,
           shape: const CircleBorder(),
@@ -481,5 +485,5 @@ class _ShareIcon extends StatelessWidget {
             color: Colors.black.withOpacity(.8),
           ),
         ),
-  );
+      );
 }

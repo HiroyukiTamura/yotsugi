@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:itsumuso/gen/assets.gen.dart';
 import 'package:itsumuso/statics.dart';
 import 'package:itsumuso/strings.dart';
 import 'package:itsumuso/util.dart';
@@ -50,8 +51,7 @@ class _ScreenPostState extends State<ScreenPost> {
           child: Stack(
             children: [
               SizedBox.expand(
-                child: Image.asset(
-                  'assets/shadow.png',
+                child: Assets.shadow.image(
                   fit: BoxFit.fill,
                 ),
               ),
@@ -94,10 +94,11 @@ class _ScreenPostState extends State<ScreenPost> {
                                   onTap: () async {
                                     final pickedFile = await ImagePicker()
                                         .getImage(source: ImageSource.gallery);
-                                    if (pickedFile == null)
-                                      return;
-                                    final bytes = await pickedFile.readAsBytes();
-                                    _imgDataVn.value = _ImgData(bytes, pickedFile.path);
+                                    if (pickedFile == null) return;
+                                    final bytes =
+                                        await pickedFile.readAsBytes();
+                                    _imgDataVn.value =
+                                        _ImgData(bytes, pickedFile.path);
                                   },
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(
