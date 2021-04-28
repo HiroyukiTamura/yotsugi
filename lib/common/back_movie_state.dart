@@ -35,7 +35,7 @@ abstract class BackMovieState<T extends StatefulWidget> extends State<T> {
       ? [
           FutureBuilder<void>(
               future: playVideoFuture,
-              builder: (context, snapshot) => vpc.value.initialized
+              builder: (context, snapshot) => vpc.value?.isInitialized == true
                   ? Stack(
                       children: [
                         SizedBox.expand(

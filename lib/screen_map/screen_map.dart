@@ -174,7 +174,7 @@ class _ScreenGoogleMapState extends State<ScreenGoogleMapMain> {
             Strings.GPS_PMS_RELATIONAL,
           ),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
               onPressed: () async => Navigator.pop(context),
               child: Text(
                 Strings.OK,
@@ -196,7 +196,7 @@ class _ScreenGoogleMapState extends State<ScreenGoogleMapMain> {
             Strings.GPS_SERVICE_RELATIONAL,
           ),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
               onPressed: () async => Navigator.pop(context),
               child: Text(
                 Strings.OK,

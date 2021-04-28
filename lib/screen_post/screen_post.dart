@@ -167,7 +167,7 @@ class _ScreenPostState extends State<ScreenPost> {
               ),
               actions: <Widget>[
                 // ボタン領域
-                FlatButton(
+                TextButton(
                   onPressed: () async => Navigator.pop(context),
                   child: const Text(
                     Strings.CANCEL,
@@ -176,7 +176,7 @@ class _ScreenPostState extends State<ScreenPost> {
                     ),
                   ),
                 ),
-                FlatButton(
+                TextButton(
                   onPressed: () async {
                     if (controller.text == Statics.PASSWORD)
                       Navigator.pop(context, controller.value.text);

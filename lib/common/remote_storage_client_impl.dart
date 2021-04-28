@@ -8,7 +8,7 @@ RemoteStorageClient createRemoteStorageClient() => RemoteStorageClientImpl();
 class RemoteStorageClientImpl extends RemoteStorageClient {
   @override
   Future<String> getImgUrl(String fileName) async  {
-    final dynamic url = await FirebaseStorage()
+    final dynamic url = await FirebaseStorage.instance
         .ref()
         .child('log')
         .child(fileName)
@@ -22,5 +22,5 @@ class RemoteStorageClientImpl extends RemoteStorageClient {
         .child('log')
         .child(fileName)
         .putFile(File(filePath))
-        .onComplete;
+        .whenComplete(() {});
 }

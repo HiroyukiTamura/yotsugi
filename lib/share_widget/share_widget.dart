@@ -6,7 +6,7 @@ class ShareWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Center(
         child: Row(
-          children: [
+          children: const [
             _SnsButton(iconData: FontAwesomeIcons.twitter),
             _SnsButton(iconData: FontAwesomeIcons.line,),
             _SnsButton(iconData: FontAwesomeIcons.facebook,)
