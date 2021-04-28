@@ -9,18 +9,18 @@ class ReportingErrClientImpl extends ReportingErrClient {
   Future<void> initialize() async {
     await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
 
-    Function originalOnError = FlutterError.onError;
+    Function? originalOnError = FlutterError.onError;
     FlutterError.onError = (FlutterErrorDetails errorDetails) async {
       await FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
-      originalOnError(errorDetails);
+      originalOnError!(errorDetails);
     };
   }
 
   @override
-  Future<void> reportErr(Object err, StackTrace stackTrace) =>
+  Future<void> reportErr(Object? err, StackTrace? stackTrace) =>
       FirebaseCrashlytics.instance.recordError(err, stackTrace);
 
   @override
-  Future<void> reportCaughtStackTrace(dynamic exception, {StackTrace stackTrace}) =>
+  Future<void> reportCaughtStackTrace(dynamic exception, {StackTrace? stackTrace}) =>
       FirebaseCrashlytics.instance.recordError(exception, stackTrace);
 }

@@ -8,11 +8,11 @@ class ReportingErrClientImplWeb extends ReportingErrClient {
   Future<void> initialize() async {}
 
   @override
-  Future<void> reportErr(Object err, StackTrace stackTrace) async {
+  Future<void> reportErr(Object? err, StackTrace? stackTrace) async {
     debugPrint(err.toString());
     debugPrintStack(stackTrace: stackTrace);
   }
 
   @override
-  Future<void> reportCaughtStackTrace(dynamic exception, {StackTrace stackTrace}) async {}
+  Future<void> reportCaughtStackTrace(dynamic exception, {StackTrace? stackTrace}) async {}
 }

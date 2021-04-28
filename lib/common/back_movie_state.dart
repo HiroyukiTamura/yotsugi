@@ -6,9 +6,9 @@ import 'package:video_player/video_player.dart';
 @protected
 abstract class BackMovieState<T extends StatefulWidget> extends State<T> {
   @protected
-  Future<void> playVideoFuture;
+  Future<void>? playVideoFuture;
   @protected
-  VideoPlayerController vpc;
+  late VideoPlayerController vpc;
 
   @override
   void initState() {
@@ -35,15 +35,15 @@ abstract class BackMovieState<T extends StatefulWidget> extends State<T> {
       ? [
           FutureBuilder<void>(
               future: playVideoFuture,
-              builder: (context, snapshot) => vpc.value?.isInitialized == true
+              builder: (context, snapshot) => vpc.value.isInitialized
                   ? Stack(
                       children: [
                         SizedBox.expand(
                           child: FittedBox(
                             fit: BoxFit.cover,
                             child: SizedBox(
-                              width: vpc.value.size?.width ?? 0,
-                              height: vpc.value.size?.height ?? 0,
+                              width: vpc.value.size.width,
+                              height: vpc.value.size.height,
                               child: VideoPlayer(vpc),
                             ),
                           ),

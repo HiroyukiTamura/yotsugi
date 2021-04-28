@@ -19,15 +19,15 @@ class ScreenPost extends StatefulWidget {
 }
 
 class _ScreenPostState extends State<ScreenPost> {
-  ValueNotifier<_ImgData> _imgDataVn;
-  TextEditingController _editingController;
+  late ValueNotifier<_ImgData?> _imgDataVn;
+  late TextEditingController _editingController;
   static const double _IMG_SIZE = 160;
 
   @override
   void initState() {
     super.initState();
     _editingController = TextEditingController();
-    _imgDataVn = ValueNotifier<_ImgData>(null);
+    _imgDataVn = ValueNotifier<_ImgData?>(null);
   }
 
   @override
@@ -87,13 +87,15 @@ class _ScreenPostState extends State<ScreenPost> {
                           hintText: 'コメントを入力',
                         ),
                       ),
-                      ValueListenableBuilder<_ImgData>(
+                      ValueListenableBuilder<_ImgData?>(
                           valueListenable: _imgDataVn,
                           builder: (context, imgData, child) => imgData == null
                               ? InkWell(
                                   onTap: () async {
                                     final pickedFile = await ImagePicker()
                                         .getImage(source: ImageSource.gallery);
+                                    if (pickedFile == null)
+                                      return;
                                     final bytes = await pickedFile.readAsBytes();
                                     _imgDataVn.value = _ImgData(bytes, pickedFile.path);
                                   },
@@ -193,7 +195,7 @@ class _ScreenPostState extends State<ScreenPost> {
 
     if (pw == null) return;
 
-    if (_editingController.text?.isNotEmpty != true) {
+    if (_editingController.text.isNotEmpty != true) {
       await Fluttertoast.showToast(msg: Strings.SNACK_NO_COMMENT);
       return;
     }
@@ -201,15 +203,16 @@ class _ScreenPostState extends State<ScreenPost> {
     await Fluttertoast.showToast(msg: Strings.SNACK_UPLOADING);
 
     final client = createRemoteStorageClient();
-    String fileName;
-    if (_imgDataVn.value != null) {
-      fileName = client.genFileName(_imgDataVn.value.filePath);
+    String? fileName;
+    final imgData = _imgDataVn.value;
+    if (imgData != null) {
+      fileName = client.genFileName(imgData.filePath);
 
       try {
         if (kIsWeb)
-          await client.uploadBlob(_imgDataVn.value.blob, fileName);
+          await client.uploadBlob(imgData.blob, fileName);
         else
-          await client.uploadImg(_imgDataVn.value.filePath, fileName);
+          await client.uploadImg(imgData.filePath, fileName);
       } catch (e) {
         Util.reportCrash(e);
         await Fluttertoast.showToast(msg: Strings.SNACK_ERR);
@@ -235,6 +238,7 @@ class _ScreenPostState extends State<ScreenPost> {
   }
 }
 
+// todo freezed
 class _ImgData {
   _ImgData(this.blob, this.filePath);
 

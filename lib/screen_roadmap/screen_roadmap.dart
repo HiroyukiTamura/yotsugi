@@ -18,14 +18,14 @@ class ScreenRoadMap extends StatefulWidget {
 }
 
 class _ScreenRoadMapState extends BackMovieState<ScreenRoadMap> {
-  LinkedScrollControllerGroup _controllers;
+  late LinkedScrollControllerGroup _controllers;
   final List<ScrollController> _scList = [];
-  ScrollController _verticalSc;
+  late ScrollController _verticalSc;
   static final accentColor = Colors.black.withOpacity(.7);
 
-  ValueNotifier<_SpreadSheetDataWrapper> _vn;
-  ValueNotifier<double> _vScrollRatio;
-  ValueNotifier<double> _hScrollRatio;
+  late ValueNotifier<_SpreadSheetDataWrapper?> _vn;
+  late ValueNotifier<double> _vScrollRatio;
+  late ValueNotifier<double> _hScrollRatio;
 
   @override
   void initState() {
@@ -51,7 +51,7 @@ class _ScreenRoadMapState extends BackMovieState<ScreenRoadMap> {
     super.dispose();
     _scList.forEach((sc) => sc.dispose());
     _vn.dispose();
-    _verticalSc.dispose();
+    _verticalSc!.dispose();
     _vScrollRatio.dispose();
     _hScrollRatio.dispose();
   }
@@ -61,11 +61,11 @@ class _ScreenRoadMapState extends BackMovieState<ScreenRoadMap> {
         backgroundColor: Styles.PRIMARY_COLOR,
         body: Padding(
           padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-          child: ValueListenableBuilder<_SpreadSheetDataWrapper>(
+          child: ValueListenableBuilder<_SpreadSheetDataWrapper?>(
               valueListenable: _vn,
               builder: (context, data, child) {
                 if (data?.err != null) {
-                  Util.reportCrash(data.err);
+                  Util.reportCrash(data!.err);
                   return SafeArea(
                     child: Stack(
                       children: const [
@@ -79,17 +79,18 @@ class _ScreenRoadMapState extends BackMovieState<ScreenRoadMap> {
                   );
                 }
 
-                if (data?.ssd == null)
+                final ssd = data?.ssd;
+
+                if (ssd == null)
                   return const Center(
                     child: CircularProgressIndicator(),
                   );
 
-                if (data.ssd.sheets.length > 1)
+                if (ssd.sheets!.length > 1)
                   Util.reportCrash(
                       Exception('snapshot.data.sheets.length > 1'));
-                final sheet = data.ssd.sheets[0];
-                final props = sheet.properties.gridProperties;
-                final datum = sheet.data.first;
+                final sheet = ssd.sheets![0];
+                final datum = sheet.data!.first;
                 final dataWithNull = sheet.getDataWithNullItem();
                 sheet.collapseEmptyRowAndColumn(dataWithNull);
 
@@ -141,7 +142,7 @@ class _ScreenRoadMapState extends BackMovieState<ScreenRoadMap> {
                               SizedBox(
                                 height: totalH * .2 * ratio,
                               ),
-                              child,
+                              child!,
                               SizedBox(
                                 height: totalH * .2 * (1 - ratio),
                               ),
@@ -172,7 +173,7 @@ class _ScreenRoadMapState extends BackMovieState<ScreenRoadMap> {
                               SizedBox(
                                 width: totalW * .2 * ratio,
                               ),
-                              child,
+                              child!,
                               SizedBox(
                                 width: totalW * .2 * (1 - ratio),
                               ),
@@ -210,7 +211,7 @@ class _ScreenRoadMapState extends BackMovieState<ScreenRoadMap> {
             'key': Statics.API_KEY,
             'ranges': 'A1:CA200'
           });
-      final ssd = SpreadSheetData.fromJson(response.data);
+      final ssd = SpreadSheetData.fromJson(response.data!);
       return _SpreadSheetDataWrapper(ssd: ssd);
     } catch (e) {
       Util.reportCrash(e);
@@ -218,13 +219,13 @@ class _ScreenRoadMapState extends BackMovieState<ScreenRoadMap> {
     }
   }
 
-  static BorderSide _genBorderSide(SingleBorder border) => BorderSide(
+  static BorderSide _genBorderSide(SingleBorder? border) => BorderSide(
       color:
-          border?.color?.toColor() == null ? Colors.transparent : Colors.white,
+          border?.color.toColor() == null ? Colors.transparent : Colors.white,
       width: border?.width?.toDouble() ?? 0);
 
   static Widget _rowWidget(
-    List<List<Value>> dataWithNull,
+    List<List<Value?>> dataWithNull,
     Datum datum,
     ScrollController sc,
     int index,
@@ -232,10 +233,10 @@ class _ScreenRoadMapState extends BackMovieState<ScreenRoadMap> {
     final dataListInRow = dataWithNull[index];
     final widgets = enumerate(dataListInRow).map((it) {
 
-      final borders = dataListInRow[it.index]?.effectiveFormat?.borders;
+      final borders = dataListInRow[it.index]?.effectiveFormat.borders;
       final data = dataListInRow[it.index];
-      final text = data?.userEnteredValue?.stringValue;
-      final width = datum.columnMetadata[it.index].pixelSize.toDouble();
+      final text = data?.userEnteredValue.stringValue;
+      final width = datum.columnMetadata![it.index].pixelSize!.toDouble();
 
       return Visibility(
         visible: width != 0,
@@ -247,9 +248,7 @@ class _ScreenRoadMapState extends BackMovieState<ScreenRoadMap> {
               bottom: _genBorderSide(borders?.bottom),
               left: _genBorderSide(borders?.left),
             ),
-            color: data?.userEnteredFormat?.backgroundColor?.toColor() == null
-                ? null
-                : Colors.white.withOpacity(.1),
+            color: data?.userEnteredFormat.backgroundColor.toColor() ?? Colors.white.withOpacity(.1)
           ),
           width: width,
           alignment: data?.alignment,
@@ -287,6 +286,6 @@ class _ScreenRoadMapState extends BackMovieState<ScreenRoadMap> {
 class _SpreadSheetDataWrapper {
   const _SpreadSheetDataWrapper({this.ssd, this.err});
 
-  final SpreadSheetData ssd;
+  final SpreadSheetData? ssd;
   final dynamic err;
 }

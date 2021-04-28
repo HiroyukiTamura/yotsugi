@@ -3,46 +3,47 @@ import 'dart:convert';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
 
+// todo freezed
 class SpreadSheetData {
   SpreadSheetData({
-    @required this.spreadsheetId,
+    required this.spreadsheetId,
     // @required this.properties,
-    @required this.sheets,
-    @required this.spreadsheetUrl,
+    required this.sheets,
+    required this.spreadsheetUrl,
   });
 
   factory SpreadSheetData.fromJson(String str) {
     final map = json.decode(str) as Map<String, dynamic>;
     return SpreadSheetData(
-      spreadsheetId: map['spreadsheetId'] as String,
+      spreadsheetId: map['spreadsheetId'] as String?,
       // properties: SpreadSheetDataProps._fromJson(json['properties'] as Map<String, dynamic>),
-      sheets: ((map['sheets'] as List<dynamic>)
+      sheets: ((map['sheets'] as List<dynamic>?)
               ?.map((dynamic x) => Sheet._fromJson(x as Map<String, dynamic>)))
           ?.toList(growable: false),
-      spreadsheetUrl: map['spreadsheetUrl'] as String,
+      spreadsheetUrl: map['spreadsheetUrl'] as String?,
     );
   }
 
-  final String spreadsheetId;
+  final String? spreadsheetId;
 
   // final SpreadSheetDataProps properties;
-  final List<Sheet> sheets;
-  final String spreadsheetUrl;
+  final List<Sheet>? sheets;
+  final String? spreadsheetUrl;
 }
 
 class SpreadSheetDataProps {
   SpreadSheetDataProps({
-    @required this.title,
+    required this.title,
     // @required this.locale,
     // @required this.autoRecalc,
     // @required this.timeZone,
     // @required this.defaultFormat,
-    @required this.spreadsheetTheme,
+    required this.spreadsheetTheme,
   });
 
   factory SpreadSheetDataProps._fromJson(Map<String, dynamic> json) =>
       SpreadSheetDataProps(
-        title: json['title'] as String,
+        title: json['title'] as String?,
         // locale: json['locale'],
         // autoRecalc: json['autoRecalc'],
         // timeZone: json['timeZone'],
@@ -51,7 +52,7 @@ class SpreadSheetDataProps {
             json['spreadsheetTheme'] as Map<String, dynamic>),
       );
 
-  final String title;
+  final String? title;
 
   // final String locale;
   // final String autoRecalc;
@@ -62,44 +63,44 @@ class SpreadSheetDataProps {
 
 class DefaultFormat {
   DefaultFormat({
-    @required this.backgroundColor,
-    @required this.padding,
-    @required this.verticalAlignment,
-    @required this.wrapStrategy,
-    @required this.textFormat,
-    @required this.backgroundColorStyle,
+    required this.backgroundColor,
+    required this.padding,
+    required this.verticalAlignment,
+    required this.wrapStrategy,
+    required this.textFormat,
+    required this.backgroundColorStyle,
   });
 
   factory DefaultFormat._fromJson(Map<String, dynamic> json) => DefaultFormat(
         backgroundColor:
-            RgbColor._fromJson(json['backgroundColor'] as Map<String, dynamic>),
-        padding: PaddingMetrics._fromJson(json['padding'] as Map<String, dynamic>),
+            RgbColor._fromJson(json['backgroundColor'] as Map<String, dynamic>?),
+        padding: PaddingMetrics._fromJson(json['padding'] as Map<String, dynamic>?),
         verticalAlignment:
             verticalAlignmentValues.map[json['verticalAlignment']],
         wrapStrategy: wrapStrategyValues.map[json['wrapStrategy']],
         textFormat: DefaultFormatTextFormat._fromJson(
             json['textFormat'] as Map<String, dynamic>),
         backgroundColorStyle: BackgroundColorStyle._fromJson(
-            json['backgroundColorStyle'] as Map<String, dynamic>),
+            json['backgroundColorStyle'] as Map<String, dynamic>?),
       );
 
   final RgbColor backgroundColor;
   final PaddingMetrics padding;
-  final VerticalAlignment verticalAlignment;
-  final WrapStrategy wrapStrategy;
+  final VerticalAlignment? verticalAlignment;
+  final WrapStrategy? wrapStrategy;
   final DefaultFormatTextFormat textFormat;
   final BackgroundColorStyle backgroundColorStyle;
 }
 
 class RgbColor {
   RgbColor({
-    @required this.red,
-    @required this.green,
-    @required this.blue,
-    @required this.alpha,
+    required this.red,
+    required this.green,
+    required this.blue,
+    required this.alpha,
   });
 
-  factory RgbColor._fromJson(Map<String, dynamic> json) => json == null
+  factory RgbColor._fromJson(Map<String, dynamic>? json) => json == null
       ? null
       : RgbColor(
           red: _parseAsDouble(json['red']),
@@ -108,36 +109,36 @@ class RgbColor {
           alpha: _parseAsDouble(json['alpha']),
         );
 
-  final double red;
-  final double green;
-  final double blue;
-  final double alpha;
+  final double? red;
+  final double? green;
+  final double? blue;
+  final double? alpha;
   static const DENOMINATOR = 255;
 
-  static double _parseAsDouble(dynamic value) =>
-      value is double ? value : (value as int)?.toDouble();
+  static double? _parseAsDouble(dynamic value) =>
+      value is double ? value : (value as int?)?.toDouble();
 
   Color toColor() => Color.fromARGB(_calcColorInt(red), _calcColorInt(green),
       _calcColorInt(blue), _calcAlphaInt(alpha));
 
-  static int _calcColorInt(double ratio) =>
+  static int _calcColorInt(double? ratio) =>
       ((ratio ?? 1) * DENOMINATOR).toInt();
 
-  static int _calcAlphaInt(double ratio) =>
+  static int _calcAlphaInt(double? ratio) =>
       ((1 - (ratio ?? 1)) * DENOMINATOR).toInt();
 }
 
 class BackgroundColorStyle {
   BackgroundColorStyle({
-    @required this.rgbColor,
+    required this.rgbColor,
   });
 
-  factory BackgroundColorStyle._fromJson(Map<String, dynamic> json) =>
+  factory BackgroundColorStyle._fromJson(Map<String, dynamic>? json) =>
       json == null
           ? null
           : BackgroundColorStyle(
               rgbColor:
-                  RgbColor._fromJson(json['rgbColor'] as Map<String, dynamic>),
+                  RgbColor._fromJson(json['rgbColor'] as Map<String, dynamic>?),
             );
 
   final RgbColor rgbColor;
@@ -145,35 +146,35 @@ class BackgroundColorStyle {
 
 class PaddingMetrics {
   PaddingMetrics._({
-    @required this.top,
-    @required this.right,
-    @required this.bottom,
-    @required this.left,
+    required this.top,
+    required this.right,
+    required this.bottom,
+    required this.left,
   });
 
-  factory PaddingMetrics._fromJson(Map<String, dynamic> json) => json == null
+  factory PaddingMetrics._fromJson(Map<String, dynamic>? json) => json == null
       ? null
       : PaddingMetrics._(
-          top: json['top'] as int,
-          right: json['right'] as int,
-          bottom: json['bottom'] as int,
-          left: json['left'] as int,
+          top: json['top'] as int?,
+          right: json['right'] as int?,
+          bottom: json['bottom'] as int?,
+          left: json['left'] as int?,
         );
 
-  final int top;
-  final int right;
-  final int bottom;
-  final int left;
+  final int? top;
+  final int? right;
+  final int? bottom;
+  final int? left;
 }
 
 class DefaultFormatTextFormat {
   DefaultFormatTextFormat({
     // @required this.foregroundColor,
-    @required this.fontSize,
-    @required this.bold,
-    @required this.italic,
-    @required this.strikethrough,
-    @required this.underline,
+    required this.fontSize,
+    required this.bold,
+    required this.italic,
+    required this.strikethrough,
+    required this.underline,
     // @required this.foregroundColorStyle,
   });
 
@@ -181,21 +182,21 @@ class DefaultFormatTextFormat {
       DefaultFormatTextFormat(
         // foregroundColor: PurpleColor._fromJson(json['foregroundColor'] as Map<String, dynamic>),
         // fontFamily: json['fontFamily'],
-        fontSize: json['fontSize'] as int,
-        bold: json['bold'] as bool,
-        italic: json['italic'] as bool,
-        strikethrough: json['strikethrough'] as bool,
-        underline: json['underline'] as bool,
+        fontSize: json['fontSize'] as int?,
+        bold: json['bold'] as bool?,
+        italic: json['italic'] as bool?,
+        strikethrough: json['strikethrough'] as bool?,
+        underline: json['underline'] as bool?,
         // foregroundColorStyle: ForegroundColorStyle._fromJson(json['foregroundColorStyle'] as Map<String, dynamic>),
       );
 
   // final PurpleColor foregroundColor;
   // final String fontFamily;
-  final int fontSize;
-  final bool bold;
-  final bool italic;
-  final bool strikethrough;
-  final bool underline;
+  final int? fontSize;
+  final bool? bold;
+  final bool? italic;
+  final bool? strikethrough;
+  final bool? underline;
 // final ForegroundColorStyle foregroundColorStyle;
 }
 
@@ -235,19 +236,19 @@ final wrapStrategyValues = EnumValues({
 class SpreadsheetTheme {
   SpreadsheetTheme({
     // @required this.primaryFontFamily,
-    @required this.themeColors,
+    required this.themeColors,
   });
 
   factory SpreadsheetTheme._fromJson(Map<String, dynamic> json) =>
       SpreadsheetTheme(
         // primaryFontFamily: fontFamilyValues.map[json['primaryFontFamily']],
-        themeColors: ((json['themeColors'] as List<dynamic>)?.map(
+        themeColors: ((json['themeColors'] as List<dynamic>?)?.map(
                 (dynamic x) => ThemeColor._fromJson(x as Map<String, dynamic>)))
             ?.toList(growable: false),
       );
 
   // final FontFamily primaryFontFamily;
-  final List<ThemeColor> themeColors;
+  final List<ThemeColor>? themeColors;
 }
 
 // enum FontFamily { ARIAL }
@@ -258,31 +259,31 @@ class SpreadsheetTheme {
 
 class ThemeColor {
   ThemeColor({
-    @required this.colorType,
-    @required this.color,
+    required this.colorType,
+    required this.color,
   });
 
   factory ThemeColor._fromJson(Map<String, dynamic> json) => ThemeColor(
-        colorType: json['colorType'] as String,
+        colorType: json['colorType'] as String?,
         color: BackgroundColorStyle._fromJson(
-            json['color'] as Map<String, dynamic>),
+            json['color'] as Map<String, dynamic>?),
       );
 
-  final String colorType;
+  final String? colorType;
   final BackgroundColorStyle color;
 }
 
 class Sheet {
   Sheet({
-    @required this.properties,
-    @required this.data,
+    required this.properties,
+    required this.data,
     // @required this.conditionalFormats,
   });
 
   factory Sheet._fromJson(Map<String, dynamic> json) => Sheet(
         properties: SheetProperties._fromJson(
-            json['properties'] as Map<String, dynamic>),
-        data: ((json['data'] as List<dynamic>)?.map(
+            json['properties'] as Map<String, dynamic>?),
+        data: ((json['data'] as List<dynamic>?)?.map(
                 (dynamic x) => Datum._fromJson(x as Map<String, dynamic>)))
             ?.toList(growable: false),
         // conditionalFormats: (json['conditionalFormats'] as List<dynamic>)
@@ -292,17 +293,17 @@ class Sheet {
       );
 
   final SheetProperties properties;
-  final List<Datum> data;
+  final List<Datum>? data;
 
-  int get lastColumn => data.first._lastColumn;
+  int get lastColumn => data!.first._lastColumn;
 
-  int get lastRow => data.first._lastRow;
+  int get lastRow => data!.first._lastRow;
 
-  Xy getXy(int index) => data.first._getXy(index);
+  Xy getXy(int index) => data!.first._getXy(index);
 
-  List<List<Value>> getDataWithNullItem() => data.first._getDataWithNullItem();
+  List<List<Value?>> getDataWithNullItem() => data!.first._getDataWithNullItem();
 
-  void collapseEmptyRowAndColumn(List<List<Value>> map) => data.first._collapseEmptyRowAndColumn(map);
+  void collapseEmptyRowAndColumn(List<List<Value?>> map) => data!.first._collapseEmptyRowAndColumn(map);
 // final List<ConditionalFormat> conditionalFormats;
 }
 
@@ -356,16 +357,16 @@ class Sheet {
 
 class BooleanRuleFormat {
   BooleanRuleFormat({
-    @required this.backgroundColor,
-    @required this.backgroundColorStyle,
+    required this.backgroundColor,
+    required this.backgroundColorStyle,
   });
 
   factory BooleanRuleFormat._fromJson(Map<String, dynamic> json) =>
       BooleanRuleFormat(
         backgroundColor:
-            RgbColor._fromJson(json['backgroundColor'] as Map<String, dynamic>),
+            RgbColor._fromJson(json['backgroundColor'] as Map<String, dynamic>?),
         backgroundColorStyle: BackgroundColorStyle._fromJson(
-            json['backgroundColorStyle'] as Map<String, dynamic>),
+            json['backgroundColorStyle'] as Map<String, dynamic>?),
       );
 
   final RgbColor backgroundColor;
@@ -395,30 +396,30 @@ class BooleanRuleFormat {
 
 class Datum {
   Datum({
-    @required this.rowData,
-    @required this.rowMetadata,
-    @required this.columnMetadata,
+    required this.rowData,
+    required this.rowMetadata,
+    required this.columnMetadata,
   })  : _lastColumn = _getLastColumn(rowData),
         _lastRow = rowData.length;
 
   factory Datum._fromJson(Map<String, dynamic> json) => Datum(
-        rowData: (json['rowData'] as List<dynamic>)
+        (rowData: (json['rowData'] as List<dynamic>?)
             ?.map<RowDatum>(
                 (dynamic x) => RowDatum._fromJson(x as Map<String, dynamic>))
-            ?.toList(growable: false),
-        rowMetadata: (json['rowMetadata'] as List<dynamic>)
+            ?.toList(growable: false))!,
+        rowMetadata: (json['rowMetadata'] as List<dynamic>?)
             ?.map<PixelSizeWrapper>((dynamic x) =>
                 PixelSizeWrapper._fromJson(x as Map<String, dynamic>))
             ?.toList(growable: false),
-        columnMetadata: (json['columnMetadata'] as List<dynamic>)
+        columnMetadata: (json['columnMetadata'] as List<dynamic>?)
             ?.map<PixelSizeWrapper>((dynamic x) =>
                 PixelSizeWrapper._fromJson(x as Map<String, dynamic>))
             ?.toList(growable: false),
       );
 
   final List<RowDatum> rowData;
-  final List<PixelSizeWrapper> rowMetadata;
-  final List<PixelSizeWrapper> columnMetadata;
+  final List<PixelSizeWrapper>? rowMetadata;
+  final List<PixelSizeWrapper>? columnMetadata;
   final int _lastColumn;
   final int _lastRow;
 
@@ -426,7 +427,7 @@ class Datum {
     int mostLongRowLen = 0;
 
     rowData.asMap().forEach((i, value) {
-      int len = value.values.length;
+      int len = value.values!.length;
       if (len > mostLongRowLen) mostLongRowLen = len;
     });
 
@@ -436,29 +437,29 @@ class Datum {
   Xy _getXy(int index) {
     int total = 0;
     for (var i = 0; i < rowData.length; i++) {
-      total += rowData[i].values.length;
+      total += rowData[i].values!.length;
       if (total >= index) return Xy(x: total - index, y: i);
     }
     throw Exception('oops!');
   }
 
-  List<List<Value>> _getDataWithNullItem() {
-    List<List<Value>> map = [];
+  List<List<Value?>> _getDataWithNullItem() {
+    List<List<Value?>> map = [];
     rowData.asMap().forEach((rowCount, row) {
-      map.add([...row.values]);
-      int trailEmptyCells = _lastColumn - row.values.length;
+      map.add([...row.values!]);
+      int trailEmptyCells = _lastColumn - row.values!.length;
       for (int i = 0; i < trailEmptyCells; i++) map[rowCount].add(null);
     });
     return map;
   }
 
-  void _collapseEmptyRowAndColumn(List<List<Value>> map) {
+  void _collapseEmptyRowAndColumn(List<List<Value?>> map) {
     map.asMap().forEach((rowIndex, element) {
       final isEmptyRow = element.where((rowItem) => rowItem?.effectiveValue?.stringValue?.isNotEmpty == true).isEmpty;
       if (isEmptyRow)
-        rowMetadata[rowIndex].pixelSize = 8;
+        rowMetadata![rowIndex].pixelSize = 8;
     });
-    final isColumnNotEmpty = List<bool>.filled(columnMetadata.length, false);
+    final isColumnNotEmpty = List<bool>.filled(columnMetadata!.length, false);
     map.asMap().forEach((rowIndex, row) {
       row.asMap().forEach((columnIndex, cell) {
         if (cell?.effectiveValue?.stringValue?.isNotEmpty == true)
@@ -468,15 +469,15 @@ class Datum {
     isColumnNotEmpty.asMap()
         .forEach((columnIndex, isNotEmpty) {
           if (!isNotEmpty)
-            columnMetadata[columnIndex].pixelSize = 8;
+            columnMetadata![columnIndex].pixelSize = 8;
     });
   }
 }
 
 class Xy {
   Xy({
-    @required this.x,
-    @required this.y,
+    required this.x,
+    required this.y,
   });
 
   final int x;
@@ -485,71 +486,71 @@ class Xy {
 
 class PixelSizeWrapper {
   PixelSizeWrapper({
-    @required this.pixelSize,
+    required this.pixelSize,
   });
 
   factory PixelSizeWrapper._fromJson(Map<String, dynamic> json) =>
       PixelSizeWrapper(
-        pixelSize: json['pixelSize'] as int,
+        pixelSize: json['pixelSize'] as int?,
       );
 
-  int pixelSize;
+  int? pixelSize;
 }
 
 class RowDatum {
   RowDatum({
-    @required this.values,
+    required this.values,
   });
 
   factory RowDatum._fromJson(Map<String, dynamic> json) => RowDatum(
-        values: (json['values'] as List<dynamic>)
+        values: (json['values'] as List<dynamic>?)
             ?.map<Value>(
                 (dynamic x) => Value._fromJson(x as Map<String, dynamic>))
             ?.toList(growable: false),
       );
 
-  final List<Value> values;
+  final List<Value?>? values;
 }
 
 class Value {
   Value({
-    @required this.userEnteredFormat,
-    @required this.effectiveFormat,
-    @required this.userEnteredValue,
-    @required this.effectiveValue,
-    @required this.formattedValue,
-    @required this.textFormatRuns,
-    @required this.hyperlink,
+    required this.userEnteredFormat,
+    required this.effectiveFormat,
+    required this.userEnteredValue,
+    required this.effectiveValue,
+    required this.formattedValue,
+    required this.textFormatRuns,
+    required this.hyperlink,
   });
 
   factory Value._fromJson(Map<String, dynamic> json) => json == null ? null : Value(
         userEnteredFormat: UserEnteredFormat._fromJson(
-            json['userEnteredFormat'] as Map<String, dynamic>),
+            json['userEnteredFormat'] as Map<String, dynamic>?),
         effectiveFormat: EffectiveFormat._fromJson(
-            json['effectiveFormat'] as Map<String, dynamic>),
+            json['effectiveFormat'] as Map<String, dynamic>?),
         userEnteredValue: EffectiveValueClass._fromJson(
-            json['userEnteredValue'] as Map<String, dynamic>),
+            json['userEnteredValue'] as Map<String, dynamic>?),
         effectiveValue: EffectiveValueClass._fromJson(
-            json['effectiveValue'] as Map<String, dynamic>),
-        formattedValue: json['formattedValue'] as String,
-        textFormatRuns: ((json['textFormatRuns'] as List<dynamic>)
+            json['effectiveValue'] as Map<String, dynamic>?),
+        formattedValue: json['formattedValue'] as String?,
+        textFormatRuns: ((json['textFormatRuns'] as List<dynamic>?)
                 ?.map<TextFormatRun>((dynamic x) =>
                     TextFormatRun._fromJson(x as Map<String, dynamic>)))
             ?.toList(growable: false),
-        hyperlink: json['hyperlink'] as String,
+        hyperlink: json['hyperlink'] as String?,
       );
 
   final UserEnteredFormat userEnteredFormat;
   final EffectiveFormat effectiveFormat;
   final EffectiveValueClass userEnteredValue;
   final EffectiveValueClass effectiveValue;
-  final String formattedValue;
-  final List<TextFormatRun> textFormatRuns;
-  final String hyperlink;
+  final String? formattedValue;
+  final List<TextFormatRun>? textFormatRuns;
+  final String? hyperlink;
 
   Alignment get alignment {
-    final verticalAlignment = effectiveFormat?.verticalAlignment;
-    final horizontalAlignment = effectiveFormat?.horizontalAlignment;
+    final verticalAlignment = effectiveFormat.verticalAlignment;
+    final horizontalAlignment = effectiveFormat.horizontalAlignment;
 
     if (verticalAlignment == VerticalAlignment.TOP) {
       if (horizontalAlignment == HorizontalAlignment.RIGHT)
@@ -582,31 +583,31 @@ class Value {
 
 class EffectiveFormat {
   EffectiveFormat({
-    @required this.backgroundColor,
-    @required this.padding,
-    @required this.verticalAlignment,
-    @required this.wrapStrategy,
-    @required this.textFormat,
-    @required this.backgroundColorStyle,
-    @required this.borders,
-    @required this.horizontalAlignment,
-    @required this.hyperlinkDisplayType,
+    required this.backgroundColor,
+    required this.padding,
+    required this.verticalAlignment,
+    required this.wrapStrategy,
+    required this.textFormat,
+    required this.backgroundColorStyle,
+    required this.borders,
+    required this.horizontalAlignment,
+    required this.hyperlinkDisplayType,
   });
 
-  factory EffectiveFormat._fromJson(Map<String, dynamic> json) => json == null
+  factory EffectiveFormat._fromJson(Map<String, dynamic>? json) => json == null
       ? null
       : EffectiveFormat(
           backgroundColor: RgbColor._fromJson(
-              json['backgroundColor'] as Map<String, dynamic>),
-          padding: PaddingMetrics._fromJson(json['padding'] as Map<String, dynamic>),
+              json['backgroundColor'] as Map<String, dynamic>?),
+          padding: PaddingMetrics._fromJson(json['padding'] as Map<String, dynamic>?),
           verticalAlignment:
               verticalAlignmentValues.map[json['verticalAlignment']],
           wrapStrategy: wrapStrategyValues.map[json['wrapStrategy']],
           textFormat: EffectiveFormatTextFormat._fromJson(
               json['textFormat'] as Map<String, dynamic>),
           backgroundColorStyle: BackgroundColorStyle._fromJson(
-              json['backgroundColorStyle'] as Map<String, dynamic>),
-          borders: Borders._fromJson(json['borders'] as Map<String, dynamic>),
+              json['backgroundColorStyle'] as Map<String, dynamic>?),
+          borders: Borders._fromJson(json['borders'] as Map<String, dynamic>?),
           horizontalAlignment: json['horizontalAlignment'] == null
               ? null
               : horizontalAlignmentValues.map[json['horizontalAlignment']],
@@ -617,30 +618,30 @@ class EffectiveFormat {
 
   final RgbColor backgroundColor;
   final PaddingMetrics padding;
-  final VerticalAlignment verticalAlignment;
-  final WrapStrategy wrapStrategy;
+  final VerticalAlignment? verticalAlignment;
+  final WrapStrategy? wrapStrategy;
   final EffectiveFormatTextFormat textFormat;
   final BackgroundColorStyle backgroundColorStyle;
   final Borders borders;
-  final HorizontalAlignment horizontalAlignment;
-  final HyperlinkDisplayType hyperlinkDisplayType;
+  final HorizontalAlignment? horizontalAlignment;
+  final HyperlinkDisplayType? hyperlinkDisplayType;
 }
 
 class Borders {
   Borders({
-    @required this.bottom,
-    @required this.left,
-    @required this.right,
-    @required this.top,
+    required this.bottom,
+    required this.left,
+    required this.right,
+    required this.top,
   });
 
-  factory Borders._fromJson(Map<String, dynamic> json) => json == null
+  factory Borders._fromJson(Map<String, dynamic>? json) => json == null
       ? null
       : Borders(
-          bottom: SingleBorder._fromJson(json['bottom'] as Map<String, dynamic>),
-          left: SingleBorder._fromJson(json['left'] as Map<String, dynamic>),
-          right: SingleBorder._fromJson(json['right'] as Map<String, dynamic>),
-          top: SingleBorder._fromJson(json['top'] as Map<String, dynamic>),
+          bottom: SingleBorder._fromJson(json['bottom'] as Map<String, dynamic>?),
+          left: SingleBorder._fromJson(json['left'] as Map<String, dynamic>?),
+          right: SingleBorder._fromJson(json['right'] as Map<String, dynamic>?),
+          top: SingleBorder._fromJson(json['top'] as Map<String, dynamic>?),
         );
 
   final SingleBorder bottom;
@@ -651,26 +652,26 @@ class Borders {
 
 class SingleBorder {
   SingleBorder({
-    @required this.style,
-    @required this.width,
-    @required this.color,
-    @required this.colorStyle,
+    required this.style,
+    required this.width,
+    required this.color,
+    required this.colorStyle,
   });
 
-  factory SingleBorder._fromJson(Map<String, dynamic> json) {
+  factory SingleBorder._fromJson(Map<String, dynamic>? json) {
     return json == null
         ? null
         : SingleBorder(
             style: styleValues.map[json['style']],
-            width: json['width'] as int,
-            color: RgbColor._fromJson(json['color'] as Map<String, dynamic>),
+            width: json['width'] as int?,
+            color: RgbColor._fromJson(json['color'] as Map<String, dynamic>?),
             colorStyle: BackgroundColorStyle._fromJson(
-                json['colorStyle'] as Map<String, dynamic>),
+                json['colorStyle'] as Map<String, dynamic>?),
           );
   }
 
-  final Style style;
-  final int width;
+  final Style? style;
+  final int? width;
   final RgbColor color;
   final BackgroundColorStyle colorStyle;
 }
@@ -701,98 +702,98 @@ final hyperlinkDisplayTypeValues = EnumValues({
 
 class EffectiveFormatTextFormat {
   EffectiveFormatTextFormat({
-    @required this.foregroundColor,
+    required this.foregroundColor,
     // @required this.fontFamily,
-    @required this.fontSize,
-    @required this.bold,
-    @required this.italic,
-    @required this.strikethrough,
-    @required this.underline,
-    @required this.foregroundColorStyle,
+    required this.fontSize,
+    required this.bold,
+    required this.italic,
+    required this.strikethrough,
+    required this.underline,
+    required this.foregroundColorStyle,
   });
 
   factory EffectiveFormatTextFormat._fromJson(Map<String, dynamic> json) =>
       EffectiveFormatTextFormat(
         foregroundColor:
-            RgbColor._fromJson(json['foregroundColor'] as Map<String, dynamic>),
+            RgbColor._fromJson(json['foregroundColor'] as Map<String, dynamic>?),
         // fontFamily: fontFamilyValues.map[json['fontFamily']],
-        fontSize: json['fontSize'] as int,
-        bold: json['bold'] as bool,
-        italic: json['italic'] as bool,
-        strikethrough: json['strikethrough'] as bool,
-        underline: json['underline'] as bool,
+        fontSize: json['fontSize'] as int?,
+        bold: json['bold'] as bool?,
+        italic: json['italic'] as bool?,
+        strikethrough: json['strikethrough'] as bool?,
+        underline: json['underline'] as bool?,
         foregroundColorStyle: BackgroundColorStyle._fromJson(
-            json['foregroundColorStyle'] as Map<String, dynamic>),
+            json['foregroundColorStyle'] as Map<String, dynamic>?),
       );
 
   final RgbColor foregroundColor;
 
   // final FontFamily fontFamily;
-  final int fontSize;
-  final bool bold;
-  final bool italic;
-  final bool strikethrough;
-  final bool underline;
+  final int? fontSize;
+  final bool? bold;
+  final bool? italic;
+  final bool? strikethrough;
+  final bool? underline;
   final BackgroundColorStyle foregroundColorStyle;
 }
 
 class EffectiveValueClass {
   EffectiveValueClass({
-    @required this.stringValue,
+    required this.stringValue,
   });
 
-  factory EffectiveValueClass._fromJson(Map<String, dynamic> json) =>
+  factory EffectiveValueClass._fromJson(Map<String, dynamic>? json) =>
       json == null
           ? null
           : EffectiveValueClass(
-              stringValue: json['stringValue'] as String,
+              stringValue: json['stringValue'] as String?,
             );
 
-  final String stringValue;
+  final String? stringValue;
 }
 
 class TextFormatRun {
   TextFormatRun({
-    @required this.format,
-    @required this.startIndex,
+    required this.format,
+    required this.startIndex,
   });
 
   factory TextFormatRun._fromJson(Map<String, dynamic> json) => TextFormatRun(
         format: TextFormatRunFormat._fromJson(
             json['format'] as Map<String, dynamic>),
-        startIndex: json['startIndex'] as int,
+        startIndex: json['startIndex'] as int?,
       );
 
   final TextFormatRunFormat format;
-  final int startIndex;
+  final int? startIndex;
 }
 
 class TextFormatRunFormat {
   TextFormatRunFormat({
-    @required this.strikethrough,
+    required this.strikethrough,
   });
 
   factory TextFormatRunFormat._fromJson(Map<String, dynamic> json) =>
       TextFormatRunFormat(
-        strikethrough: json['strikethrough'] as bool,
+        strikethrough: json['strikethrough'] as bool?,
       );
 
-  final bool strikethrough;
+  final bool? strikethrough;
 }
 
 class UserEnteredFormat {
   UserEnteredFormat({
-    @required this.wrapStrategy,
-    @required this.verticalAlignment,
-    @required this.textFormat,
-    @required this.backgroundColor,
-    @required this.borders,
-    @required this.horizontalAlignment,
-    @required this.backgroundColorStyle,
-    @required this.hyperlinkDisplayType,
+    required this.wrapStrategy,
+    required this.verticalAlignment,
+    required this.textFormat,
+    required this.backgroundColor,
+    required this.borders,
+    required this.horizontalAlignment,
+    required this.backgroundColorStyle,
+    required this.hyperlinkDisplayType,
   });
 
-  factory UserEnteredFormat._fromJson(Map<String, dynamic> json) => json == null
+  factory UserEnteredFormat._fromJson(Map<String, dynamic>? json) => json == null
       ? null
       : UserEnteredFormat(
           wrapStrategy: json['wrapStrategy'] == null
@@ -802,56 +803,56 @@ class UserEnteredFormat {
               ? null
               : verticalAlignmentValues.map[json['verticalAlignment']],
           textFormat: UserEnteredFormatTextFormat._fromJson(
-              json['textFormat'] as Map<String, dynamic>),
+              json['textFormat'] as Map<String, dynamic>?),
           backgroundColor: RgbColor._fromJson(
-              json['backgroundColor'] as Map<String, dynamic>),
-          borders: Borders._fromJson(json['borders'] as Map<String, dynamic>),
+              json['backgroundColor'] as Map<String, dynamic>?),
+          borders: Borders._fromJson(json['borders'] as Map<String, dynamic>?),
           horizontalAlignment: json['horizontalAlignment'] == null
               ? null
               : horizontalAlignmentValues.map[json['horizontalAlignment']],
           backgroundColorStyle: json['backgroundColorStyle'] == null
               ? null
               : BackgroundColorStyle._fromJson(
-                  json['backgroundColorStyle'] as Map<String, dynamic>),
+                  json['backgroundColorStyle'] as Map<String, dynamic>?),
           hyperlinkDisplayType: json['hyperlinkDisplayType'] == null
               ? null
               : hyperlinkDisplayTypeValues.map[json['hyperlinkDisplayType']],
         );
 
-  final WrapStrategy wrapStrategy;
-  final VerticalAlignment verticalAlignment;
+  final WrapStrategy? wrapStrategy;
+  final VerticalAlignment? verticalAlignment;
   final UserEnteredFormatTextFormat textFormat;
   final RgbColor backgroundColor;
   final Borders borders;
-  final HorizontalAlignment horizontalAlignment;
-  final BackgroundColorStyle backgroundColorStyle;
-  final HyperlinkDisplayType hyperlinkDisplayType;
+  final HorizontalAlignment? horizontalAlignment;
+  final BackgroundColorStyle? backgroundColorStyle;
+  final HyperlinkDisplayType? hyperlinkDisplayType;
 }
 
 class UserEnteredFormatTextFormat {
   UserEnteredFormatTextFormat({
     // @required this.fontFamily,
-    @required this.foregroundColor,
-    @required this.foregroundColorStyle,
-    @required this.underline,
+    required this.foregroundColor,
+    required this.foregroundColorStyle,
+    required this.underline,
   });
 
-  factory UserEnteredFormatTextFormat._fromJson(Map<String, dynamic> json) =>
+  factory UserEnteredFormatTextFormat._fromJson(Map<String, dynamic>? json) =>
       json == null
           ? null
           : UserEnteredFormatTextFormat(
               // fontFamily: fontFamilyValues.map[json['fontFamily']],
               foregroundColor: RgbColor._fromJson(
-                  json['foregroundColor'] as Map<String, dynamic>),
+                  json['foregroundColor'] as Map<String, dynamic>?),
               foregroundColorStyle: BackgroundColorStyle._fromJson(
-                  json['foregroundColorStyle'] as Map<String, dynamic>),
-              underline: json['underline'] as bool,
+                  json['foregroundColorStyle'] as Map<String, dynamic>?),
+              underline: json['underline'] as bool?,
             );
 
   // final FontFamily fontFamily;
   final RgbColor foregroundColor;
   final BackgroundColorStyle foregroundColorStyle;
-  final bool underline;
+  final bool? underline;
 }
 
 class SheetProperties {
@@ -860,10 +861,10 @@ class SheetProperties {
     // @required this.title,
     // @required this.index,
     // @required this.sheetType,
-    @required this.gridProperties,
+    required this.gridProperties,
   });
 
-  factory SheetProperties._fromJson(Map<String, dynamic> json) => json == null
+  factory SheetProperties._fromJson(Map<String, dynamic>? json) => json == null
       ? null
       : SheetProperties(
           // sheetId: json['sheetId'] as int,
@@ -871,7 +872,7 @@ class SheetProperties {
           // index: json['index'] as int,
           // sheetType: json['sheetType'] as String,
           gridProperties: GridProperties._fromJson(
-              json['gridProperties'] as Map<String, dynamic>),
+              json['gridProperties'] as Map<String, dynamic>?),
         );
 
   // final int sheetId;
@@ -883,11 +884,11 @@ class SheetProperties {
 
 class GridProperties {
   GridProperties({
-    @required this.rowCount,
-    @required this.columnCount,
+    required this.rowCount,
+    required this.columnCount,
   }) : cellCount = rowCount * columnCount;
 
-  factory GridProperties._fromJson(Map<String, dynamic> json) => json == null
+  factory GridProperties._fromJson(Map<String, dynamic>? json) => json == null
       ? null
       : GridProperties(
           rowCount: json['rowCount'] as int,
@@ -903,9 +904,9 @@ class EnumValues<T> {
   EnumValues(this.map);
 
   Map<String, T> map;
-  Map<T, String> reverseMap;
+  Map<T, String>? reverseMap;
 
-  Map<T, String> get reverse {
+  Map<T, String>? get reverse {
     reverseMap ??= map.map((k, v) => MapEntry(v, k));
     return reverseMap;
   }

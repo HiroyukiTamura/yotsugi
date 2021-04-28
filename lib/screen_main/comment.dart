@@ -6,7 +6,7 @@ import 'package:itsumuso/util.dart';
 import 'package:itsumuso/common/remote_storage_client_impl_web.dart' if (dart.library.io) 'package:itsumuso/common/remote_storage_client_impl.dart';
 
 class Comment extends StatelessWidget {
-  const Comment({Key key, @required this.string}) : super(key: key);
+  const Comment({Key? key, required this.string}) : super(key: key);
 
   final String string;
 
@@ -24,7 +24,7 @@ class Comment extends StatelessWidget {
 }
 
 class DateText extends StatelessWidget {
-  const DateText({Key key, @required this.string}) : super(key: key);
+  const DateText({Key? key, required this.string}) : super(key: key);
 
   final String string;
 
@@ -43,7 +43,7 @@ class DateText extends StatelessWidget {
 }
 
 class Images extends StatelessWidget {
-  Images({Key key, List<dynamic> fileList})
+  Images({Key? key, required List<dynamic> fileList})
       : fileName = fileList.first as String,
         super(key: key);
 
@@ -51,10 +51,7 @@ class Images extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (fileName == null)
-      return const SizedBox();
-    else
-      return Padding(
+    return Padding(
           padding: const EdgeInsets.only(top: 64),
           child: SizedBox(
               height: 256,

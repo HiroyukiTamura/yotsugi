@@ -115,7 +115,7 @@ class _Title extends StatelessWidget {
 }
 
 class _Intro extends StatelessWidget {
-  const _Intro({@required this.string, Key key}) : super(key: key);
+  const _Intro({required this.string, Key? key}) : super(key: key);
 
   final String string;
 
@@ -157,8 +157,8 @@ class _IntroReference extends StatelessWidget {
 
 class _Content extends StatelessWidget {
   const _Content({
-    Key key,
-    @required this.string,
+    Key? key,
+    required this.string,
     this.fontSize = 14,
   }) : super(key: key);
 

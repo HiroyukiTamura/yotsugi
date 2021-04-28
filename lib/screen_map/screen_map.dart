@@ -30,7 +30,7 @@ class _ScreenGoogleMapState extends State<ScreenGoogleMapMain> {
 
   static const _latLng = LatLng(35.730461, 139.841722);
 
-  Completer<GoogleMapController> _controller;
+  late Completer<GoogleMapController> _controller;
 
   final CameraPosition _googlePlex;
 
@@ -52,60 +52,65 @@ class _ScreenGoogleMapState extends State<ScreenGoogleMapMain> {
           child: const Icon(Icons.gps_fixed),
         ),
         body: FutureBuilder<_Data>(
-          future: _loadMapStyle(context),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData)
-              return const SizedBox();
+            future: _loadMapStyle(context),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) return const SizedBox();
 
-            debugPrint(snapshot.data.bd.toJson().toString());
+              final data = snapshot.data!;
 
-            return Stack(
-              children: [
-                GoogleMap(
-                  myLocationButtonEnabled: false,
-                  zoomControlsEnabled: false,
-                  compassEnabled: true,
-                  onMapCreated: (controller) {
-                    controller.setMapStyle(snapshot.data.style);
-                    _controller.complete(controller);
-                  },
-                  initialCameraPosition: _googlePlex,
-                  markers: <Marker>{
-                    Marker(
-                      position: _latLng,
-                      markerId: MarkerId('spot'),
-                      icon: snapshot.data.bd,
-                    )
-                  },
-                ),
-                SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: RawMaterialButton(
-                      constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
-                      onPressed: () => Navigator.of(context).pop(),
-                      fillColor: Colors.white,
-                      padding: const EdgeInsets.all(6),
-                      shape: const CircleBorder(),
-                      elevation: 0,
-                      child: const Icon(
-                        Icons.arrow_back,
-                        size: 24,
+              debugPrint(data.bd.toJson().toString());
+
+              return Stack(
+                children: [
+                  GoogleMap(
+                    myLocationButtonEnabled: false,
+                    zoomControlsEnabled: false,
+                    compassEnabled: true,
+                    onMapCreated: (controller) {
+                      controller.setMapStyle(data.style);
+                      _controller.complete(controller);
+                    },
+                    initialCameraPosition: _googlePlex,
+                    markers: <Marker>{
+                      Marker(
+                        position: _latLng,
+                        markerId: const MarkerId('spot'),
+                        icon: data.bd,
+                      )
+                    },
+                  ),
+                  SafeArea(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: RawMaterialButton(
+                        constraints:
+                            const BoxConstraints(minWidth: 36, minHeight: 36),
+                        onPressed: () => Navigator.of(context).pop(),
+                        fillColor: Colors.white,
+                        padding: const EdgeInsets.all(6),
+                        shape: const CircleBorder(),
+                        elevation: 0,
+                        child: const Icon(
+                          Icons.arrow_back,
+                          size: 24,
+                        ),
                       ),
                     ),
-                  ),
-                )
-              ],
-            );
-          }
-        ));
+                  )
+                ],
+              );
+            }));
   }
 
   Future<void> _moveMap(LocationData locationData) async {
     final GoogleMapController controller = await _controller.future;
+    if (locationData.latitude == null || locationData.longitude == null)
+      return;
+
     CameraPosition position = CameraPosition(
-        target: LatLng(locationData.latitude, locationData.longitude),
-        zoom: _ZOOM);
+      target: LatLng(locationData.latitude!, locationData.longitude!),
+      zoom: _ZOOM,
+    );
 
     controller.animateCamera(CameraUpdate.newCameraPosition(position));
   }
@@ -146,10 +151,12 @@ class _ScreenGoogleMapState extends State<ScreenGoogleMapMain> {
     final mapStyle = await rootBundle.loadString('assets/map_style.json');
     BitmapDescriptor bd;
     if (kIsWeb) {
-      final conf = createLocalImageConfiguration(context, size: const Size.square(48));
+      final conf =
+          createLocalImageConfiguration(context, size: const Size.square(48));
       bd = await BitmapDescriptor.fromAssetImage(conf, 'assets/maps_flags.png');
     } else {
-      final Uint8List markerIcon = await _getBytesFromAsset('maps_flags.png', 64);
+      final Uint8List markerIcon =
+          await _getBytesFromAsset('maps_flags.png', 64);
       bd = BitmapDescriptor.fromBytes(markerIcon);
     }
 
@@ -162,7 +169,8 @@ class _ScreenGoogleMapState extends State<ScreenGoogleMapMain> {
     final codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
         targetWidth: width);
     final fi = await codec.getNextFrame();
-    final byteData = await fi.image.toByteData(format: ui.ImageByteFormat.png);
+    final byteData = await (fi.image.toByteData(format: ui.ImageByteFormat.png)
+        as FutureOr<ByteData>);
     return byteData.buffer.asUint8List();
   }
 

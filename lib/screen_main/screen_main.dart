@@ -18,7 +18,7 @@ import 'package:itsumuso/util.dart';
 import 'package:itsumuso/common/url_launcher_impl_web.dart' if (dart.library.io) 'package:itsumuso/common/url_launcher_impl.dart';
 
 class ScreenMain extends StatefulWidget {
-  const ScreenMain({Key key}) : super(key: key);
+  const ScreenMain({Key? key}) : super(key: key);
 
   @override
   _ScreenMainState createState() => _ScreenMainState();
@@ -28,15 +28,15 @@ class _ScreenMainState extends State<ScreenMain> with TickerProviderStateMixin {
   static const int _WIDTH = 1920;
   static const int _HEIGHT = 1080;
 
-  AnimationController _animationController;
-  Animation<Offset> _animation;
+  late AnimationController _animationController;
+  late Animation<Offset> _animation;
 
-  AnimationController _fadeInAcLeft;
-  AnimationController _fadeInAcRight;
-  ValueNotifier<double> _themeOpacity;
+  late AnimationController _fadeInAcLeft;
+  late AnimationController _fadeInAcRight;
+  late ValueNotifier<double> _themeOpacity;
 
-  ScrollController _sc;
-  ScrollController _barSc;
+  late ScrollController _sc;
+  late ScrollController _barSc;
 
   @override
   void initState() {
@@ -153,10 +153,10 @@ class _ScreenMainState extends State<ScreenMain> with TickerProviderStateMixin {
 
 class _Header extends StatelessWidget {
   const _Header({
-    Key key,
-    @required this.animation,
-    @required this.headerH,
-    @required this.topRightAnmDuration,
+    Key? key,
+    required this.animation,
+    required this.headerH,
+    required this.topRightAnmDuration,
   }) : super(key: key);
 
   final Animation<Offset> animation;
@@ -252,13 +252,13 @@ class _Header extends StatelessWidget {
 
 class _Content extends StatelessWidget {
   const _Content({
-    Key key,
-    @required this.is2pain,
-    @required this.height,
-    @required this.sc,
-    @required this.fadeInAcLeft,
-    @required this.fadeInAcRight,
-    @required this.themeOpacity,
+    Key? key,
+    required this.is2pain,
+    required this.height,
+    required this.sc,
+    required this.fadeInAcLeft,
+    required this.fadeInAcRight,
+    required this.themeOpacity,
   }) : super(key: key);
 
   static const double _BTM_PADDING = 48;
@@ -294,7 +294,7 @@ class _Content extends StatelessWidget {
 
             int count = 0;
             List<int> indexList = [];
-            snapshot.data.docs.forEach((doc) {
+            snapshot.data!.docs.forEach((doc) {
               indexList.add(count);
               final comment = doc.get('comments') as String;
               count += comment.split('\\n').length;
@@ -315,8 +315,8 @@ class _Content extends StatelessWidget {
                   else if (pos >= 0) offset = indexList[pos];
 
                   QueryDocumentSnapshot snap = pos == -2
-                      ? snapshot.data.docs.last
-                      : snapshot.data.docs[pos];
+                      ? snapshot.data!.docs.last
+                      : snapshot.data!.docs[pos];
                   final indexInItem = i - offset;
                   final comment = snap.get('comments') as String;
                   final comments = comment.split('\\n');
@@ -453,10 +453,10 @@ class _Content extends StatelessWidget {
 
 class _ShareIcon extends StatelessWidget {
   const _ShareIcon({
-    Key key,
-    @required this.icon,
-    @required this.duration,
-    @required this.onTap,
+    Key? key,
+    required this.icon,
+    required this.duration,
+    required this.onTap,
   }) : super(key: key);
 
   final IconData icon;

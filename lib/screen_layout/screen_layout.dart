@@ -13,7 +13,7 @@ class ScreenLayout extends StatefulWidget {
 }
 
 class _ScreenLayoutState extends BackMovieState<ScreenLayout> {
-  Orientation _initialOrientation;
+  Orientation? _initialOrientation;
 
   static const _portOrientations = [
     DeviceOrientation.portraitUp,
@@ -28,7 +28,7 @@ class _ScreenLayoutState extends BackMovieState<ScreenLayout> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _forceDeviceRotation());
+    WidgetsBinding.instance!.addPostFrameCallback((_) => _forceDeviceRotation());
   }
 
   @override
@@ -72,7 +72,7 @@ class _ScreenLayoutState extends BackMovieState<ScreenLayout> {
               child: Align(
                 alignment: Alignment.topRight,
                 child: Text(
-                  '2020:09:07:13:10',
+                  '2020:09:07:13:10',//todo fix
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.white,

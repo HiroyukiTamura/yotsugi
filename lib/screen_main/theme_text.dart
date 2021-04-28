@@ -4,7 +4,7 @@ import 'package:itsumuso/strings.dart';
 import 'package:itsumuso/styles.dart';
 
 class ThemeText extends StatelessWidget {
-  const ThemeText({Key key, this.contentH}) : super(key: key);
+  const ThemeText({Key? key, required this.contentH}) : super(key: key);
 
   final double contentH;
 

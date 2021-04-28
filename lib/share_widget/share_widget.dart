@@ -17,7 +17,7 @@ class ShareWidget extends StatelessWidget {
 
 class _SnsButton extends StatelessWidget {
 
-  const _SnsButton({Key key, @required this.iconData}) : super(key: key);
+  const _SnsButton({Key? key, required this.iconData}) : super(key: key);
 
   final IconData iconData;
 

@@ -4,12 +4,12 @@ import 'package:itsumuso/styles.dart';
 
 class CornerLabel extends StatelessWidget {
   const CornerLabel({
-    Key key,
-    @required this.alignment,
-    @required this.curve,
-    @required this.duration,
-    @required this.tween,
-    @required this.string,
+    Key? key,
+    required this.alignment,
+    required this.curve,
+    required this.duration,
+    required this.tween,
+    required this.string,
     this.onTap,
     this.fontSize = 12,
   }) : super(key: key);
@@ -19,7 +19,7 @@ class CornerLabel extends StatelessWidget {
   final String string;
   final Duration duration;
   final Alignment alignment;
-  final GestureTapCallback onTap;
+  final GestureTapCallback? onTap;
   final double fontSize;
 
   @override

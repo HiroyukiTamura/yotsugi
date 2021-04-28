@@ -31,7 +31,7 @@ class _RootPageState extends State<RootPage> {
 
   final _urlLauncher = createUrlLauncher();
   final _redirectCommand = createRedirectRouter().getRedirectCommand();
-  Future<void> _initializeFlutterFireFuture;
+  Future<void>? _initializeFlutterFireFuture;
 
   @override
   void initState() {

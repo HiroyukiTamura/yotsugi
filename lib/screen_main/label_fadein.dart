@@ -4,11 +4,11 @@ import 'package:itsumuso/styles.dart';
 
 class LabelFadeIn extends StatelessWidget {
   const LabelFadeIn({
-    Key key,
-    @required this.string,
-    @required this.animationController,
-    @required this.alignment,
-    @required this.onTap,
+    Key? key,
+    required this.string,
+    required this.animationController,
+    required this.alignment,
+    required this.onTap,
   }) : super(key: key);
 
   final String string;

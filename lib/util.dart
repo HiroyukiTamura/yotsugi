@@ -6,7 +6,7 @@ import 'package:itsumuso/common/reporting_err_client_impl_web.dart' if (dart.lib
 import 'package:itsumuso/strings.dart';
 
 class Util {
-  static Future<void> reportCrash(dynamic exception, { StackTrace stackTrace }) async {
+  static Future<void> reportCrash(dynamic exception, { StackTrace? stackTrace }) async {
     createReportingErrClient().reportErr(exception, stackTrace);
     debugPrint(exception?.toString());
     debugPrintStack(stackTrace: stackTrace);

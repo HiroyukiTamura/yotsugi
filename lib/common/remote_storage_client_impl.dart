@@ -17,10 +17,10 @@ class RemoteStorageClientImpl extends RemoteStorageClient {
   }
 
   @override
-  Future<void> uploadImg(String filePath, String fileName) async => FirebaseStorage.instance
+  Future<void> uploadImg(String filePath, String? fileName) async => FirebaseStorage.instance
         .ref()
         .child('log')
-        .child(fileName)
+        .child(fileName!)
         .putFile(File(filePath))
         .whenComplete(() {});
 }

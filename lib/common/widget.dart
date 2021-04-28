@@ -10,10 +10,10 @@ import 'package:itsumuso/styles.dart';
 ///画面左上で戻るボタンを提供する
 class BackBtn extends StatelessWidget {
   const BackBtn({
-    Key key,
+    Key? key,
     this.btnFillColor = Colors.transparent,
-    @required this.iconColor,
-    @required this.onTap,
+    required this.iconColor,
+    required this.onTap,
   }) : super(key: key);
 
   final Color btnFillColor;
@@ -44,7 +44,7 @@ class ErrRobotWidget extends StatelessWidget {
   const ErrRobotWidget({this.errMsg = Strings.SNACK_ERR, this.errMsg2nd}): super();
 
   final String errMsg;
-  final String errMsg2nd;
+  final String? errMsg2nd;
 
   static const _IMG_URL = 'assets/err_robot.svg';
   static const double _SIZE = 72;
@@ -76,7 +76,7 @@ class ErrRobotWidget extends StatelessWidget {
     if (errMsg2nd != null) {
       children.add(Padding(
         padding: const EdgeInsets.only(top: 12),
-        child: _errorText(text: errMsg2nd),
+        child: _errorText(text: errMsg2nd!),
       ));
     }
 
@@ -91,7 +91,7 @@ class ErrRobotWidget extends StatelessWidget {
     );
   }
 
-  static Text _errorText({@required String text}) => Text(
+  static Text _errorText({required String text}) => Text(
     text,
     style: const TextStyle(
         fontFamily: Styles.FONT_SHINGO,

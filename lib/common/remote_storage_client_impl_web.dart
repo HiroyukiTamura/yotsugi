@@ -18,9 +18,9 @@ class RemoteStorageClientImplWeb extends RemoteStorageClient {
   }
 
   @override
-  Future<void> uploadBlob(Uint8List blob, String fileName) async => fb.storage()
+  Future<void> uploadBlob(Uint8List blob, String? fileName) async => fb.storage()
         .ref('/')
         .child('log')
-        .child(fileName)
+        .child(fileName!)
         .put(blob);
 }

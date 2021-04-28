@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 
 class ThinScrollbar extends StatelessWidget {
 
-  const ThinScrollbar({Key key, this.sc}) : super(key: key);
+  const ThinScrollbar({Key? key, required this.sc}) : super(key: key);
 
   static const double HEIGHT = 96;
 
