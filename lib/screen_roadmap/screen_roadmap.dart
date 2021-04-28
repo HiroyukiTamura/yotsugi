@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:itsumuso/json_data/single_border.dart';
+import 'package:itsumuso/json_data/value.dart';
 import 'package:linked_scroll_controller/linked_scroll_controller.dart';
 import 'package:quiver/iterables.dart';
 import 'package:itsumuso/common/back_movie_state.dart';
@@ -51,7 +55,7 @@ class _ScreenRoadMapState extends BackMovieState<ScreenRoadMap> {
     super.dispose();
     _scList.forEach((sc) => sc.dispose());
     _vn.dispose();
-    _verticalSc!.dispose();
+    _verticalSc.dispose();
     _vScrollRatio.dispose();
     _hScrollRatio.dispose();
   }
@@ -86,12 +90,12 @@ class _ScreenRoadMapState extends BackMovieState<ScreenRoadMap> {
                     child: CircularProgressIndicator(),
                   );
 
-                if (ssd.sheets!.length > 1)
+                if (ssd.sheets.length > 1)
                   Util.reportCrash(
                       Exception('snapshot.data.sheets.length > 1'));
-                final sheet = ssd.sheets![0];
-                final datum = sheet.data!.first;
-                final dataWithNull = sheet.getDataWithNullItem();
+                final sheet = ssd.sheets[0];
+                final datum = sheet.data.first;
+                final dataWithNull = sheet.getDataWithNullItem;
                 sheet.collapseEmptyRowAndColumn(dataWithNull);
 
                 List<Widget> allWidgets = _scList.isEmpty
@@ -211,7 +215,7 @@ class _ScreenRoadMapState extends BackMovieState<ScreenRoadMap> {
             'key': Statics.API_KEY,
             'ranges': 'A1:CA200'
           });
-      final ssd = SpreadSheetData.fromJson(response.data!);
+      final ssd = SpreadSheetData.fromJson(jsonDecode(response.data!) as Map<String, dynamic>);
       return _SpreadSheetDataWrapper(ssd: ssd);
     } catch (e) {
       Util.reportCrash(e);
@@ -236,7 +240,7 @@ class _ScreenRoadMapState extends BackMovieState<ScreenRoadMap> {
       final borders = dataListInRow[it.index]?.effectiveFormat.borders;
       final data = dataListInRow[it.index];
       final text = data?.userEnteredValue.stringValue;
-      final width = datum.columnMetadata![it.index].pixelSize!.toDouble();
+      final width = datum.columnMetadata[it.index].pixelSize!.toDouble();
 
       return Visibility(
         visible: width != 0,

@@ -41,6 +41,8 @@ analyzer:
     - "lib/flutter_icon_icons.dart"
     - "lib/page_search/follow_list_tile.dart"
     - "lib/my_video_player.dart"
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
 
 linter:
   rules:
