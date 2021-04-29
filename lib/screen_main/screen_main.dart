@@ -61,11 +61,12 @@ class _ScreenMainState extends State<ScreenMain> with TickerProviderStateMixin {
 
     _sc = ScrollController()
       ..addListener(() async {
-        double ratio = _sc.position.pixels / _sc.position.maxScrollExtent;
-        double ratio2 = 1 - ratio * 3;
-        if (ratio2.isNegative) ratio2 = 0;
-        if (ratio2 > 1) ratio2 = 1;
-        _themeOpacity.value = ratio2;
+        double ratio = _sc.position.pixels / 200;
+        if(ratio.isNegative)
+          ratio = 0;
+        if (1 < ratio)
+          ratio = 1;
+        _themeOpacity.value = 1 - ratio;
       });
 
     _barSc = ScrollController();

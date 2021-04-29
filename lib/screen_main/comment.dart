@@ -3,7 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:itsumuso/util.dart';
-import 'package:itsumuso/common/remote_storage_client_impl_web.dart' if (dart.library.io) 'package:itsumuso/common/remote_storage_client_impl.dart';
+import 'package:itsumuso/common/remote_storage_client_impl_web.dart'
+    if (dart.library.io) 'package:itsumuso/common/remote_storage_client_impl.dart';
 
 class Comment extends StatelessWidget {
   const Comment({Key? key, required this.string}) : super(key: key);
@@ -30,7 +31,12 @@ class DateText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.only(right: 32, left: 32, top: 48, bottom: 68),
+        padding: const EdgeInsets.only(
+          right: 32,
+          left: 32,
+          top: 48,
+          bottom: 68,
+        ),
         alignment: Alignment.centerRight,
         child: Text(
           string,
@@ -44,36 +50,36 @@ class DateText extends StatelessWidget {
 
 class Images extends StatelessWidget {
   Images({Key? key, required List<dynamic> fileList})
-      : fileName = fileList.first as String,
+      : fileName = fileList.first as String?,
         super(key: key);
 
-  final String fileName;
+  final String? fileName;
 
   @override
-  Widget build(BuildContext context) {
-    return Padding(
-          padding: const EdgeInsets.only(top: 64),
-          child: SizedBox(
-              height: 256,
-              width: 256,
-              child: FutureBuilder<dynamic>(
-                future: createRemoteStorageClient().getImgUrl(fileName),
-                builder: (context, AsyncSnapshot<dynamic> snapshot) {
-                  if (snapshot.hasError) {
-                    Util.reportCrash(snapshot.error);
-                    return const SizedBox();
-                  }
-
-                  if (!snapshot.hasData) return const SizedBox();
-
-                  return CachedNetworkImage(
-                    imageUrl: snapshot.data as String,
-                    errorWidget: (context, url, dynamic error) {
-                      Util.reportCrash(error);
+  Widget build(BuildContext context) => Padding(
+      padding: const EdgeInsets.only(top: 64),
+      child: SizedBox(
+          height: 256,
+          width: 256,
+          child: fileName == null
+              ? null
+              : FutureBuilder<dynamic>(
+                  future: createRemoteStorageClient().getImgUrl(fileName!),
+                  builder: (context, AsyncSnapshot<dynamic> snapshot) {
+                    if (snapshot.hasError) {
+                      Util.reportCrash(snapshot.error);
                       return const SizedBox();
-                    },
-                  );
-                },
-              )));
-  }
+                    }
+
+                    if (!snapshot.hasData) return const SizedBox();
+
+                    return CachedNetworkImage(
+                      imageUrl: snapshot.data as String,
+                      errorWidget: (context, url, dynamic error) {
+                        Util.reportCrash(error);
+                        return const SizedBox();
+                      },
+                    );
+                  },
+                )));
 }
