@@ -1,0 +1,6 @@
+app_identifier("com.cks.yotsugi") # The bundle identifier of your app
+apple_id("hiroyuktamura@gmail.com") # Your Apple email address
+
+
+# For more information about the Appfile, see:
+#     https://docs.fastlane.tools/advanced/#appfile

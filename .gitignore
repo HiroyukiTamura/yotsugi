@@ -320,3 +320,7 @@ fastlane/test_output
 
 iOSInjectionProject/
 
+/android/app/keystore2.jks
+/android/key.properties
+/android/google_play_console_developer_secret_key.json
+/android/app/google-services.json

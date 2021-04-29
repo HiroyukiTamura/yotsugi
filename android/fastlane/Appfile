@@ -1,0 +1,2 @@
+json_key_file("/Volumes/SSD-PGMU3/data/StudioProjects/yotsugi/android/google_play_console_developer_secret_key.json") # Path to the json secret file - Follow https://docs.fastlane.tools/actions/supply/#setup to get one
+package_name("com.cks.yotsugi") # e.g. com.krausefx.app
