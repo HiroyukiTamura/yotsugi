@@ -37,7 +37,7 @@ dependencies:
   font_awesome_flutter: ^9.0.0
   share: ^2.0.1
   json_serializable: ^4.1.1
-  dio: ^4.0.0
+  dio: ^5.0.3
   quiver: ^3.0.1
   linked_scroll_controller: ^0.2.0-nullsafety.0
   flutter_svg: ^0.22.0
